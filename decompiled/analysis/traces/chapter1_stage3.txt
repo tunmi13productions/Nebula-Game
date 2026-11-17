@@ -1,0 +1,10 @@
+-> <Chapter1Scene 0x10000900> setAllowMove: 1
+-> <Chapter1Scene 0x10000900> setAllowShoot: 1
+-> <Chapter1Scene 0x10000900> intro3
+-> <MessageWindow 0x10002920> presentText:withSpeaker: L('chap1_icarus1.2') 'I.C.A.R.U.S.'
+<VoiceSynthesizer 0x10001900> speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition: L('chap1_icarus1.2') 0.55 1 0 BLOCK#1(invoke 0x6c1cc)  => #224 speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:
+== BLOCK#1 (from speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:)
+-> <Chapter1Scene 0x10000900> createTank
+<Chapter1Scene 0x10000900> createEnemyWithType: 46  => #22a createEnemyWithType:
+-> <Chapter1Scene 0x10000900> createLaserEnemy1
+<Chapter1Scene 0x10000900> createEnemyWithType: 7  => #22b createEnemyWithType:

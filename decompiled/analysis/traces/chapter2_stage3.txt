@@ -1,0 +1,6 @@
+-> <Chapter2Scene 0x10000900> setAllowMove: 1
+-> <Chapter2Scene 0x10000900> setAllowShoot: 1
+-> <Chapter2Scene 0x10000900> createSmallEnemy2
+<Chapter2Scene 0x10000900> createEnemyWithType: 41  => #190 createEnemyWithType:
+-> <Chapter2Scene 0x10000900> createLaserEnemy1
+<Chapter2Scene 0x10000900> createEnemyWithType: 42  => #191 createEnemyWithType:

@@ -1,0 +1,18 @@
+-> <Chapter1Scene 0x10000900> setAllowMove: 1
+-> <Chapter1Scene 0x10000900> setAllowShoot: 1
+-> <Chapter1Scene 0x10000900> stage4Loop
+-> <Chapter1Scene 0x10000900> setAllowMove: 0
+-> <Chapter1Scene 0x10000900> setAllowShoot: 0
+-> <MessageWindow 0x10002920> presentText:withSpeaker: L('chap1_icarus2') 'I.C.A.R.U.S.'
+<VoiceSynthesizer 0x10001900> speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition: L('chap1_icarus2') 0.55 0 1 BLOCK#1(invoke 0x6d0de)  => #224 speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:
+== BLOCK#1 (from speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:)
+-> <MessageWindow 0x10002920> presentText:withSpeaker: L('chap1_icarus3') 'I.C.A.R.U.S.'
+<VoiceSynthesizer 0x10001900> speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition: L('chap1_icarus3') 0.55 0 0 BLOCK#3(invoke 0x6d266)  => #22d speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:
+== BLOCK#3 (from speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:)
+class SKAction waitForDuration: 0.5  => #23e waitForDuration:
+<Chapter1Scene 0x10000900> runAction:completion: #23e waitForDuration: BLOCK#5(invoke 0x6d30a)
+-> <Chapter1Scene 0x10000900> makeBossEntrance
+#241 initWithTexture: runAction:completion: #247 moveToY:duration: BLOCK#6(invoke 0x6e034)
+<Boss 0x100039e0> initBoss:onParentScene: 1 <Chapter1Scene 0x10000900>  => #248 initBoss:onParentScene:
+-> <Chapter1Scene 0x10000900> setAllowMove: 1
+-> <Chapter1Scene 0x10000900> setAllowShoot: 1

@@ -190,6 +190,8 @@ class Tracer:
             raw = bytes(self.mu.mem_read(p, n * 2 if fl == 0x7d0 else n))
             return repr(raw.decode('utf-16-le' if fl == 0x7d0 else 'utf-8', 'replace'))
         if v in self.import_name: return '&' + self.import_name[v]
+        mn = self.sec['__objc_methname']
+        if mn.virtual_address <= v < mn.virtual_address + mn.size: return '@selector(%s)' % self.cstr(v)
         if self.STACK <= v < self.STACK + 0x200000 or self.HEAP <= v < self.HEAP + 0x4000000:
             # maybe a block
             isa = self.r32(v) if self.HEAP <= v or True else 0
@@ -240,7 +242,7 @@ class Tracer:
     def enc_to_sig(self, enc):
         enc = re.sub(r'\d+', '', enc)
         # skip return type
-        toks = re.findall(r'\{[^}]*\}|\^?[@:#vcifdBlILsSqQ*]|@\?', enc)
+        toks = re.findall(r'\{[^}]*\}|@\?|\^?[@:#vcifdBlILsSqQ*]', enc)
         sig = ''
         for t in toks[3:]:
             if t.startswith('{CGPoint') or t.startswith('{CGSize'): sig += 'P'
@@ -298,6 +300,14 @@ class Tracer:
         if name in ('_objc_retainBlock', '__Block_copy'):
             self.copy_block(r[0], 'retainBlock'); return self.ret(r[0])
         if name.startswith('_objc_'): return self.ret(r[0])
+        if name in ('___umodsi3', '___udivsi3', '___modsi3', '___divsi3'):
+            a, b = r[0], r[1]
+            if name in ('___modsi3', '___divsi3'):
+                a = struct.unpack('<i', struct.pack('<I', a))[0]; b = struct.unpack('<i', struct.pack('<I', b))[0]
+            if b == 0: return self.ret(0)
+            q = int(a / b) if name == '___divsi3' else a // b
+            v = q if 'div' in name else a - q * b
+            return self.ret(v)
         # math functions use softfp doubles in r0:r1 (and r2:r3)
         import math
         x = f64(r[0], r[1]); y = f64(r[2], r[3])
@@ -330,7 +340,9 @@ class Tracer:
         imp = self.find_method(cls, sel, meta) if cls is not None else None
         if imp and not (sel in self.skip_impl):
             if not stret and self.trace_internal:
-                self.log('-> %s %s' % (self.desc(recv) if not meta else self.classes[recv]['name'], sel))
+                isig = self.enc_to_sig(imp[1])
+                iargs = self.fmt_args(sel, isig.replace('B', '@'), [0, 0] + r[2:4], sp) if isig else []
+                self.log('-> %s %s %s' % (self.desc(recv) if not meta else self.classes[recv]['name'], sel, ' '.join(iargs)))
             if sup:  # replace the super struct pointer by the receiver
                 mu.reg_write(UC_ARM_REG_R1 if stret else UC_ARM_REG_R0, recv)
             mu.reg_write(UC_ARM_REG_PC, imp[0] | 1 if imp[0] & 1 == 0 else imp[0]); return
@@ -364,7 +376,8 @@ class Tracer:
         return self.ret(0 if val is None else val)
 
     quiet = {'count', 'class', 'isEqualToString:', 'mainBundle', 'standardUserDefaults', 'defaultCenter'}
-    skip_impl = {'getTexturesWithPrefix:', 'getTextureWithName:', 'platform'}
+    skip_impl = {'getTexturesWithPrefix:', 'getTextureWithName:', 'platform',
+                 'speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:', 'speakSentence:withRate:'}
     trace_internal = True
     rand_value = 0
 

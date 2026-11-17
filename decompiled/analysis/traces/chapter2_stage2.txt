@@ -1,0 +1,11 @@
+-> <Chapter2Scene 0x10000900> setAllowMove: 1
+-> <Chapter2Scene 0x10000900> setAllowShoot: 1
+-> <Chapter2Scene 0x10000900> intro2
+-> <MessageWindow 0x10002920> presentText:withSpeaker: L('chap2_icarus2') 'I.C.A.R.U.S.'
+-> <Chapter2Scene 0x10000900> generator
+<VoiceSynthesizer 0x10001900> speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition: L('chap2_icarus2') 0.55 1 0 BLOCK#1(invoke 0x1335c)  => #224 speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:
+== BLOCK#1 (from speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:)
+-> <Chapter2Scene 0x10000900> createSmallEnemy1
+<Chapter2Scene 0x10000900> createEnemyWithType: 10  => #22a createEnemyWithType:
+-> <Chapter2Scene 0x10000900> createSmallEnemy2
+<Chapter2Scene 0x10000900> createEnemyWithType: 41  => #22b createEnemyWithType:

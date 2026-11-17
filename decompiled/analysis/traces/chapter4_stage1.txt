@@ -1,0 +1,12 @@
+-> <Chapter4Scene 0x10000900> setAllowMove: 1
+-> <Chapter4Scene 0x10000900> setAllowShoot: 1
+-> <Chapter4Scene 0x10000900> intro1
+-> <MessageWindow 0x10002920> presentText:withSpeaker: L('chap4_icarus1') 'I.C.A.R.U.S.'
+<VoiceSynthesizer 0x10001900> speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition: L('chap4_icarus1') 0.55 0.5 0 BLOCK#1(invoke 0x19678)  => #224 speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:
+== BLOCK#1 (from speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:)
+-> <Chapter4Scene 0x10000900> setAllowMove: 0
+-> <Chapter4Scene 0x10000900> setAllowShoot: 0
+-> <Chapter4Scene 0x10000900> makeBossEntrance1
+<Boss 0x10003960> initBoss:onParentScene: 4 <Chapter4Scene 0x10000900>  => #22a initBoss:onParentScene:
+-> <Chapter4Scene 0x10000900> setAllowMove: 1
+-> <Chapter4Scene 0x10000900> setAllowShoot: 1

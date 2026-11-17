@@ -1,0 +1,6 @@
+-> <Chapter6Scene 0x10000900> setAllowMove: 1
+-> <Chapter6Scene 0x10000900> setAllowShoot: 1
+-> <Chapter6Scene 0x10000900> createSmallEnemy1
+<Chapter6Scene 0x10000900> createEnemyWithType: 4  => #190 createEnemyWithType:
+-> <Chapter6Scene 0x10000900> createLaserEnemy1
+<Chapter6Scene 0x10000900> createEnemyWithType: 5  => #191 createEnemyWithType:

@@ -1,0 +1,6 @@
+-> <Chapter8Scene 0x10000900> setAllowMove: 1
+-> <Chapter8Scene 0x10000900> setAllowShoot: 1
+-> <Chapter8Scene 0x10000900> createSmallEnemy2
+<Chapter8Scene 0x10000900> createEnemyWithType: 18  => #190 createEnemyWithType:
+-> <Chapter8Scene 0x10000900> createMediumEnemy1
+<Chapter8Scene 0x10000900> createEnemyWithType: 19  => #191 createEnemyWithType:

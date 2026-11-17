@@ -1,0 +1,4 @@
+-> <Chapter9Scene 0x10000900> setAllowMove: 1
+-> <Chapter9Scene 0x10000900> setAllowShoot: 1
+-> <Chapter9Scene 0x10000900> createMediumEnemy2
+<Chapter9Scene 0x10000900> createEnemyWithType: 16  => #190 createEnemyWithType:

@@ -1,0 +1,11 @@
+-> <Chapter3Scene 0x10000900> setAllowMove: 0
+-> <Chapter3Scene 0x10000900> setAllowShoot: 0
+-> <MessageWindow 0x10002920> presentText:withSpeaker: L('chap3_icarus2') 'I.C.A.R.U.S.'
+<VoiceSynthesizer 0x10001900> speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition: L('chap3_icarus2') 0.55 0.5 0 BLOCK#1(invoke 0x31118)  => #224 speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:
+== BLOCK#1 (from speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:)
+class SKAction runBlock: BLOCK#3(invoke 0x3139c)  => #22d runBlock:
+<Chapter3Scene 0x10000900> runAction:completion: #22d runBlock: BLOCK#4(invoke 0x3150e)
+== BLOCK#3 (from runBlock:)
+class SKAction playSoundFileNamed:waitForCompletion: 'science_fiction_warp_dimensional.mp3' 1  => #22e playSoundFileNamed:waitForCompletion:
+<Chapter3Scene 0x10000900> runAction: #22e playSoundFileNamed:waitForCompletion:
+<Chapter3Scene 0x10000900> endGameVictorious   => #22f endGameVictorious
