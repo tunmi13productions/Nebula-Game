@@ -1,0 +1,392 @@
+== <Chapter1Scene 0x10000900> setIsActive:
+== <Boss 0x10001100> initBoss:onParentScene:
+-> Aureal sharedManager
+-> <Aureal 0x10001900> init
+class NSMutableDictionary alloc   => #f1 alloc
+#f1 alloc init   => #f2 init
+#f3 defaultCenter addObserver:selector:name:object: <Aureal 0x10001900> 0xa2c54 nil nil  => #f4 addObserver:selector:name:object:
+#f5 defaultCenter addObserver:selector:name:object: <Aureal 0x10001900> 0xa2c64 nil nil  => #f6 addObserver:selector:name:object:
+<Global 0x10000100> getTexturesWithPrefix: 'Boss_'  => textures(Boss_*)
+textures(Boss_*) objectAtIndexedSubscript: 0  => tex('Boss_01')
+class SKSpriteNode alloc   => #f9 alloc
+#f9 alloc initWithTexture: tex('Boss_01')  => #fa initWithTexture:
+#fa initWithTexture: setAnchorPoint: (0.5, 0.5)
+-> <Boss 0x10001100> setBossSize
+#fa initWithTexture: setScale: 1
+<Boss 0x10001100> setSize: (481, 417)
+<Boss 0x10001100> addChild: #fa initWithTexture:
+-> <Boss 0x10001100> setPositionOnScene
+<Boss 0x10001100> setPosition: (160, 985)
+<Boss 0x10001100> setZPosition: 5
+<Chapter1Scene 0x10000900> addChild: <Boss 0x10001100>
+-> <Boss 0x10001100> shootSequence
+class SKAction runBlock: BLOCK#0(invoke 0x20958)  => #fc runBlock:
+-> <Boss 0x10001100> entranceAction
+class SKAction moveTo:duration: (160, 568) 5  => #fd moveTo:duration:
+class SKAction waitForDuration: 1  => #fe waitForDuration:
+<Boss 0x10001100> runAction:completion: #fd moveTo:duration: BLOCK#1(invoke 0x1aad0)
+-- random value 0
+== BLOCK#0 (from runBlock:)
+-> <Chapter1Scene 0x10000900> isActive
+-> <Boss 0x10001100> laserShootOnPosition:
+arc4random -> 0
+-> <Shoot 0x10002140> setSpaceShip:
+class SKAction waitForDuration: 3  => #ff waitForDuration:
+class SKAction runBlock: BLOCK#2(invoke 0x1fe3e)  => #100 runBlock:
+class SKAction runBlock: BLOCK#3(invoke 0x1fe7c)  => #101 runBlock:
+class SKAction runBlock: BLOCK#4(invoke 0x1feba)  => #102 runBlock:
+class SKAction runBlock: BLOCK#5(invoke 0x2015c)  => #103 runBlock:
+class SKAction runBlock: BLOCK#6(invoke 0x201f6)  => #104 runBlock:
+class SKAction runBlock: BLOCK#7(invoke 0x20244)  => #105 runBlock:
+class SKAction runBlock: BLOCK#8(invoke 0x203dc)  => #106 runBlock:
+<Shoot 0x10002140> setAnchorPoint: (0.5, 1)
+<Boss 0x10001100> addChild: <Shoot 0x10002140>
+class SKAction waitForDuration: 1  => #107 waitForDuration:
+class SKAction waitForDuration: 1.5  => #108 waitForDuration:
+class NSArray arrayWithObjects:count: [#100 runBlock:, #102 runBlock:, #107 waitForDuration:, #101 runBlock:, #103 runBlock:, #108 waitForDuration:, #105 runBlock:, #ff waitForDuration:, #104 runBlock:, #106 runBlock:] 10  => #109 arrayWithObjects:count:
+class SKAction sequence: #109 arrayWithObjects:count:  => #10a sequence:
+<Shoot 0x10002140> runAction: #10a sequence:
+-> <Boss 0x10001100> shootingOnPosition:
+-> Global sharedManager
+-> <Global 0x10000100> EnemyShoot
+textures(Fireball_*) objectAtIndexedSubscript: 2  => tex('Fireball_03')
+class Shoot spriteNodeWithTexture: tex('Fireball_03')  => #10c spriteNodeWithTexture:
+#10c spriteNodeWithTexture: setSpaceShip: <Boss 0x10001100>
+#10c spriteNodeWithTexture: setSize: (26.6667, 26.6667)
+class SKPhysicsBody bodyWithCircleOfRadius: 5  => #10d bodyWithCircleOfRadius:
+#10c spriteNodeWithTexture: setPhysicsBody: #10d bodyWithCircleOfRadius:
+#10c spriteNodeWithTexture: setPosition: (87.85, 985)
+class SKAction moveToY:duration: -20 1.5  => #10f moveToY:duration:
+class SKAction removeFromParent 
+-> <Global 0x10000100> EnemyShoot
+class SKAction animateWithTextures:timePerFrame: textures(Fireball_*) 0.03  => #110 animateWithTextures:timePerFrame:
+class SKAction repeatActionForever: #110 animateWithTextures:timePerFrame:  => #111 repeatActionForever:
+#10c spriteNodeWithTexture: runAction: #111 repeatActionForever:
+class NSArray arrayWithObjects:count: [#10f moveToY:duration:, nil] 2  => #112 arrayWithObjects:count:
+class SKAction sequence: #112 arrayWithObjects:count:  => #113 sequence:
+#10c spriteNodeWithTexture: runAction: #113 sequence:
+#114 physicsBody setCategoryBitMask: 8
+#115 physicsBody setContactTestBitMask: 5
+#116 physicsBody setCollisionBitMask: 8
+-> <Boss 0x10001100> getSpaceShipColor:
+<Chapter1Scene 0x10000900> addChild: #10c spriteNodeWithTexture:
+-> <Boss 0x10001100> soundTiroWithBullet:
+-> <Boss 0x10001100> executeShootSoundNamed:withFormat:andNode:
+-> <Aureal 0x10001900> soundIDEnumerator
+class NSString stringWithFormat: '%ld' 0 740112 268439808 805308480  => fmt('%ld',0)
+-> <Aureal 0x10001900> addSoundIntoDictionary:ofType:withKey:
+-> <Aureal 0x10001900> soundIDEnumerator
+-> <Aureal 0x10001900> setSoundIDEnumerator:
+-> <Aureal 0x10001900> linkSound:toObject:
+-> <Aureal 0x10001900> executeOnceSoundNamed:inPosition:
+-> <Aureal 0x10001900> configurePlayer:toExecuteInPosition:
+-> <Aureal 0x10001900> getPanBasedOnMaxX:
+-> <Aureal 0x10001900> getAngleBetweenListenerAndObjectWithPosition:
+-> <Aureal 0x10001900> getNewVolume:
+<Boss 0x10001100> zPosition   => nil
+#10c spriteNodeWithTexture: setZPosition: -1
+-- random value 1
+== BLOCK#0 (from runBlock:)
+-> <Chapter1Scene 0x10000900> isActive
+-> <Boss 0x10001100> laserShootOnPosition:
+-> <Boss 0x10001100> shootingOnPosition:
+-> Global sharedManager
+-> <Global 0x10000100> EnemyShoot
+textures(Fireball_*) objectAtIndexedSubscript: 2  => tex('Fireball_03')
+class Shoot spriteNodeWithTexture: tex('Fireball_03')  => #120 spriteNodeWithTexture:
+#120 spriteNodeWithTexture: setSpaceShip: <Boss 0x10001100>
+#120 spriteNodeWithTexture: setSize: (26.6667, 26.6667)
+class SKPhysicsBody bodyWithCircleOfRadius: 5  => #121 bodyWithCircleOfRadius:
+#120 spriteNodeWithTexture: setPhysicsBody: #121 bodyWithCircleOfRadius:
+#120 spriteNodeWithTexture: setPosition: (232.15, 985)
+class SKAction moveToY:duration: -20 1.5  => #123 moveToY:duration:
+class SKAction removeFromParent 
+-> <Global 0x10000100> EnemyShoot
+class SKAction animateWithTextures:timePerFrame: textures(Fireball_*) 0.03  => #124 animateWithTextures:timePerFrame:
+class SKAction repeatActionForever: #124 animateWithTextures:timePerFrame:  => #125 repeatActionForever:
+#120 spriteNodeWithTexture: runAction: #125 repeatActionForever:
+class NSArray arrayWithObjects:count: [#123 moveToY:duration:, nil] 2  => #126 arrayWithObjects:count:
+class SKAction sequence: #126 arrayWithObjects:count:  => #127 sequence:
+#120 spriteNodeWithTexture: runAction: #127 sequence:
+#128 physicsBody setCategoryBitMask: 8
+#129 physicsBody setContactTestBitMask: 5
+#12a physicsBody setCollisionBitMask: 8
+-> <Boss 0x10001100> getSpaceShipColor:
+<Chapter1Scene 0x10000900> addChild: #120 spriteNodeWithTexture:
+-> <Boss 0x10001100> soundTiroWithBullet:
+-> <Boss 0x10001100> executeShootSoundNamed:withFormat:andNode:
+-> <Aureal 0x10001900> soundIDEnumerator
+class NSString stringWithFormat: '%ld' 1 1148600320 1118810931 1148600320  => fmt('%ld',1)
+-> <Aureal 0x10001900> addSoundIntoDictionary:ofType:withKey:
+-> <Aureal 0x10001900> soundIDEnumerator
+-> <Aureal 0x10001900> setSoundIDEnumerator:
+-> <Aureal 0x10001900> linkSound:toObject:
+-> <Aureal 0x10001900> executeOnceSoundNamed:inPosition:
+-> <Aureal 0x10001900> configurePlayer:toExecuteInPosition:
+-> <Aureal 0x10001900> getPanBasedOnMaxX:
+-> <Aureal 0x10001900> getAngleBetweenListenerAndObjectWithPosition:
+-> <Aureal 0x10001900> getNewVolume:
+<Boss 0x10001100> zPosition   => nil
+#120 spriteNodeWithTexture: setZPosition: -1
+-- random value 2
+== BLOCK#0 (from runBlock:)
+-> <Chapter1Scene 0x10000900> isActive
+-> <Boss 0x10001100> laserShootOnPosition:
+-> <Boss 0x10001100> shootingOnPosition:
+-> Global sharedManager
+-> <Global 0x10000100> EnemyShoot
+textures(Fireball_*) objectAtIndexedSubscript: 2  => tex('Fireball_03')
+class Shoot spriteNodeWithTexture: tex('Fireball_03')  => #134 spriteNodeWithTexture:
+#134 spriteNodeWithTexture: setSpaceShip: <Boss 0x10001100>
+#134 spriteNodeWithTexture: setSize: (26.6667, 26.6667)
+class SKPhysicsBody bodyWithCircleOfRadius: 5  => #135 bodyWithCircleOfRadius:
+#134 spriteNodeWithTexture: setPhysicsBody: #135 bodyWithCircleOfRadius:
+#134 spriteNodeWithTexture: setPosition: (232.15, 985)
+class SKAction moveToY:duration: -20 1.5  => #137 moveToY:duration:
+class SKAction removeFromParent 
+-> <Global 0x10000100> EnemyShoot
+class SKAction animateWithTextures:timePerFrame: textures(Fireball_*) 0.03  => #138 animateWithTextures:timePerFrame:
+class SKAction repeatActionForever: #138 animateWithTextures:timePerFrame:  => #139 repeatActionForever:
+#134 spriteNodeWithTexture: runAction: #139 repeatActionForever:
+class NSArray arrayWithObjects:count: [#137 moveToY:duration:, nil] 2  => #13a arrayWithObjects:count:
+class SKAction sequence: #13a arrayWithObjects:count:  => #13b sequence:
+#134 spriteNodeWithTexture: runAction: #13b sequence:
+#13c physicsBody setCategoryBitMask: 8
+#13d physicsBody setContactTestBitMask: 5
+#13e physicsBody setCollisionBitMask: 8
+-> <Boss 0x10001100> getSpaceShipColor:
+<Chapter1Scene 0x10000900> addChild: #134 spriteNodeWithTexture:
+-> <Boss 0x10001100> soundTiroWithBullet:
+-> <Boss 0x10001100> executeShootSoundNamed:withFormat:andNode:
+-> <Aureal 0x10001900> soundIDEnumerator
+class NSString stringWithFormat: '%ld' 2 1148600320 1130899046 1148600320  => fmt('%ld',2)
+-> <Aureal 0x10001900> addSoundIntoDictionary:ofType:withKey:
+-> <Aureal 0x10001900> soundIDEnumerator
+-> <Aureal 0x10001900> setSoundIDEnumerator:
+-> <Aureal 0x10001900> linkSound:toObject:
+-> <Aureal 0x10001900> executeOnceSoundNamed:inPosition:
+-> <Aureal 0x10001900> configurePlayer:toExecuteInPosition:
+-> <Aureal 0x10001900> getPanBasedOnMaxX:
+-> <Aureal 0x10001900> getAngleBetweenListenerAndObjectWithPosition:
+-> <Aureal 0x10001900> getNewVolume:
+<Boss 0x10001100> zPosition   => nil
+#134 spriteNodeWithTexture: setZPosition: -1
+-- random value 3
+== BLOCK#0 (from runBlock:)
+-> <Chapter1Scene 0x10000900> isActive
+-> <Boss 0x10001100> laserShootOnPosition:
+-> <Boss 0x10001100> shootingOnPosition:
+-> Global sharedManager
+-> <Global 0x10000100> EnemyShoot
+textures(Fireball_*) objectAtIndexedSubscript: 2  => tex('Fireball_03')
+class Shoot spriteNodeWithTexture: tex('Fireball_03')  => #148 spriteNodeWithTexture:
+#148 spriteNodeWithTexture: setSpaceShip: <Boss 0x10001100>
+#148 spriteNodeWithTexture: setSize: (26.6667, 26.6667)
+class SKPhysicsBody bodyWithCircleOfRadius: 5  => #149 bodyWithCircleOfRadius:
+#148 spriteNodeWithTexture: setPhysicsBody: #149 bodyWithCircleOfRadius:
+#148 spriteNodeWithTexture: setPosition: (87.85, 985)
+class SKAction moveToY:duration: -20 1.5  => #14b moveToY:duration:
+class SKAction removeFromParent 
+-> <Global 0x10000100> EnemyShoot
+class SKAction animateWithTextures:timePerFrame: textures(Fireball_*) 0.03  => #14c animateWithTextures:timePerFrame:
+class SKAction repeatActionForever: #14c animateWithTextures:timePerFrame:  => #14d repeatActionForever:
+#148 spriteNodeWithTexture: runAction: #14d repeatActionForever:
+class NSArray arrayWithObjects:count: [#14b moveToY:duration:, nil] 2  => #14e arrayWithObjects:count:
+class SKAction sequence: #14e arrayWithObjects:count:  => #14f sequence:
+#148 spriteNodeWithTexture: runAction: #14f sequence:
+#150 physicsBody setCategoryBitMask: 8
+#151 physicsBody setContactTestBitMask: 5
+#152 physicsBody setCollisionBitMask: 8
+-> <Boss 0x10001100> getSpaceShipColor:
+<Chapter1Scene 0x10000900> addChild: #148 spriteNodeWithTexture:
+-> <Boss 0x10001100> soundTiroWithBullet:
+-> <Boss 0x10001100> executeShootSoundNamed:withFormat:andNode:
+-> <Aureal 0x10001900> soundIDEnumerator
+class NSString stringWithFormat: '%ld' 3 1148600320 1130899046 1148600320  => fmt('%ld',3)
+-> <Aureal 0x10001900> addSoundIntoDictionary:ofType:withKey:
+-> <Aureal 0x10001900> soundIDEnumerator
+-> <Aureal 0x10001900> setSoundIDEnumerator:
+-> <Aureal 0x10001900> linkSound:toObject:
+-> <Aureal 0x10001900> executeOnceSoundNamed:inPosition:
+-> <Aureal 0x10001900> configurePlayer:toExecuteInPosition:
+-> <Aureal 0x10001900> getPanBasedOnMaxX:
+-> <Aureal 0x10001900> getAngleBetweenListenerAndObjectWithPosition:
+-> <Aureal 0x10001900> getNewVolume:
+<Boss 0x10001100> zPosition   => nil
+#148 spriteNodeWithTexture: setZPosition: -1
+-- random value 4
+== BLOCK#0 (from runBlock:)
+-> <Chapter1Scene 0x10000900> isActive
+-> <Boss 0x10001100> laserShootOnPosition:
+-> <Boss 0x10001100> shootingOnPosition:
+-> Global sharedManager
+-> <Global 0x10000100> EnemyShoot
+textures(Fireball_*) objectAtIndexedSubscript: 2  => tex('Fireball_03')
+class Shoot spriteNodeWithTexture: tex('Fireball_03')  => #15c spriteNodeWithTexture:
+#15c spriteNodeWithTexture: setSpaceShip: <Boss 0x10001100>
+#15c spriteNodeWithTexture: setSize: (26.6667, 26.6667)
+class SKPhysicsBody bodyWithCircleOfRadius: 5  => #15d bodyWithCircleOfRadius:
+#15c spriteNodeWithTexture: setPhysicsBody: #15d bodyWithCircleOfRadius:
+#15c spriteNodeWithTexture: setPosition: (232.15, 985)
+class SKAction moveToY:duration: -20 1.5  => #15f moveToY:duration:
+class SKAction removeFromParent 
+-> <Global 0x10000100> EnemyShoot
+class SKAction animateWithTextures:timePerFrame: textures(Fireball_*) 0.03  => #160 animateWithTextures:timePerFrame:
+class SKAction repeatActionForever: #160 animateWithTextures:timePerFrame:  => #161 repeatActionForever:
+#15c spriteNodeWithTexture: runAction: #161 repeatActionForever:
+class NSArray arrayWithObjects:count: [#15f moveToY:duration:, nil] 2  => #162 arrayWithObjects:count:
+class SKAction sequence: #162 arrayWithObjects:count:  => #163 sequence:
+#15c spriteNodeWithTexture: runAction: #163 sequence:
+#164 physicsBody setCategoryBitMask: 8
+#165 physicsBody setContactTestBitMask: 5
+#166 physicsBody setCollisionBitMask: 8
+-> <Boss 0x10001100> getSpaceShipColor:
+<Chapter1Scene 0x10000900> addChild: #15c spriteNodeWithTexture:
+-> <Boss 0x10001100> soundTiroWithBullet:
+-> <Boss 0x10001100> executeShootSoundNamed:withFormat:andNode:
+-> <Aureal 0x10001900> soundIDEnumerator
+class NSString stringWithFormat: '%ld' 4 1148600320 1118810931 1148600320  => fmt('%ld',4)
+-> <Aureal 0x10001900> addSoundIntoDictionary:ofType:withKey:
+-> <Aureal 0x10001900> soundIDEnumerator
+-> <Aureal 0x10001900> setSoundIDEnumerator:
+-> <Aureal 0x10001900> linkSound:toObject:
+-> <Aureal 0x10001900> executeOnceSoundNamed:inPosition:
+-> <Aureal 0x10001900> configurePlayer:toExecuteInPosition:
+-> <Aureal 0x10001900> getPanBasedOnMaxX:
+-> <Aureal 0x10001900> getAngleBetweenListenerAndObjectWithPosition:
+-> <Aureal 0x10001900> getNewVolume:
+<Boss 0x10001100> zPosition   => nil
+#15c spriteNodeWithTexture: setZPosition: -1
+-- random value 5
+== BLOCK#0 (from runBlock:)
+-> <Chapter1Scene 0x10000900> isActive
+-> <Boss 0x10001100> laserShootOnPosition:
+-> <Boss 0x10001100> shootingOnPosition:
+-> Global sharedManager
+-> <Global 0x10000100> EnemyShoot
+textures(Fireball_*) objectAtIndexedSubscript: 2  => tex('Fireball_03')
+class Shoot spriteNodeWithTexture: tex('Fireball_03')  => #170 spriteNodeWithTexture:
+#170 spriteNodeWithTexture: setSpaceShip: <Boss 0x10001100>
+#170 spriteNodeWithTexture: setSize: (26.6667, 26.6667)
+class SKPhysicsBody bodyWithCircleOfRadius: 5  => #171 bodyWithCircleOfRadius:
+#170 spriteNodeWithTexture: setPhysicsBody: #171 bodyWithCircleOfRadius:
+#170 spriteNodeWithTexture: setPosition: (232.15, 985)
+class SKAction moveToY:duration: -20 1.5  => #173 moveToY:duration:
+class SKAction removeFromParent 
+-> <Global 0x10000100> EnemyShoot
+class SKAction animateWithTextures:timePerFrame: textures(Fireball_*) 0.03  => #174 animateWithTextures:timePerFrame:
+class SKAction repeatActionForever: #174 animateWithTextures:timePerFrame:  => #175 repeatActionForever:
+#170 spriteNodeWithTexture: runAction: #175 repeatActionForever:
+class NSArray arrayWithObjects:count: [#173 moveToY:duration:, nil] 2  => #176 arrayWithObjects:count:
+class SKAction sequence: #176 arrayWithObjects:count:  => #177 sequence:
+#170 spriteNodeWithTexture: runAction: #177 sequence:
+#178 physicsBody setCategoryBitMask: 8
+#179 physicsBody setContactTestBitMask: 5
+#17a physicsBody setCollisionBitMask: 8
+-> <Boss 0x10001100> getSpaceShipColor:
+<Chapter1Scene 0x10000900> addChild: #170 spriteNodeWithTexture:
+-> <Boss 0x10001100> soundTiroWithBullet:
+-> <Boss 0x10001100> executeShootSoundNamed:withFormat:andNode:
+-> <Aureal 0x10001900> soundIDEnumerator
+class NSString stringWithFormat: '%ld' 5 1148600320 1130899046 1148600320  => fmt('%ld',5)
+-> <Aureal 0x10001900> addSoundIntoDictionary:ofType:withKey:
+-> <Aureal 0x10001900> soundIDEnumerator
+-> <Aureal 0x10001900> setSoundIDEnumerator:
+-> <Aureal 0x10001900> linkSound:toObject:
+-> <Aureal 0x10001900> executeOnceSoundNamed:inPosition:
+-> <Aureal 0x10001900> configurePlayer:toExecuteInPosition:
+-> <Aureal 0x10001900> getPanBasedOnMaxX:
+-> <Aureal 0x10001900> getAngleBetweenListenerAndObjectWithPosition:
+-> <Aureal 0x10001900> getNewVolume:
+<Boss 0x10001100> zPosition   => nil
+#170 spriteNodeWithTexture: setZPosition: -1
+== BLOCK#1 (from runAction:completion:)
+-> <Boss 0x10001100> defineBody
+class UIBezierPath bezierPath   => #183 bezierPath
+#183 bezierPath moveToPoint: (-184.45, -166.8)  => #184 moveToPoint:
+#183 bezierPath addLineToPoint: (-136.35, -208.5)  => #185 addLineToPoint:
+#183 bezierPath addLineToPoint: (-88.25, -166.8)  => #186 addLineToPoint:
+#183 bezierPath addLineToPoint: (-88.25, 10.425)  => #187 addLineToPoint:
+#183 bezierPath addLineToPoint: (-52.175, 10.425)  => #188 addLineToPoint:
+#183 bezierPath addLineToPoint: (-52.175, -104.25)  => #189 addLineToPoint:
+#183 bezierPath addLineToPoint: (1.9375, -135.525)  => #18a addLineToPoint:
+#183 bezierPath addLineToPoint: (56.05, -104.25)  => #18b addLineToPoint:
+#183 bezierPath addLineToPoint: (56.05, 10.425)  => #18c addLineToPoint:
+#183 bezierPath addLineToPoint: (92.125, 10.425)  => #18d addLineToPoint:
+#183 bezierPath addLineToPoint: (92.125, -166.8)  => #18e addLineToPoint:
+#183 bezierPath addLineToPoint: (140.225, -208.5)  => #18f addLineToPoint:
+#183 bezierPath addLineToPoint: (188.325, -166.8)  => #190 addLineToPoint:
+#183 bezierPath addLineToPoint: (188.325, 52.125)  => #191 addLineToPoint:
+#183 bezierPath addLineToPoint: (-184.45, 52.125)  => #192 addLineToPoint:
+#183 bezierPath closePath   => #193 closePath
+call _CGPathCreateMutable(#193 closePath, 0xa1dea, 0xc3387333, 0x42508000)
+#183 bezierPath CGPath   => #195 CGPath
+call _CGPathAddPath(ret of _CGPathCreateMutable, nil, #195 CGPath, 0x42508000)
+class SKPhysicsBody bodyWithEdgeLoopFromPath: ret of _CGPathCreateMutable  => #197 bodyWithEdgeLoopFromPath:
+<Boss 0x10001100> setPhysicsBody: #197 bodyWithEdgeLoopFromPath:
+#198 physicsBody setDensity: 0x3dcccccd
+#199 physicsBody setCategoryBitMask: 2
+#19a physicsBody setCollisionBitMask: 16
+#19b physicsBody setContactTestBitMask: 21
+-> <Boss 0x10001100> startingMove
+class SKAction moveByX:y:duration: 0 -45.44 2  => #19c moveByX:y:duration:
+class SKAction moveByX:y:duration: 0 45.44 2  => #19d moveByX:y:duration:
+class SKAction runBlock: BLOCK#9(invoke 0x1eb98)  => #19e runBlock:
+class NSArray arrayWithObjects:count: [#19c moveByX:y:duration:, #19d moveByX:y:duration:, #19e runBlock:] 3  => #19f arrayWithObjects:count:
+class SKAction sequence: #19f arrayWithObjects:count:  => #1a0 sequence:
+class SKAction repeatActionForever: #1a0 sequence:  => #1a1 repeatActionForever:
+<Boss 0x10001100> runAction: #1a1 repeatActionForever:
+class NSArray arrayWithObjects:count: [#fe waitForDuration:, #fc runBlock:] 2  => #1a2 arrayWithObjects:count:
+class SKAction sequence: #1a2 arrayWithObjects:count:  => #1a3 sequence:
+class SKAction repeatActionForever: #1a3 sequence:  => #1a4 repeatActionForever:
+<Boss 0x10001100> runAction: #1a4 repeatActionForever:
+== BLOCK#2 (from runBlock:)
+-> <Boss 0x10001100> executeLaserSoundNamed:withFormat:andNode:
+-> <Aureal 0x10001900> soundIDEnumerator
+class NSString stringWithFormat: '%ld' 6 0 753672 268439808  => fmt('%ld',6)
+-> <Aureal 0x10001900> addSoundIntoDictionary:ofType:withKey:
+-> <Aureal 0x10001900> soundIDEnumerator
+-> <Aureal 0x10001900> setSoundIDEnumerator:
+-> <Aureal 0x10001900> linkSound:toObject:
+-> <Aureal 0x10001900> executeOnceSoundNamed:inPosition:
+-> <Aureal 0x10001900> configurePlayer:toExecuteInPosition:
+-> <Aureal 0x10001900> getPanBasedOnMaxX:
+-> <Aureal 0x10001900> getAngleBetweenListenerAndObjectWithPosition:
+-> <Aureal 0x10001900> getNewVolume:
+== BLOCK#3 (from runBlock:)
+-> <Boss 0x10001100> executeLaserSoundNamed:withFormat:andNode:
+-> <Aureal 0x10001900> soundIDEnumerator
+class NSString stringWithFormat: '%ld' 7 1148600320 753688 268439808  => fmt('%ld',7)
+-> <Aureal 0x10001900> addSoundIntoDictionary:ofType:withKey:
+-> <Aureal 0x10001900> soundIDEnumerator
+-> <Aureal 0x10001900> setSoundIDEnumerator:
+-> <Aureal 0x10001900> linkSound:toObject:
+-> <Aureal 0x10001900> executeOnceSoundNamed:inPosition:
+-> <Aureal 0x10001900> configurePlayer:toExecuteInPosition:
+-> <Aureal 0x10001900> getPanBasedOnMaxX:
+-> <Aureal 0x10001900> getAngleBetweenListenerAndObjectWithPosition:
+-> <Aureal 0x10001900> getNewVolume:
+== BLOCK#4 (from runBlock:)
+class NSKeyedUnarchiver unarchiveObjectWithFile: #1b4 pathForResource:ofType:  => #1b5 unarchiveObjectWithFile:
+-> <Boss 0x10001100> getSpaceShipColor:
+<Boss 0x10001100> addChild: #1b5 unarchiveObjectWithFile:
+== BLOCK#5 (from runBlock:)
+== BLOCK#6 (from runBlock:)
+== BLOCK#7 (from runBlock:)
+<Shoot 0x10002140> setPosition: (0, -347.5)
+<Shoot 0x10002140> setZPosition: 5
+class SKPhysicsBody bodyWithRectangleOfSize: (6.4, 568)  => #1b7 bodyWithRectangleOfSize:
+<Shoot 0x10002140> setPhysicsBody: #1b7 bodyWithRectangleOfSize:
+#1b8 physicsBody setCategoryBitMask: 64
+#1b9 physicsBody setContactTestBitMask: 1
+#1ba physicsBody setCollisionBitMask: 64
+== BLOCK#8 (from runBlock:)
+-> <Aureal 0x10001900> stopSoundNamed:withOptions:
+NSLog 'FADE'
+-> <Aureal 0x10001900> doVolumeFadeOutOnPlayer:
+class SKAction moveToY:duration: 417 3  => #1bc moveToY:duration:
+<Shoot 0x10002140> runAction:completion: #1bc moveToY:duration: BLOCK#10(invoke 0x204ec)
+== BLOCK#9 (from runBlock:)
+-> <Chapter1Scene 0x10000900> isActive
+== BLOCK#10 (from runAction:completion:)
+<Shoot 0x10002140> removeFromParent 

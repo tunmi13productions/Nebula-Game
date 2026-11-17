@@ -66,7 +66,7 @@ Findings from studying the original iOS build. Raw dumps live in `decompiled/ana
 ## Decompilation setup
 
 - Ghidra 12.2 headless, run with JDK 25. Pseudocode for all 1692 functions is in `decompiled/analysis/decompiled.c`, with real Objective-C method names (for example `Aureal::getNewVolume:`).
-- Ghidra mangles floating point on this armv7 build because doubles are passed in integer register pairs. For any math, read the Thumb disassembly instead. The helper scripts used for that (Mach-O string dump, ObjC class dump, Thumb disassembler with stub and literal resolution) were kept in the session scratchpad. They're small and easy to rewrite.
+- Ghidra mangles floating point on this armv7 build because doubles are passed in integer register pairs. For any math, read the Thumb disassembly instead, or better, run the code in the tracing emulator. All the helper scripts live in `tools/re/` (see its README). The most useful one is `objc_trace.py`, which runs original methods and logs every SpriteKit, sound and speech call with exact values.
 - Calls into imports often go through small thunks near 0x9e6cc. Their targets: 0x9e6cc is objc_release, 0x9e750 is cos, 0x9e75c is atan2.
 
 ## Recovered mechanics: Aureal audio engine
@@ -315,12 +315,46 @@ So 0x40 is the enemy laser beam, which hits once on contact begin. The player ha
 - `addScore:` adds the ship's score to scoreCounter.
 - In stage 0 (free mode), with VoiceOver running, it speaks "Score: N." at rate 0.6 after every kill. deathCounter goes up by 1.
 
+## Recovered mechanics: bosses (`Boss` class)
+
+Full call traces for every boss are in `decompiled/analysis/traces/boss_NN.txt`, produced by `tools/re/trace_bosses.py`. The coordinates there assume a 320 by 568 scene. Summary:
+
+- Created with `initBoss: code onParentScene:`. The texture is `Boss_NN` (code 1 to 10). The sprite is anchored at its centre and sized to the texture on iPhone (setScale 1 on the inner node). The sizes are large, for example Boss 1 is 481 by 417. The boss usually stops with its centre on the top edge, so it covers the top of the screen and overhangs the sides.
+- Stats, read from the emulator after init:
+  - 1: life 30, damage 1
+  - 2: life 50, damage 2
+  - 3: life 65, damage 3
+  - 4: life 70, damage 4
+  - 5: life 80, damage 5
+  - 6: life 120, damage 4
+  - 7: life 120, damage 4
+  - 8: life 120, damage 1
+  - 9: life 180, damage 9
+  - 10: life 70, damage 4
+  - All bosses have shield 0 and score 1000.
+- `Boss::inflictDamage:` works like the ship version: a shield point absorbs a hit, otherwise life drops, and at 0 or below `destroyBoss` runs and it returns YES. Bosses have no announcements, life bar or alarm.
+- Entrance: it starts above the screen (Boss 2 starts off to the side at (833, 406)) and moves to (W/2, H) over 5 seconds, 6 for Boss 7. Boss 6 stops at (W/2, 0.75H) instead.
+- After the entrance (completion block), the physics body is set as a polygon edge loop, scaled to the sprite, with category 2 (enemy) and contact 21 (player, player shot and 0x10). Then the movement loop starts and the attack loop runs forever, one tick per interval. The interval is 1.0 second by default, 0.6 for bosses 3 and 10, 0.7 for 5, about 0.7 plus 0.6 chained for 7 and 8, and 0.8 for 9.
+- Movement loops (repeat forever, coordinates relative to the current position):
+  - 1: bob down 45.44 and back up, 2 seconds each.
+  - 2: (+32, +56.8) in 1 second, (-64, 0) in 2, (0, -56.8) in 1, then back to (W/2, H) in 1.
+  - 3: +128 in 2 seconds, -256 in 4, back to centre in 2.
+  - 4 and 10: +96 in 2, -192 in 4, back in 2.
+  - 5 and 8: +64 in 2, -128 in 4, back in 2.
+  - 6: +160 in 2, -320 in 4, back to (W/2, 0.75H) in 2.
+  - 7: +32 in 5, -64 in 6, back in 4.
+  - 9: +32 in 2, (-64, +56.8) in 4, back in 2.
+- Attack tick (block at 0x20958, shared by all bosses): if the scene is inactive the boss removes itself. atualShootPoint cycles 1, 2, 0. The boss tries a laser from that point: 0 is at (-5w/17, -h/2), 1 is at (0, -h/3) and 2 is at (+5w/17, -h/2), relative to the boss, where w and h are the boss size. The laser only starts if none is active. Then it fires one bullet from boss.x - 0.15*spriteWidth on odd ticks or boss.x + 0.15*spriteWidth on even ticks, at the boss's y. The bullet is a Fireball, size W/12, radius 5, moving to y = -20 over 1.5 seconds. It uses `Enemy_Shot_1.caf`, linked and positional.
+- The boss laser uses the same pattern as the ship laser: `Laser_Charge.caf`, wait 1 second, `Laser_Firing.mp3`, wait 1.5 seconds, then a W/50 by H beam, which stays for laserTime seconds before fading. laserTime is 0 by default, which means a random 3 to 7 seconds. In the traces, lasers appear for bosses 1, 5, 6, 7, 8 and 9 (fixed times: 5 gives 6 seconds, 6 gives 0.5, 7 gives 5, 8 and 9 give 4). Bosses 2, 3, 4 and 10 never started a laser in the traces. Confirm that's real and not a tracer artefact.
+- `destroyBoss`: it plays `explosion_1.caf`, waits 0.3 seconds, plays `Explosion_.mp3`, waits 0.2 seconds, plays `explosion.mp3` (all non-positional). It removes the physics body, plays the explosion animation, then a completion block runs (not traced yet, probably the scene's boss-defeated hook).
+- Bosses don't seem to carry their own looping engine sound in this class. Check whether the chapter scenes attach one, or whether the invisible SpaceShip parts 100 to 105 provide the sound and hitboxes.
+
 ## Open questions
 
 - Input on Windows: steering is decided (left and right arrow keys, see DEVIATIONS.md). Still open: the fixed accelX magnitude, plus the keys for firing (tap), pause (swipe up), speaking life (swipe down) and menu navigation (swipes and double tap).
 - What 0x10 is. Find where that category bit is assigned.
 - `setPhysicsBodySpecs` (hitbox sizes) and the texture sizes from the atlas plist, since sizes affect collisions.
-- Boss behaviour per chapter (`Boss` class) and the boss parts 100 to 105.
+- Which chapters spawn which boss, how the boss parts 100 to 105 relate to the Boss class, and what the boss-destroyed completion block does.
 - Per-chapter level scripts: `ChapterNScene` and `didBeginStage:onChapter:onMode:`, spawn timing, I.C.A.R.U.S. lines, win conditions.
 - Free mode difficulty curve (`nivel_FreeMode`), and power-up spawn timing (`timeToNextPoweUp`, `timeBetweenPowerUps`).
 - Tutorial script (`TutorialScene`), cutscene timing (`CutScene`), menus and view controllers, intro sequence, save data.
