@@ -38,7 +38,7 @@ FW_SIG = {
     'integerForKey:': '@', 'boolForKey:': '@', 'setInteger:forKey:': 'i@', 'setBool:forKey:': 'i@',
     'colorWithRed:green:blue:alpha:': 'ffff', 'getTextureWithName:': '@', 'getTexturesWithPrefix:': '@',
     'textureWithImageNamed:': '@', 'followPath:asOffset:orientToPath:duration:': '@iid',
-    'getRandomNumberBetween:maxNumber:': 'ii', 'removeFromParent': '', 'setHidden:': 'i', 'setPaused:': 'i',
+    'getRandomNumberBetween:maxNumber:': 'ii', 'numberWithInt:': 'i', 'numberWithInteger:': 'i', 'numberWithFloat:': 'f', 'removeFromParent': '', 'setHidden:': 'i', 'setPaused:': 'i',
     'setPan:': 'f', 'setVolume:': 'f', 'moveToPoint:': 'P', 'addLineToPoint:': 'P', 'setRestitution:': 'f',
     'setLastKnownPosition:': 'P', 'setNumberOfLoops:': 'i', 'setMaxAudio:': 'f', 'setBlendMode:': 'i',
     'setParticleLifetime:': 'f', 'setParticleSpeed:': 'f', 'setEmissionAngleRange:': 'f',
@@ -215,7 +215,7 @@ class Tracer:
             elif t == 'i': v = take(1)[0]; out.append(str(struct.unpack('<i', struct.pack('<I', v))[0]))
             elif t == 'A':
                 arr, = take(1); cnt = words[wi] if wi < len(words) else 0
-                out.append('[' + ', '.join(self.desc(self.r32(arr + 4 * k)) for k in range(min(cnt, 16))) + ']')
+                out.append('[' + ', '.join(self.desc(self.r32(arr + 4 * k)) for k in range(min(cnt, 64))) + ']')
             elif t == 'B':
                 v = take(1)[0]; out.append(self.copy_block(v, sel))
             else: out.append(self.desc(take(1)[0]))
@@ -393,6 +393,7 @@ class Tracer:
         if sel == 'getTextureWithName:' or sel == 'textureWithImageNamed:': return self.new_handle('tex(%s)' % args[0])
         if sel == 'getTexturesWithPrefix:': return self.new_handle('textures(%s*)' % args[0].strip("'"))
         if sel == 'stringWithFormat:': return self.new_handle('fmt(%s)' % ','.join(args[:2]))
+        if sel in ('numberWithInt:', 'numberWithInteger:', 'numberWithFloat:', 'numberWithBool:'): return self.new_handle('num(%s)' % args[0])
         if sel == 'objectAtIndexedSubscript:' or sel == 'objectAtIndex:':
             d = self.handles.get(recv, '')
             m = re.match(r"textures[(](.*)[*][)]", d)

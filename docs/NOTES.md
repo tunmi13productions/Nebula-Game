@@ -356,8 +356,8 @@ Full call traces for every boss are in `decompiled/analysis/traces/boss_NN.txt`,
 - `setPhysicsBodySpecs` (hitbox sizes) and the texture sizes from the atlas plist, since sizes affect collisions.
 - Boss parts 100 to 105: only used by the possibly dead chapter 6 stage4Loop (see CHAPTERS.md). Confirm nothing else creates them.
 - Chapter scripts are in `docs/CHAPTERS.md`. Still open there: the exact kill rules for chapters 6 to 9 (to be translated and emulator-tested during assembly), chapter 6 stage4Loop reachability, and when chapter 9 enterGround runs. Also `didBeginStage:onChapter:onMode:`, `didWinStage`, `missionComplete`, `defaultVictoriousAnimation`, the campaign game-over screen and save progress.
-- Free mode difficulty curve (`nivel_FreeMode`), and power-up spawn timing (`timeToNextPoweUp`, `timeBetweenPowerUps`).
-- Tutorial script (`TutorialScene`), cutscene timing (`CutScene`), menus and view controllers, intro sequence, save data.
+- Free mode and tutorial are in `docs/MODES.md`, with a few items to confirm listed there.
+- Cutscene timing (`CutScene`), menus and view controllers (including the tutorial selection order and the Hangar), intro sequence, save data.
 - Versus mode over Game Center: decide later how or whether to port it.
 - The scene size to use on Windows. The original uses device points (320 wide on iPhone). All the formulas scale with W and H, so the port can pick one iPhone resolution (320x568 is the likely choice) and keep it.
 
