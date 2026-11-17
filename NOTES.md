@@ -189,7 +189,7 @@ Points per stat range from 0 to 5.
 
 ## Open questions
 
-- Input on Windows: the original steers by tilt and shoots by tap, with swipes for pause and life. A keyboard mapping will be a deviation and needs a decision with the user. Arrow keys could feed a fixed accelX value, but which value, and should holding a key ramp it?
+- Input on Windows: steering is decided (left and right arrow keys, see DEVIATIONS.md). Still open: the fixed accelX magnitude, plus the keys for firing (tap), pause (swipe up), speaking life (swipe down) and menu navigation (swipes and double tap).
 - What 0x10 and 0x40 really are. Find where those category bits are assigned.
 - Enemy table: `SpaceShip::initEnemyOfType:inParentView:` and `createEnemyWithLife:withScore:withShootingTime:andMovmentTime:inParentView:`. That gives life, score, fire rate and movement per ship code, and the mapping to engine sounds through ShipSounds.plist.
 - Laser behaviour (`laserShoot`, the boss laser, the Laser_Charge and Laser_Firing sounds).
