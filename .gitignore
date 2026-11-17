@@ -3,3 +3,4 @@ decompiled/ipa/
 decompiled/ghidra_project/
 __pycache__/
 *.pyc
+decompiled/analysis/decompiled.c
