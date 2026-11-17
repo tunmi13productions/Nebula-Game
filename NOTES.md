@@ -280,7 +280,7 @@ Other notes:
 
 - Sprite sizing: the texture `SpaceShips_<code>` is scaled to fit a box of W/4.3, keeping its aspect ratio. The ship node then gets scale 0.8. The hitbox comes from `setPhysicsBodySpecs` (not read yet).
 - Life bars (visual only) are skipped for codes 37 to 39, 46 to 50, and 100 and up.
-- This table is transcribed from Ghidra's pseudocode, where several cases share tail code. It's worth cross-checking a few entries against the disassembly before building on it.
+- Verified: the original constructor was run in a Unicorn ARM emulator for all 57 type codes (Objective-C calls stubbed, the createEnemy arguments captured), and every value matches this table. The same technique works for any other table-like function.
 
 ## Recovered mechanics: enemy entrance and behaviour
 
