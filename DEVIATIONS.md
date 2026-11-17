@@ -8,3 +8,9 @@ Each entry is a settled decision. Don't change a deviated behaviour unless the u
 - Changed: holding the right arrow key feeds a fixed positive accelX and holding the left arrow key feeds the same value negated. With neither held, accelX is 0. Everything downstream of accelX (movement state, the move and stabilise calls, talking movement, clamping, the listener update) stays as in the original.
 - Reason: a Windows PC has no accelerometer. Decided by the user on 2026-11-17.
 - Open detail: the fixed accelX magnitude isn't chosen yet. It has to be above 0.05 so the movement state changes. It gets tuned during testing and recorded here once settled.
+
+## VoiceOver-gated behaviour always counts as VoiceOver running
+
+- Original: some announcements and controls only happen when `UIAccessibilityIsVoiceOverRunning()` is true. These include the half-health line, the free-mode score after each kill, and swipe navigation with spoken items in the in-game menus. Without VoiceOver, menu items activate on a single touch.
+- Changed: the port always takes the VoiceOver-running branch, and speaks through Prism.
+- Reason: the port always uses screen reader output, so it matches the original as played with VoiceOver. Decided by the user on 2026-11-17.
