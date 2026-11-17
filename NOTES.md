@@ -187,18 +187,143 @@ Points per stat range from 0 to 5.
 - getShield: points, maximum 5.
 - getSpeed (the divisor of screen width): 50 - 5 * points, minimum 25. A lower value means faster movement.
 
+## Recovered mechanics: damage model (`SpaceShip::inflictDamage:`)
+
+- Damage only applies while receciveDemage is true. It's set true at creation.
+- If shield > 0, the hit removes exactly 1 shield point, whatever its damage, and life is untouched. For the player (ship code 98), it speaks "Your shield is N", or "Shield Down." when the shield reaches 0.
+- Otherwise life -= damage. If life is 0 or less, `destroyShip` runs and the method returns YES (killed).
+- If the ship survives:
+  - The first time life drops to half of max life or below, and only if VoiceOver is running, it speaks "Enemy with less than 50% health." This applies to any ship, the player included, even though the text says "Enemy". Original quirk, keep it.
+  - For the player, it speaks "Your life is N". If life is exactly 1, `alarm.caf` starts repeating every 4 seconds (action key "alarme").
+- `restoreLife`: +1 life up to max. For the player it speaks "Your life is N", and stops the alarm once life is above 1. `restoreShield`: +1 shield up to max shield. For the player it speaks "Your shield is N".
+- All of these speak at rate 0.55.
+- VoiceOver gating: several announcements only happen when `UIAccessibilityIsVoiceOverRunning()` is true. The port always runs with screen reader output through Prism, so those branches should count as running. Confirm with the user before treating it as settled.
+
+## Recovered mechanics: destroying a ship (`SpaceShip::destroyShip`)
+
+- Ship codes 100 to 105 also call the scene's `destroyEnemy:`. In BaseScene that's an empty method that subclasses override.
+- `removeSpaceshipOnAutodestruction: NO` stops the player alarm, removes the laser emitter and laser body for laser ships, removes the life bar, the sprite and all actions.
+- The engine sound is stopped immediately. Its key is the ship's soundIDEnumerator.
+- A random explosion plays at the ship's last position, not linked: one third each `explosion_1.caf`, `Explosion_.mp3`, `explosion.mp3`.
+- The rest is visual (explosion animation and score particles). In free mode the score particle flies toward the score label.
+- For the player: canShoot is set to NO, the "BlockShoot" auto-fire loop is removed, and a death animation plays.
+
+## Recovered mechanics: enemy spawning (`BaseScene::createEnemyWithType:`)
+
+- The ship is created with `initEnemyOfType:inParentView:`.
+- The engine sound is `ShipSounds.plist["SpaceShipSound_<code>"]`. Its extension is caf for code 43 and codes above 46 (that's `Ship_44.caf` and `sonarpedra.caf`), otherwise mp3. It's added to Aureal under the next numeric key, linked to the ship, and started with `executeForeverSoundNamed` (infinite loop). The key is stored on the ship so destroyShip can stop it.
+- So every enemy is a looping engine sound that Aureal moves with it. That's how the player locates enemies.
+- Power-ups (`releasePowerUpOfType:`) work the same way with a looping `beep_radar.caf` linked to the power-up node.
+
+## Recovered mechanics: enemy table (`SpaceShip::initEnemyOfType:inParentView:`)
+
+Each line gives the ship code, then life, score, fire interval in seconds, movement interval in seconds, and the damage the ship's shots (or the ship ramming you) deal. Laser ships are marked. Their fire interval is the gap between laser cycles, and they don't move.
+
+- 0: life 2, score 10, fire 2.0, move 0.9, damage 1
+- 1: life 3, score 12, fire 1.3, move 1.0, damage 1
+- 2: life 5, score 12, fire 2.0, move 1.0, damage 1
+- 3 (laser): life 30, score 25, fire 1.2, move 1.0, damage 1
+- 4: life 20, score 50, fire 1.2, move 0.8, damage 3
+- 5 (laser): life 80, score 55, fire 1.2, move 1.0, damage 3
+- 6: life 25, score 30, fire 1.5, move 3.0, damage 5
+- 7 (laser): life 7, score 25, fire 1.2, move 1.0, damage 1
+- 8 (laser): life 13, score 17, fire 1.5, move 1.0, damage 1
+- 9: life 12, score 35, fire 1.0, move 1.0, damage 1
+- 10: life 13, score 17, fire 1.5, move 1.0, damage 1
+- 11: life 15, score 40, fire 1.0, move 1.0, damage 1
+- 12: life 18, score 35, fire 0.8, move 0.3, damage 2
+- 13: life 46, score 55, fire 1.0, move 1.0, damage 10
+- 14: life 25, score 45, fire 1.0, move 0.5, damage 5
+- 15 (laser): life 50, score 58, fire 1.0, move 1.0, damage 4
+- 16: life 45, score 55, fire 1.0, move 1.0, damage 12
+- 17: life 35, score 50, fire 1.0, move 0.8, damage 4
+- 18: life 60, score 80, fire 0.9, move 1.0, damage 6
+- 19: life 65, score 70, fire 1.5, move 1.5, damage 8
+- 20: life 30, score 29, fire 1.3, move 2.0, damage 3
+- 21: life 32, score 75, fire 1.0, move 1.0, damage 2
+- 22: life 6, score 25, fire 1.0, move 0.2, damage 2
+- 23 (laser): life 35, score 34, fire 1.3, move 1.0, damage 2
+- 24: life 35, score 90, fire 0.8, move 1.0, damage 3
+- 25: life 90, score 175, fire 1.8, move 1.6, damage 8
+- 26: life 42, score 100, fire 0.7, move 1.0, damage 3
+- 27 (laser): life 70, score 110, fire 0.6, move 1.0, damage 4
+- 28: life 40, score 115, fire 1.0, move 0.6, damage 2
+- 29: life 55, score 120, fire 1.2, move 1.0, damage 4
+- 30 (laser): life 57, score 125, fire 1.5, move 1.0, damage 4
+- 31: life 60, score 135, fire 1.6, move 2.0, damage 8
+- 32: life 58, score 130, fire 0.8, move 1.0, damage 6
+- 33: life 63, score 135, fire 0.7, move 1.0, damage 6
+- 34: life 65, score 140, fire 1.0, move 1.1, damage 4
+- 35: life 70, score 150, fire 0.7, move 1.0, damage 6
+- 36: life 75, score 155, fire 0.7, move 1.0, damage 5
+- 37: life 1, score -100, fire 1.0, move 1.0, damage 5. Allied ship (chapter 6 escort). Destroying it costs 100 points.
+- 38: life 1, score -100, fire 1.0, move 2.0, damage 7. Allied.
+- 39: life 1, score -100, fire 1.0, move 3.0, damage 8. Allied.
+- 40: life 15, score 18, fire 1.5, move 1.0, damage 2
+- 41: life 15, score 17, fire 1.4, move 0.5, damage 1
+- 42 (laser): life 19, score 20, fire 1.3, move 1.0, damage 1
+- 43: life 22, score 25, fire 2.0, move 3.0, damage 4
+- 44: life 80, score 270, fire 0.6, move 1.0, damage 8
+- 45: life 140, score 300, fire 0.6, move 1.0, damage 12
+- 46: life 1, score 5, fire 1.0, move 1.0, damage 2. A drifting object (engine sound Ship_50). Probably the chapter 1 fuel tank.
+- 47: life 1, score 5, fire 1.0, move 1.0, damage 2. A rock (sound sonarpedra).
+- 48: life 3, score 10, fire 1.0, move 1.0, damage 3. A rock.
+- 49: life 4, score 15, fire 1.0, move 1.0, damage 4. A rock.
+- 50: life 6, score 20, fire 1.0, move 1.0, damage 5. A rock.
+- 100, 101, 102, 104, 105: life 30, score 1000, fire 1.0, move 1.0, damage 1. These are invisible hitbox parts of a boss (clear-colour rectangles placed at fixed spots). 100 to 102 count as laser ships.
+- 103: life 50, score 1000, fire 1.0, move 1.0, damage 1. A boss part.
+- The player is code 98.
+
+Laser ship codes: 3, 5, 7, 8, 15, 23, 27, 30, 42 and 100 to 102.
+
+Other notes:
+
+- Sprite sizing: the texture `SpaceShips_<code>` is scaled to fit a box of W/4.3, keeping its aspect ratio. The ship node then gets scale 0.8. The hitbox comes from `setPhysicsBodySpecs` (not read yet).
+- Life bars (visual only) are skipped for codes 37 to 39, 46 to 50, and 100 and up.
+- This table is transcribed from Ghidra's pseudocode, where several cases share tail code. It's worth cross-checking a few entries against the disassembly before building on it.
+
+## Recovered mechanics: enemy entrance and behaviour
+
+- Every enemy starts at (W/2, H + its height), just above the top of the screen.
+- Normal ships: they move to a random x between shipW and W - shipW, and a random y between 0.75H and 0.9H, over 1.5 seconds with ease in-out. Then they start shooting (every fire-interval seconds) and moving, and the physics body is switched on.
+- Movement (`SpaceShip::move:`), on each movement-interval tick: 50% chance to do nothing. Otherwise the ship moves to a random x between shipW/2 and W - shipW/2 and a random y between 0.7H and 0.85H, with ease in-out. The move takes the interval itself if that's 1 second or less, 1.5 seconds if it's up to 3, otherwise 2 seconds. If the scene is inactive or the ship's life is 0, the ship removes itself.
+- Laser ships: they move to x = 1.8*shipW or x = W - 1.8*shipW (random side) and a random y between 0.8H and 0.85H, over 1.0 second. Then they start the laser cycle with no movement.
+- Allies (37 to 39), the drifting object (46) and rocks (47 to 50): they move to a random x and y = 1.5H (off the top) over 1.5 seconds. Then the physics body is switched on and `pushSpaceShip` runs: they drift down by 2H over 5 to 8 seconds (allies 2 to 5 seconds, rocks 3 to 6 seconds) with a random sideways drift of up to W/4, spinning. They don't shoot. They hurt by ramming (enemy-with-player contact).
+
+## Recovered mechanics: laser cycle (`SpaceShip::laserShoot`)
+
+Sets laserAtivo and runs this sequence:
+
+1. `Laser_Charge.caf` plays, linked to the ship (positional), and the charge particle effect is created.
+2. Wait 1.0 second.
+3. `Laser_Firing.mp3` plays, linked to the ship, and the effect intensifies.
+4. Wait 1.5 seconds.
+5. The beam's physics body is created: a rectangle W/50 wide and H tall, hanging straight down from the ship (anchor at the top centre). Category 0x40 (the "toaster"), contact with the player.
+6. Wait a random 3 to 7 seconds (whole seconds).
+7. The effect fades and the firing sound is stopped with the fade option (about 3 seconds). The beam is cleaned up and laserAtivo is cleared.
+
+So 0x40 is the enemy laser beam, which hits once on contact begin. The player has about 2.5 seconds of charge and firing sound to get out of the column before the beam turns harmful.
+
+## Recovered mechanics: power-up duration
+
+- Speed and fast-shot power-ups last 10 seconds (the power bar shrinks to 0 over 10 seconds). Then `endPowerUpOfType:` runs.
+- Fast shot (4): speaks "Fast shooting ended" and clears powerUpShot.
+- Speed (3): speaks "SpeedUp ended" and restores velocidadeMovimento to W / getSpeed.
+
+## Recovered mechanics: scoring
+
+- `addScore:` adds the ship's score to scoreCounter.
+- In stage 0 (free mode), with VoiceOver running, it speaks "Score: N." at rate 0.6 after every kill. deathCounter goes up by 1.
+
 ## Open questions
 
 - Input on Windows: steering is decided (left and right arrow keys, see DEVIATIONS.md). Still open: the fixed accelX magnitude, plus the keys for firing (tap), pause (swipe up), speaking life (swipe down) and menu navigation (swipes and double tap).
-- What 0x10 and 0x40 really are. Find where those category bits are assigned.
-- Enemy table: `SpaceShip::initEnemyOfType:inParentView:` and `createEnemyWithLife:withScore:withShootingTime:andMovmentTime:inParentView:`. That gives life, score, fire rate and movement per ship code, and the mapping to engine sounds through ShipSounds.plist.
-- Laser behaviour (`laserShoot`, the boss laser, the Laser_Charge and Laser_Firing sounds).
-- Boss behaviour per chapter (`Boss` class).
+- What 0x10 is. Find where that category bit is assigned.
+- `setPhysicsBodySpecs` (hitbox sizes) and the texture sizes from the atlas plist, since sizes affect collisions.
+- Boss behaviour per chapter (`Boss` class) and the boss parts 100 to 105.
 - Per-chapter level scripts: `ChapterNScene` and `didBeginStage:onChapter:onMode:`, spawn timing, I.C.A.R.U.S. lines, win conditions.
 - Free mode difficulty curve (`nivel_FreeMode`), and power-up spawn timing (`timeToNextPoweUp`, `timeBetweenPowerUps`).
 - Tutorial script (`TutorialScene`), cutscene timing (`CutScene`), menus and view controllers, intro sequence, save data.
-- How the enemy engine sound is attached (`createEnemyWithType:` and `SpaceShipSound_%ld`) and how `beep_radar` and `alarm` are used.
-- Damage model: shield versus life in `inflictDamage:`, plus the half-health announcement and the "Shield down" line.
 - Versus mode over Game Center: decide later how or whether to port it.
 - The scene size to use on Windows. The original uses device points (320 wide on iPhone). All the formulas scale with W and H, so the port can pick one iPhone resolution (320x568 is the likely choice) and keep it.
 
