@@ -1,0 +1,2280 @@
+@interface CampaignScene : SKScene  // instanceSize 184
+  protocols: UIAccelerometerDelegate, UIAlertViewDelegate
+  ivar currentMaxAccelX d @offset 4
+  ivar currentMaxAccelY d @offset 12
+  ivar screenRect {CGRect="origin"{CGPoint="x"f"y"f}"size"{CGSize="width"f"height"f}} @offset 20
+  ivar screenHeight f @offset 36
+  ivar screenWidth f @offset 40
+  ivar generator @"MapGenerator" @offset 44
+  ivar backgroundNode @"SKSpriteNode" @offset 48
+  ivar campaingLabel @"SKLabelNode" @offset 52
+  ivar campaignNode @"SKSpriteNode" @offset 56
+  ivar fase_1 @"SKSpriteNode" @offset 60
+  ivar fase_2 @"SKSpriteNode" @offset 64
+  ivar fase_3 @"SKSpriteNode" @offset 68
+  ivar fase_4 @"SKSpriteNode" @offset 72
+  ivar label_1 @"SKLabelNode" @offset 76
+  ivar label_2 @"SKLabelNode" @offset 80
+  ivar label_3 @"SKLabelNode" @offset 84
+  ivar label_4 @"SKLabelNode" @offset 88
+  ivar holo1 @"SKSpriteNode" @offset 92
+  ivar holo2 @"SKSpriteNode" @offset 96
+  ivar block @"SKSpriteNode" @offset 100
+  ivar backButton @"SKSpriteNode" @offset 104
+  ivar backFromToMenu @"SKSpriteNode" @offset 108
+  ivar swipeRight @"UISwipeGestureRecognizer" @offset 112
+  ivar swipeLeft @"UISwipeGestureRecognizer" @offset 116
+  ivar swipeUp @"UISwipeGestureRecognizer" @offset 120
+  ivar swiping B @offset 124
+  ivar capAtual @"Capitulo" @offset 128
+  ivar alturaBotao f @offset 132
+  ivar larguraBotao f @offset 136
+  ivar alturaBack f @offset 140
+  ivar larguraBack f @offset 144
+  ivar swipeRecognizerRight @"UISwipeGestureRecognizer" @offset 148
+  ivar swipeRecognizerLeft @"UISwipeGestureRecognizer" @offset 152
+  ivar doubleTapRecognizer @"UITapGestureRecognizer" @offset 156
+  ivar menuObjects @"NSArray" @offset 160
+  ivar menuSelection i @offset 164
+  ivar defaults @"NSUserDefaults" @offset 168
+  ivar _shipNumberForLabel l @offset 172
+  ivar _synthesizer @"VoiceSynthesizer" @offset 176
+  ivar _capitulo @"NSNumber" @offset 180
+  property shipNumberForLabel Tl,V_shipNumberForLabel
+  property synthesizer T@"VoiceSynthesizer",&,N,V_synthesizer
+  property capitulo T@"NSNumber",&,N,V_capitulo
+  property hash TI,R
+  property superclass T#,R
+  property description T@"NSString",R,C
+  property debugDescription T@"NSString",R,C
+  - initWithSize:onChapter:  @20@0:4{CGSize=ff}8@16  imp 0x81c1
+  - didMoveToView:  v12@0:4@8  imp 0x95c3
+  - verifypurchasedCampaign  v8@0:4  imp 0x9d19
+  - verifyProgress  v8@0:4  imp 0xa1c1
+  - loadNextChapter  v8@0:4  imp 0xa4e9
+  - loadPreviousChapter  v8@0:4  imp 0xbfa9
+  - touchesEnded:withEvent:  v16@0:4@8@12  imp 0xd957
+  - didSwipeRight:  v12@0:4^@8  imp 0xed4d
+  - didSwipeLeft:  v12@0:4^@8  imp 0xedd7
+  - didSwipeUp:  v12@0:4^@8  imp 0xee61
+  - swipeRightDetected:  v12@0:4@8  imp 0xefc1
+  - swipeLeftDetected:  v12@0:4@8  imp 0xf849
+  - doubleTapDetected:  v12@0:4@8  imp 0x1046d
+  - presentChapterWithStage:  v12@0:4i8  imp 0x10cad
+  - willMoveFromView:  v12@0:4@8  imp 0x113b7
+  - iniciaCompra  v8@0:4  imp 0x11889
+  - alertView:clickedButtonAtIndex:  v16@0:4@8i12  imp 0x11be5
+  - backPressed  v8@0:4  imp 0x11c83
+  - loadingNode  @8@0:4  imp 0x121c3
+  - .cxx_destruct  v8@0:4  imp 0x124a5
+  - shipNumberForLabel  l8@0:4  imp 0x12419
+  - setShipNumberForLabel:  v12@0:4l8  imp 0x12429
+  - synthesizer  @8@0:4  imp 0x12439
+  - setSynthesizer:  v12@0:4@8  imp 0x12449
+  - capitulo  @8@0:4  imp 0x1246f
+  - setCapitulo:  v12@0:4@8  imp 0x1247f
+@end
+
+@interface Chapter2Scene : BaseScene  // instanceSize 81
+  ivar theBoss @"Boss" @offset 48
+  ivar releasedPowerUp c @offset 52
+  ivar smallEnemy i @offset 56
+  ivar mediumEnemy i @offset 60
+  ivar laserEnemy i @offset 64
+  ivar mediumEnemyInScene i @offset 68
+  ivar smallEnemyInScene i @offset 72
+  ivar laserEnemyInScene i @offset 76
+  ivar theEnd c @offset 80
+  - initWithSize:  @16@0:4{CGSize=ff}8  imp 0x126e1
+  - didMoveToView:  v12@0:4@8  imp 0x12a39
+  - nextStage  v8@0:4  imp 0x12df1
+  - intro1  v8@0:4  imp 0x12f23
+  - intro2  v8@0:4  imp 0x13157
+  - destroyEnemy:  v12@0:4i8  imp 0x133c9
+  - createSmallEnemy1  v8@0:4  imp 0x13715
+  - createSmallEnemy2  v8@0:4  imp 0x13773
+  - createMediumEnemy1  v8@0:4  imp 0x137d1
+  - createMediumEnemy2  v8@0:4  imp 0x1382f
+  - createLaserEnemy1  v8@0:4  imp 0x1388d
+  - baseActions  v8@0:4  imp 0x138eb
+  - stage4Loop  v8@0:4  imp 0x1398d
+  - endLvl  v8@0:4  imp 0x13be7
+  - makeBossEntrance  v8@0:4  imp 0x13e2d
+  - endGameVictorious  v8@0:4  imp 0x13ea5
+  - endGame  v8@0:4  imp 0x13f85
+  - .cxx_destruct  v8@0:4  imp 0x14075
+@end
+
+@interface GameViewController : UIViewController  // instanceSize 36
+  ivar skView @"SKView" @offset 4
+  ivar viewPricipal @"UIView" @offset 8
+  ivar synthesizer @"VoiceSynthesizer" @offset 12
+  ivar currentScene @"BaseScene" @offset 16
+  ivar compraCampanhaView @"CompraCampanhaViewController" @offset 20
+  ivar _gameType i @offset 24
+  ivar _invite @"GKInvite" @offset 28
+  ivar _tutorialType i @offset 32
+  property gameType Ti,V_gameType
+  property invite T@"GKInvite",&,V_invite
+  property tutorialType Ti,N,V_tutorialType
+  - viewDidLoad  v8@0:4  imp 0x14089
+  - destruirUltimaCena  v8@0:4  imp 0x148b1
+  - updateCurrentScene:  v12@0:4@8  imp 0x14953
+  - shouldAutorotate  c8@0:4  imp 0x149ef
+  - restart:  v12@0:4^@8  imp 0x149f3
+  - supportedInterfaceOrientations  I8@0:4  imp 0x14aad
+  - getGameType  i8@0:4  imp 0x14af9
+  - proximoTutorial  v8@0:4  imp 0x14b09
+  - novoJogo  v8@0:4  imp 0x14cdd
+  - backMenuCampaign  v8@0:4  imp 0x151db
+  - proximaMissao  v8@0:4  imp 0x1559d
+  - backMenuController  v8@0:4  imp 0x15ab5
+  - chamaCompracampanha  v8@0:4  imp 0x15b4f
+  - transactionCompleted  v8@0:4  imp 0x15bcb
+  - .cxx_destruct  v8@0:4  imp 0x15d31
+  - gameType  i8@0:4  imp 0x15ccf
+  - setGameType:  v12@0:4i8  imp 0x15cdf
+  - invite  @8@0:4  imp 0x15cef
+  - setInvite:  v12@0:4@8  imp 0x15d01
+  - tutorialType  i8@0:4  imp 0x15d11
+  - setTutorialType:  v12@0:4i8  imp 0x15d21
+@end
+
+@interface Shoot : SKSpriteNode  // instanceSize 12
+  ivar _spaceShip @"SKSpriteNode" @offset 4
+  ivar _shoot @"SKSpriteNode" @offset 8
+  property spaceShip T@"SKSpriteNode",&,V_spaceShip
+  property shoot T@"SKSpriteNode",&,V_shoot
+  - .cxx_destruct  v8@0:4  imp 0x15df5
+  - spaceShip  @8@0:4  imp 0x15db1
+  - setSpaceShip:  v12@0:4@8  imp 0x15dc3
+  - shoot  @8@0:4  imp 0x15dd3
+  - setShoot:  v12@0:4@8  imp 0x15de5
+@end
+
+@interface Global : NSObject  // instanceSize 72
+  ivar gameTextures @"SKTextureAtlas" @offset 4
+  ivar gameTextureNames @"NSArray" @offset 8
+  ivar firsNaveEmCena B @offset 12
+  ivar inviteToPlayAccepted c @offset 13
+  ivar purchasedCampaign c @offset 14
+  ivar _freeMode c @offset 15
+  ivar timeShotPoints i @offset 16
+  ivar shieldPoints i @offset 20
+  ivar lifePoints i @offset 24
+  ivar speedPoints i @offset 28
+  ivar shotPoints i @offset 32
+  ivar winPoints i @offset 36
+  ivar atl_cutScene @"SKTextureAtlas" @offset 40
+  ivar avAudioPlayer @"AVAudioPlayer" @offset 44
+  ivar lastChapter i @offset 48
+  ivar lastLevel i @offset 52
+  ivar Explosion_1 @"NSArray" @offset 56
+  ivar Explosion_2 @"NSArray" @offset 60
+  ivar EnemyShoot @"NSArray" @offset 64
+  ivar _mainMenuMusic @"AVAudioPlayer" @offset 68
+  property timeShotPoints Ti,N,VtimeShotPoints
+  property shotPoints Ti,N,VshotPoints
+  property lifePoints Ti,N,VlifePoints
+  property speedPoints Ti,N,VspeedPoints
+  property shieldPoints Ti,N,VshieldPoints
+  property winPoints Ti,N,VwinPoints
+  property firsNaveEmCena TB,N,VfirsNaveEmCena
+  property atl_cutScene T@"SKTextureAtlas",&,N,Vatl_cutScene
+  property Explosion_1 T@"NSArray",&,N,VExplosion_1
+  property Explosion_2 T@"NSArray",&,N,VExplosion_2
+  property EnemyShoot T@"NSArray",&,N,VEnemyShoot
+  property inviteToPlayAccepted Tc,N,VinviteToPlayAccepted
+  property avAudioPlayer T@"AVAudioPlayer",&,N,VavAudioPlayer
+  property lastChapter Ti,N,VlastChapter
+  property lastLevel Ti,N,VlastLevel
+  property purchasedCampaign Tc,N,VpurchasedCampaign
+  property freeMode Tc,N,V_freeMode
+  property mainMenuMusic T@"AVAudioPlayer",&,N,V_mainMenuMusic
+  + sharedManager  @8@0:4  imp 0x15e29
+  - init  @8@0:4  imp 0x15ee1
+  - platform  @8@0:4  imp 0x16629
+  - savePoints  v8@0:4  imp 0x166a1
+  - saveProgress  v8@0:4  imp 0x16937
+  - savePurchasedCampaign  v8@0:4  imp 0x16a39
+  - getTimeShot  f8@0:4  imp 0x16ac9
+  - getShot  i8@0:4  imp 0x16b11
+  - getLife  i8@0:4  imp 0x16b29
+  - getShield  i8@0:4  imp 0x16b45
+  - getSpeed  i8@0:4  imp 0x16b5b
+  - scaleImage:toSize:  @20@0:4@8{CGSize=ff}12  imp 0x16b7f
+  - setBackgroundPortaLisaWithView:withSize:  v20@0:4@8{CGSize=ff}12  imp 0x16be3
+  - formatFontImpact:withSize:  @16@0:4@8i12  imp 0x16cfd
+  - checkImageTelaJPG:  @12@0:4@8  imp 0x16e95
+  - checkImagePalavraPNG:  @12@0:4@8  imp 0x174f9
+  - playAcceptSoundButton  v8@0:4  imp 0x177f5
+  - playSound:withFormat:  v16@0:4@8@12  imp 0x17831
+  - getTextureWithName:  @12@0:4@8  imp 0x17967
+  - getTexturesWithPrefix:  @12@0:4@8  imp 0x179bb
+  - createImageTextWith:active:withSize:initalMargin:xAligment:yAligment:fontMultplyer:  @40@0:4@8c12{CGSize=ff}16f24I28I32f36  imp 0x17ba9
+  - .cxx_destruct  v8@0:4  imp 0x18adf
+  - timeShotPoints  i8@0:4  imp 0x1881b
+  - setTimeShotPoints:  v12@0:4i8  imp 0x1882b
+  - shieldPoints  i8@0:4  imp 0x1883b
+  - setShieldPoints:  v12@0:4i8  imp 0x1884b
+  - lifePoints  i8@0:4  imp 0x1885b
+  - setLifePoints:  v12@0:4i8  imp 0x1886b
+  - speedPoints  i8@0:4  imp 0x1887b
+  - setSpeedPoints:  v12@0:4i8  imp 0x1888b
+  - shotPoints  i8@0:4  imp 0x1889b
+  - setShotPoints:  v12@0:4i8  imp 0x188ab
+  - winPoints  i8@0:4  imp 0x188bb
+  - setWinPoints:  v12@0:4i8  imp 0x188cb
+  - firsNaveEmCena  B8@0:4  imp 0x188db
+  - setFirsNaveEmCena:  v12@0:4B8  imp 0x188eb
+  - inviteToPlayAccepted  c8@0:4  imp 0x188fb
+  - setInviteToPlayAccepted:  v12@0:4c8  imp 0x1890b
+  - atl_cutScene  @8@0:4  imp 0x1891b
+  - setAtl_cutScene:  v12@0:4@8  imp 0x1892b
+  - avAudioPlayer  @8@0:4  imp 0x18951
+  - setAvAudioPlayer:  v12@0:4@8  imp 0x18961
+  - lastChapter  i8@0:4  imp 0x18987
+  - setLastChapter:  v12@0:4i8  imp 0x18997
+  - lastLevel  i8@0:4  imp 0x189a7
+  - setLastLevel:  v12@0:4i8  imp 0x189b7
+  - purchasedCampaign  c8@0:4  imp 0x189c7
+  - setPurchasedCampaign:  v12@0:4c8  imp 0x189d7
+  - Explosion_1  @8@0:4  imp 0x189e7
+  - setExplosion_1:  v12@0:4@8  imp 0x189f7
+  - Explosion_2  @8@0:4  imp 0x18a1d
+  - setExplosion_2:  v12@0:4@8  imp 0x18a2d
+  - EnemyShoot  @8@0:4  imp 0x18a53
+  - setEnemyShoot:  v12@0:4@8  imp 0x18a63
+  - freeMode  c8@0:4  imp 0x18a89
+  - setFreeMode:  v12@0:4c8  imp 0x18a99
+  - mainMenuMusic  @8@0:4  imp 0x18aa9
+  - setMainMenuMusic:  v12@0:4@8  imp 0x18ab9
+@end
+
+@interface AppDelegate : UIResponder  // instanceSize 8
+  protocols: UIApplicationDelegate
+  ivar _window @"UIWindow" @offset 4
+  property window T@"UIWindow",&,N,V_window
+  property hash TI,R
+  property superclass T#,R
+  property description T@"NSString",R,C
+  property debugDescription T@"NSString",R,C
+  - application:didFinishLaunchingWithOptions:  c16@0:4@8@12  imp 0x18b89
+  - applicationWillResignActive:  v12@0:4@8  imp 0x18c1b
+  - applicationDidEnterBackground:  v12@0:4@8  imp 0x18c1d
+  - applicationWillEnterForeground:  v12@0:4@8  imp 0x18c1f
+  - applicationDidBecomeActive:  v12@0:4@8  imp 0x18c21
+  - applicationWillTerminate:  v12@0:4@8  imp 0x18c23
+  - .cxx_destruct  v8@0:4  imp 0x18c5b
+  - window  @8@0:4  imp 0x18c25
+  - setWindow:  v12@0:4@8  imp 0x18c35
+@end
+
+@interface Chapter4Scene : BaseScene  // instanceSize 81
+  ivar theBoss @"Boss" @offset 48
+  ivar releasedPowerUp c @offset 52
+  ivar smallEnemy i @offset 56
+  ivar mediumEnemy i @offset 60
+  ivar laserEnemy i @offset 64
+  ivar mediumEnemyInScene i @offset 68
+  ivar smallEnemyInScene i @offset 72
+  ivar laserEnemyInScene i @offset 76
+  ivar theEnd c @offset 80
+  - initWithSize:  @16@0:4{CGSize=ff}8  imp 0x18c71
+  - didMoveToView:  v12@0:4@8  imp 0x18fc9
+  - nextStage  v8@0:4  imp 0x19381
+  - intro1  v8@0:4  imp 0x194a1
+  - intro2  v8@0:4  imp 0x196fb
+  - intro3  v8@0:4  imp 0x1992f
+  - intro4  v8@0:4  imp 0x19b8b
+  - destroyEnemy:  v12@0:4i8  imp 0x19de7
+  - createSmallEnemy  v8@0:4  imp 0x19ea5
+  - baseActions  v8@0:4  imp 0x19f85
+  - endLvl  v8@0:4  imp 0x1a027
+  - makeBossEntrance1  v8@0:4  imp 0x1a295
+  - makeBossEntrance2  v8@0:4  imp 0x1a30d
+  - makeBossEntrance3  v8@0:4  imp 0x1a385
+  - endGameVictorious  v8@0:4  imp 0x1a3fd
+  - endGame  v8@0:4  imp 0x1a4dd
+  - .cxx_destruct  v8@0:4  imp 0x1a5cd
+@end
+
+@interface Boss : SKSpriteNode  // instanceSize 48
+  ivar life i @offset 4
+  ivar shield i @offset 8
+  ivar bossCode i @offset 12
+  ivar theBoss @"SKSpriteNode" @offset 16
+  ivar parentScene @"BaseScene" @offset 20
+  ivar atualShootPoint i @offset 24
+  ivar laserAtivo c @offset 28
+  ivar laserBody @"Shoot" @offset 32
+  ivar laserEmitter @"SKEmitterNode" @offset 36
+  ivar laserSoundID @"NSString" @offset 40
+  ivar laserTime f @offset 44
+  - initBoss:onParentScene:  @16@0:4i8@12  imp 0x1a5e1
+  - setBossSize  v8@0:4  imp 0x1ac01
+  - defineBody  v8@0:4  imp 0x1afb9
+  - setPositionOnScene  v8@0:4  imp 0x1d559
+  - entranceAction  @8@0:4  imp 0x1d6f5
+  - startingMove  v8@0:4  imp 0x1d9e9
+  - shootingOnPosition:  v16@0:4{CGPoint=ff}8  imp 0x1ef59
+  - soundTiroWithBullet:  v12@0:4@8  imp 0x1f401
+  - getSpaceShipColor:  @12@0:4i8  imp 0x1f435
+  - executeLaserSoundNamed:withFormat:andNode:  v20@0:4@8@12@16  imp 0x1f6a5
+  - executeShootSoundNamed:withFormat:andNode:  v20@0:4@8@12@16  imp 0x1f7f5
+  - laserShootOnPosition:  v16@0:4{CGPoint=ff}8  imp 0x1f919
+  - shootSequence  @8@0:4  imp 0x20541
+  - inflictDamage:  c12@0:4i8  imp 0x229dd
+  - autodestruction  v8@0:4  imp 0x22a27
+  - destroyBoss  v8@0:4  imp 0x22ab1
+  - getShootDamage  i8@0:4  imp 0x22e47
+  - getScore  i8@0:4  imp 0x22e6f
+  - getShipCode  i8@0:4  imp 0x22e75
+  - getLife  i8@0:4  imp 0x22e79
+  - .cxx_destruct  v8@0:4  imp 0x22e89
+@end
+
+@interface IntroViewController : UIViewController  // instanceSize 20
+  protocols: AVAudioPlayerDelegate
+  ivar player @"AVAudioPlayer" @offset 4
+  ivar goMenu c @offset 8
+  ivar timer @"NSTimer" @offset 12
+  ivar _synthesizer @"VoiceSynthesizer" @offset 16
+  property synthesizer T@"VoiceSynthesizer",&,N,V_synthesizer
+  property hash TI,R
+  property superclass T#,R
+  property description T@"NSString",R,C
+  property debugDescription T@"NSString",R,C
+  - initWithNibName:bundle:  @16@0:4@8@12  imp 0x22ef9
+  - viewDidLoad  v8@0:4  imp 0x22f51
+  - avisoDosFones  v8@0:4  imp 0x231f1
+  - showLogo  v8@0:4  imp 0x23e1f
+  - viewDidAppear:  v12@0:4c8  imp 0x24025
+  - playThunder  v8@0:4  imp 0x24081
+  - playSound  v8@0:4  imp 0x24205
+  - animateLogo  v8@0:4  imp 0x24389
+  - didReceiveMemoryWarning  v8@0:4  imp 0x24893
+  - .cxx_destruct  v8@0:4  imp 0x248f5
+  - synthesizer  @8@0:4  imp 0x248bf
+  - setSynthesizer:  v12@0:4@8  imp 0x248cf
+@end
+
+@interface Chapter6Scene : BaseScene  // instanceSize 101
+  ivar bossLife i @offset 48
+  ivar boss @"SKSpriteNode" @offset 52
+  ivar bossRight @"SpaceShip" @offset 56
+  ivar bossLeft @"SpaceShip" @offset 60
+  ivar bossCenter @"SpaceShip" @offset 64
+  ivar releasedPowerUp c @offset 68
+  ivar smallEnemy i @offset 72
+  ivar mediumEnemy i @offset 76
+  ivar laserEnemy i @offset 80
+  ivar mediumEnemyInScene i @offset 84
+  ivar smallEnemyInScene i @offset 88
+  ivar laserEnemyInScene i @offset 92
+  ivar inocentCounter i @offset 96
+  ivar theEnd c @offset 100
+  - initWithSize:  @16@0:4{CGSize=ff}8  imp 0x24941
+  - didMoveToView:  v12@0:4@8  imp 0x24c99
+  - nextStage  v8@0:4  imp 0x25051
+  - intro2  v8@0:4  imp 0x251a3
+  - intro4  v8@0:4  imp 0x25589
+  - destroyEnemy:  v12@0:4i8  imp 0x257ef
+  - createSmallEnemy1  v8@0:4  imp 0x25e79
+  - createSmallEnemy2  v8@0:4  imp 0x25ed7
+  - createSmallEnemy3  v8@0:4  imp 0x25f35
+  - createMediumEnemy1  v8@0:4  imp 0x25f93
+  - createMediumEnemy2  v8@0:4  imp 0x25ff1
+  - createMediumEnemy3  v8@0:4  imp 0x2604f
+  - createLaserEnemy1  v8@0:4  imp 0x260ad
+  - baseActions  v8@0:4  imp 0x2610b
+  - stage4Loop  v8@0:4  imp 0x264c3
+  - endLvl  v8@0:4  imp 0x26507
+  - makeBossEntrance  v8@0:4  imp 0x2674d
+  - initializeBossWiggle  v8@0:4  imp 0x271f3
+  - endGameVictorious  v8@0:4  imp 0x27903
+  - endGame  v8@0:4  imp 0x279e3
+  - .cxx_destruct  v8@0:4  imp 0x27ad3
+@end
+
+@interface MessageWindow : NSObject  // instanceSize 20
+  ivar announcer @"NSString" @offset 4
+  ivar conversationBG @"SKSpriteNode" @offset 8
+  ivar textNode @"DSMultilineLabelNode" @offset 12
+  ivar parentScene @"BaseScene" @offset 16
+  - initMessageWindowOnScene:  @12@0:4@8  imp 0x27b31
+  - showText:for:speaker:  v24@0:4@8d12@20  imp 0x27d73
+  - showMessageWindow  v8@0:4  imp 0x27e11
+  - presentText:withSpeaker:  v16@0:4@8@12  imp 0x27ea9
+  - hideMessageWindow  v8@0:4  imp 0x282e5
+  - .cxx_destruct  v8@0:4  imp 0x28433
+@end
+
+@interface TutorialSelectionViewController : UIViewController  // instanceSize 56
+  ivar backFromInfoToMenu @"UIButton" @offset 4
+  ivar btn_movement @"UIButton" @offset 8
+  ivar btn_enemies @"UIButton" @offset 12
+  ivar btn_attack @"UIButton" @offset 16
+  ivar btn_batalha @"UIButton" @offset 20
+  ivar btn_basico @"UIButton" @offset 24
+  ivar btn_especial @"UIButton" @offset 28
+  ivar preferredLang @"NSString" @offset 32
+  ivar leftDoor @"UIImageView" @offset 36
+  ivar rightDoor @"UIImageView" @offset 40
+  ivar loadView @"UIView" @offset 44
+  ivar synthesizer @"VoiceSynthesizer" @offset 48
+  ivar global @"Global" @offset 52
+  - viewDidLoad  v8@0:4  imp 0x28491
+  - tutorialSelected:  v12@0:4@8  imp 0x2a861
+  - prepareForSegue:sender:  v16@0:4@8@12  imp 0x2b6cb
+  - backPressed  v8@0:4  imp 0x2b899
+  - viewDidAppear:  v12@0:4c8  imp 0x2bb55
+  - .cxx_destruct  v8@0:4  imp 0x2bded
+@end
+
+@interface TutorialScene : BaseScene  // instanceSize 76
+  protocols: UIAccelerometerDelegate, AVAudioPlayerDelegate
+  ivar firstEnemy @"SpaceShip" @offset 48
+  ivar laserShip @"SpaceShip" @offset 52
+  ivar pauseButton @"SKSpriteNode" @offset 56
+  ivar aux i @offset 60
+  ivar voicePlayer @"AVAudioPlayer" @offset 64
+  ivar myBlock @? @offset 68
+  ivar _tutorialType i @offset 72
+  property tutorialType Ti,N,V_tutorialType
+  property hash TI,R
+  property superclass T#,R
+  property description T@"NSString",R,C
+  property debugDescription T@"NSString",R,C
+  - initWithSize:  @16@0:4{CGSize=ff}8  imp 0x2bf01
+  - tutorialManager  v8@0:4  imp 0x2c1d1
+  - tutorial1  v8@0:4  imp 0x2c24b
+  - tutorial2  v8@0:4  imp 0x2c647
+  - checkIfEnded:  v12@0:4@8  imp 0x2d6c9
+  - tutorial3  v8@0:4  imp 0x2d71b
+  - tutorial4  v8@0:4  imp 0x2dc47
+  - tutorial5  v8@0:4  imp 0x2e2ad
+  - tutorial6  v8@0:4  imp 0x2e895
+  - objetos:  v12@0:4@8  imp 0x2f385
+  - createEnemy  v8@0:4  imp 0x2f6b1
+  - destroyEnemy:  v12@0:4i8  imp 0x2f987
+  - endTutorial  v8@0:4  imp 0x2f9d5
+  - stopAudio  v8@0:4  imp 0x2fa33
+  - swipeUpDetected:  v12@0:4@8  imp 0x2fbbb
+  - endGame  v8@0:4  imp 0x2fbcb
+  - didMoveToView:  v12@0:4@8  imp 0x2fc23
+  - wait:toExecute:  v16@0:4i8@?12  imp 0x2fc69
+  - willMoveFromView:  v12@0:4@8  imp 0x2fcc9
+  - playAudioFileNamed:completion:  v16@0:4@8@?12  imp 0x2fd1b
+  - audioPlayerDidFinishPlaying:successfully:  v16@0:4@8c12  imp 0x2fe97
+  - destroiCena  v8@0:4  imp 0x2feb5
+  - .cxx_destruct  v8@0:4  imp 0x2ffdb
+  - tutorialType  i8@0:4  imp 0x2ffbb
+  - setTutorialType:  v12@0:4i8  imp 0x2ffcb
+@end
+
+@interface Chapter3Scene : BaseScene  // instanceSize 81
+  ivar theBoss @"Boss" @offset 48
+  ivar releasedPowerUp c @offset 52
+  ivar smallEnemy i @offset 56
+  ivar mediumEnemy i @offset 60
+  ivar laserEnemy i @offset 64
+  ivar mediumEnemyInScene i @offset 68
+  ivar smallEnemyInScene i @offset 72
+  ivar laserEnemyInScene i @offset 76
+  ivar theEnd c @offset 80
+  - initWithSize:  @16@0:4{CGSize=ff}8  imp 0x300a9
+  - didMoveToView:  v12@0:4@8  imp 0x30401
+  - nextStage  v8@0:4  imp 0x307b9
+  - intro1  v8@0:4  imp 0x308d9
+  - intro3  v8@0:4  imp 0x30b1f
+  - endStage1  v8@0:4  imp 0x30f19
+  - destroyEnemy:  v12@0:4i8  imp 0x31559
+  - createSmallEnemy1  v8@0:4  imp 0x31925
+  - createSmallEnemy2  v8@0:4  imp 0x31983
+  - createSmallEnemy3  v8@0:4  imp 0x319e1
+  - createMediumEnemy1  v8@0:4  imp 0x31a3f
+  - createMediumEnemy2  v8@0:4  imp 0x31a9d
+  - createLaserEnemy1  v8@0:4  imp 0x31afb
+  - baseActions  v8@0:4  imp 0x31b59
+  - stage4Loop  v8@0:4  imp 0x31bfb
+  - makeBossEntrance  v8@0:4  imp 0x31e55
+  - endGameVictorious  v8@0:4  imp 0x32339
+  - endGame  v8@0:4  imp 0x32419
+  - .cxx_destruct  v8@0:4  imp 0x32509
+@end
+
+@interface MainMenuViewController : UIViewController  // instanceSize 72
+  protocols: UIGestureRecognizerDelegate, GKLocalPlayerListener, GKInviteEventListener
+  ivar bgImage @"UIImageView" @offset 4
+  ivar tutorialButton @"UIButton" @offset 8
+  ivar campaignButton @"UIButton" @offset 12
+  ivar freeModeButton @"UIButton" @offset 16
+  ivar versusButton @"UIButton" @offset 20
+  ivar infoButton @"UIButton" @offset 24
+  ivar settingsButton @"UIButton" @offset 28
+  ivar doorAudio @"AVAudioPlayer" @offset 32
+  ivar accessibleElements @"NSMutableArray" @offset 36
+  ivar loadView @"UIView" @offset 40
+  ivar synthesizer @"VoiceSynthesizer" @offset 44
+  ivar defaults @"NSUserDefaults" @offset 48
+  ivar initeAccepted @"GKInvite" @offset 52
+  ivar global @"Global" @offset 56
+  ivar _portaDireita @"UIImageView" @offset 60
+  ivar _portaEsquerda @"UIImageView" @offset 64
+  ivar _imgNebula @"UIImageView" @offset 68
+  property imgNebula T@"UIImageView",W,N,V_imgNebula
+  property portaDireita T@"UIImageView",W,N,V_portaDireita
+  property portaEsquerda T@"UIImageView",W,N,V_portaEsquerda
+  property hash TI,R
+  property superclass T#,R
+  property description T@"NSString",R,C
+  property debugDescription T@"NSString",R,C
+  - viewDidAppear:  v12@0:4c8  imp 0x32521
+  - viewDidLoad  v8@0:4  imp 0x32709
+  - enterBackground  v8@0:4  imp 0x343f3
+  - returnBackground  v8@0:4  imp 0x344a9
+  - player:didAcceptInvite:  v16@0:4@8@12  imp 0x34563
+  - startingMultplayerGameInvited  v8@0:4  imp 0x346d1
+  - player:didRequestMatchWithPlayers:  v16@0:4@8@12  imp 0x3473d
+  - viewWillAppear:  v12@0:4c8  imp 0x34751
+  - openSecondaryMenu:  v12@0:4@8  imp 0x3477d
+  - buttonPressed:  v12@0:4@8  imp 0x3491f
+  - prepareForSegue:sender:  v16@0:4@8@12  imp 0x358e3
+  - stopMenuMusic  v8@0:4  imp 0x35a7b
+  - playMenuMusic  v8@0:4  imp 0x35aed
+  - initializeMainMenuPlayer  v8@0:4  imp 0x35b5f
+  - alertViewTutorial  v8@0:4  imp 0x35ca3
+  - alertView:clickedButtonAtIndex:  v16@0:4@8i12  imp 0x35e43
+  - .cxx_destruct  v8@0:4  imp 0x35f81
+  - portaDireita  @8@0:4  imp 0x35eeb
+  - setPortaDireita:  v12@0:4@8  imp 0x35f09
+  - portaEsquerda  @8@0:4  imp 0x35f1d
+  - setPortaEsquerda:  v12@0:4@8  imp 0x35f3b
+  - imgNebula  @8@0:4  imp 0x35f4f
+  - setImgNebula:  v12@0:4@8  imp 0x35f6d
+@end
+
+@interface DSMultilineLabelNode : SKSpriteNode  // instanceSize 32
+  ivar _fontColor @"UIColor" @offset 4
+  ivar _fontName @"NSString" @offset 8
+  ivar _fontSize f @offset 12
+  ivar _horizontalAlignmentMode i @offset 16
+  ivar _text @"NSString" @offset 20
+  ivar _verticalAlignmentMode i @offset 24
+  ivar _paragraphWidth f @offset 28
+  property fontColor T@"UIColor",&,N,V_fontColor
+  property fontName T@"NSString",C,N,V_fontName
+  property fontSize Tf,N,V_fontSize
+  property horizontalAlignmentMode Ti,N,V_horizontalAlignmentMode
+  property text T@"NSString",C,N,V_text
+  property verticalAlignmentMode Ti,N,V_verticalAlignmentMode
+  property paragraphWidth Tf,N,V_paragraphWidth
+  + labelNodeWithFontNamed:  @12@0:4@8  imp 0x361f7
+  - init  @8@0:4  imp 0x360d7
+  - initWithFontNamed:  @12@0:4@8  imp 0x361b5
+  - setFontColor:  v12@0:4@8  imp 0x36247
+  - setFontName:  v12@0:4@8  imp 0x3628b
+  - setFontSize:  v12@0:4f8  imp 0x362cf
+  - setHorizontalAlignmentMode:  v12@0:4i8  imp 0x362ed
+  - setText:  v12@0:4@8  imp 0x3630b
+  - setVerticalAlignmentMode:  v12@0:4i8  imp 0x3634f
+  - setParagraphWidth:  v12@0:4f8  imp 0x3636d
+  - retexture  v8@0:4  imp 0x3638b
+  - imageFromText:  @12@0:4@8  imp 0x36449
+  - mapSkLabelHorizontalAlignmentToNSTextAlignment:  i12@0:4i8  imp 0x367e9
+  - .cxx_destruct  v8@0:4  imp 0x36875
+  - fontColor  @8@0:4  imp 0x36801
+  - fontName  @8@0:4  imp 0x36811
+  - fontSize  f8@0:4  imp 0x36823
+  - horizontalAlignmentMode  i8@0:4  imp 0x36833
+  - text  @8@0:4  imp 0x36843
+  - verticalAlignmentMode  i8@0:4  imp 0x36855
+  - paragraphWidth  f8@0:4  imp 0x36865
+@end
+
+@interface FreeModeScene : BaseScene  // instanceSize 112
+  protocols: UIAccelerometerDelegate
+  ivar gameView @"GameViewController" @offset 48
+  ivar nodoPause @"SKSpriteNode" @offset 52
+  ivar baseEnemys @"NSArray" @offset 56
+  ivar specialEnemys @"NSArray" @offset 60
+  ivar totalBaseEnemys i @offset 64
+  ivar totalSpecialEnemys i @offset 68
+  ivar baseEnemyInScene i @offset 72
+  ivar specialEnemyInScene i @offset 76
+  ivar iniBaseEnemy i @offset 80
+  ivar finBaseEnemy i @offset 84
+  ivar iniSpecialEnemy i @offset 88
+  ivar finSpecialEnemy i @offset 92
+  ivar nextBaseType i @offset 96
+  ivar nextSpecialType i @offset 100
+  ivar bossCode i @offset 104
+  ivar bossList @"NSArray" @offset 108
+  property hash TI,R
+  property superclass T#,R
+  property description T@"NSString",R,C
+  property debugDescription T@"NSString",R,C
+  - initWithSize:  @16@0:4{CGSize=ff}8  imp 0x368c1
+  - objetos:  v12@0:4@8  imp 0x37559
+  - runBlockOnDifferentThread:withPriority:  v16@0:4@?8l12  imp 0x37883
+  - stopAudio  v8@0:4  imp 0x378b9
+  - endGame  v8@0:4  imp 0x37a2f
+  - didMoveToView:  v12@0:4@8  imp 0x37da1
+  - willMoveFromView:  v12@0:4@8  imp 0x382e7
+  - createFirstEnemy  v8@0:4  imp 0x38313
+  - destroyEnemy:  v12@0:4i8  imp 0x38417
+  - releaseEnemyBaseEnemy  v8@0:4  imp 0x38601
+  - releaseEnemySpecialEnemy  v8@0:4  imp 0x387c1
+  - isBaseEnemy:  c12@0:4i8  imp 0x38981
+  - isSpecialEnemy:  c12@0:4i8  imp 0x38a91
+  - wait:toExecute:  v16@0:4i8@?12  imp 0x38bd1
+  - .cxx_destruct  v8@0:4  imp 0x38c31
+@end
+
+@interface SpaceShip : SKSpriteNode  // instanceSize 148
+  ivar synthesizer @"VoiceSynthesizer" @offset 4
+  ivar spaceshipLife i @offset 8
+  ivar spaceshipMaxLife i @offset 12
+  ivar spaceshipShield i @offset 16
+  ivar spaceshipMaxShield i @offset 20
+  ivar lifeBar @"SKSpriteNode" @offset 24
+  ivar lifeBarBG @"SKSpriteNode" @offset 28
+  ivar lifeBarTop @"SKSpriteNode" @offset 32
+  ivar shieldBar @"SKSpriteNode" @offset 36
+  ivar shieldBarTop @"SKSpriteNode" @offset 40
+  ivar powerUpBar @"SKSpriteNode" @offset 44
+  ivar powerUpBarTop @"SKSpriteNode" @offset 48
+  ivar spaceshipParentScene @"BaseScene" @offset 52
+  ivar entrance @"SKAction" @offset 56
+  ivar parent_height i @offset 60
+  ivar parent_width i @offset 64
+  ivar shipCode i @offset 68
+  ivar score i @offset 72
+  ivar shieldChuckSize d @offset 76
+  ivar lifeChunkSize d @offset 84
+  ivar laserAtivo c @offset 92
+  ivar freeMode c @offset 93
+  ivar reachedHalfHealth c @offset 94
+  ivar arrayPlayerShip @"NSArray" @offset 96
+  ivar mutableSpaceship @"NSMutableArray" @offset 100
+  ivar laserBody @"Shoot" @offset 104
+  ivar shootDamage i @offset 108
+  ivar soundManager @"Aureal" @offset 112
+  ivar arrayLanguages @"NSDictionary" @offset 116
+  ivar laserEmitter @"SKEmitterNode" @offset 120
+  ivar laserSoundID @"NSString" @offset 124
+  ivar backgroundTimerShoot f @offset 128
+  ivar backgroundTimerMove f @offset 132
+  ivar _receciveDemage c @offset 136
+  ivar _spaceshipNode @"SKSpriteNode" @offset 140
+  ivar _soundIDEnumerator l @offset 144
+  property spaceshipNode T@"SKSpriteNode",&,V_spaceshipNode
+  property receciveDemage Tc,V_receciveDemage
+  property soundIDEnumerator Tl,V_soundIDEnumerator
+  - initPlayerInParentView:  @12@0:4@8  imp 0x38ca1
+  - initEnemyPlayerInParentView:  @12@0:4@8  imp 0x39599
+  - setEnemyLife:andShield:  v16@0:4i8i12  imp 0x39c31
+  - createEnemyWithLife:withScore:withShootingTime:andMovmentTime:inParentView:  v28@0:4i8i12f16f20@24  imp 0x3a989
+  - getScore  i8@0:4  imp 0x3bb97
+  - inflictDamage:  c12@0:4i8  imp 0x3bba9
+  - destroyShip  v8@0:4  imp 0x3c1b1
+  - removeSpaceshipOnAutodestruction:  v12@0:4c8  imp 0x3ce6b
+  - initializeEnemyLifeBar  v8@0:4  imp 0x3cf81
+  - initializePLayerLifeBar:larguraTela:inParentView:  v20@0:4i8i12@16  imp 0x3d331
+  - removeLifeBar  v8@0:4  imp 0x3e211
+  - startShooting:  v12@0:4f8  imp 0x3e2b3
+  - shoot:  v12@0:4@8  imp 0x3e459
+  - startMovingWithInterval:  v12@0:4f8  imp 0x3ea41
+  - getSpaceShipColor:  @12@0:4i8  imp 0x3ebe7
+  - move:  v12@0:4@8  imp 0x3ee69
+  - pushSpaceShip  v8@0:4  imp 0x3f119
+  - startingPowerUpOfTipe:  v12@0:4i8  imp 0x3f5d1
+  - moveSpaceshipToLeft  v8@0:4  imp 0x3f7b9
+  - moveSpaceshipToRight  v8@0:4  imp 0x3f909
+  - estabilizaSpaceshipToLeft  v8@0:4  imp 0x3fa59
+  - estabilizaSpaceshipToRight  v8@0:4  imp 0x3fba9
+  - soundTiroWithBullet:  v12@0:4@8  imp 0x3fcf9
+  - executeSoundNamed:withFormat:andNode:  v20@0:4@8@12@16  imp 0x3fdef
+  - executeWithoutLinkSoundNamed:withFormat:inPosition:  v24@0:4@8@12{CGPoint=ff}16  imp 0x3ff7b
+  - getParticleColorful:  @12@0:4^i8  imp 0x4008f
+  - laserShoot  v8@0:4  imp 0x400db
+  - invalidateMovementAndShoot  v8@0:4  imp 0x40dcb
+  - initializeMovement  v8@0:4  imp 0x40df9
+  - initializeShootWithTime:  v12@0:4f8  imp 0x40e0d
+  - manualShot  v8@0:4  imp 0x40e21
+  - restoreLife  v8@0:4  imp 0x41301
+  - restoreShield  v8@0:4  imp 0x414d9
+  - getLife  i8@0:4  imp 0x41689
+  - getShield  i8@0:4  imp 0x41699
+  - getShipCode  i8@0:4  imp 0x416a9
+  - getShootDamage  i8@0:4  imp 0x416b9
+  - initEnemyOfType:inParentView:  @16@0:4i8@12  imp 0x416c9
+  - setPhysicsBodySpecs  v8@0:4  imp 0x42691
+  - .cxx_destruct  v8@0:4  imp 0x4a715
+  - spaceshipNode  @8@0:4  imp 0x4a6b1
+  - setSpaceshipNode:  v12@0:4@8  imp 0x4a6c3
+  - receciveDemage  c8@0:4  imp 0x4a6d3
+  - setRececiveDemage:  v12@0:4c8  imp 0x4a6e5
+  - soundIDEnumerator  l8@0:4  imp 0x4a6f5
+  - setSoundIDEnumerator:  v12@0:4l8  imp 0x4a705
+@end
+
+@interface VoiceSynthesizer : NSObject  // instanceSize 40
+  ivar shouldPauseSynth c @offset 4
+  ivar shouldStopSynth c @offset 5
+  ivar checkIfFinishedSpeaking @"NSTimer" @offset 8
+  ivar checkingFinish c @offset 12
+  ivar myBlock @? @offset 16
+  ivar inBackground c @offset 20
+  ivar ignorante i @offset 24
+  ivar preferredLang @"NSString" @offset 28
+  ivar _synthesizer @"AVSpeechSynthesizer" @offset 32
+  ivar _utterance @"AVSpeechUtterance" @offset 36
+  property preferredLang T@"NSString",&,N,VpreferredLang
+  property synthesizer T@"AVSpeechSynthesizer",&,N,V_synthesizer
+  property utterance T@"AVSpeechUtterance",&,N,V_utterance
+  + sharedManager  @8@0:4  imp 0x4a889
+  - enterBackground  v8@0:4  imp 0x4a941
+  - returnBackground  v8@0:4  imp 0x4aa61
+  - init  @8@0:4  imp 0x4ab91
+  - speakSentence:withRate:  v16@0:4@8f12  imp 0x4ad49
+  - speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:  v32@0:4@8f12d16d24  imp 0x4ae65
+  - stopAllSpeech  v8@0:4  imp 0x4af81
+  - pauseAllSpeech  v8@0:4  imp 0x4afd9
+  - resumeAllSpeech  v8@0:4  imp 0x4b009
+  - speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:  v36@0:4@8f12d16d24@?32  imp 0x4b039
+  - hasFinishedSpeaking:  v12@0:4@8  imp 0x4b159
+  - .cxx_destruct  v8@0:4  imp 0x4b31f
+  - preferredLang  @8@0:4  imp 0x4b27d
+  - setPreferredLang:  v12@0:4@8  imp 0x4b28d
+  - synthesizer  @8@0:4  imp 0x4b2b3
+  - setSynthesizer:  v12@0:4@8  imp 0x4b2c3
+  - utterance  @8@0:4  imp 0x4b2e9
+  - setUtterance:  v12@0:4@8  imp 0x4b2f9
+@end
+
+@interface CutScene : SKSpriteNode  // instanceSize 57
+  protocols: AVAudioPlayerDelegate
+  ivar capNumber i @offset 4
+  ivar synthesizer @"VoiceSynthesizer" @offset 8
+  ivar voicePlayer @"AVAudioPlayer" @offset 12
+  ivar playerBlock @? @offset 16
+  ivar myBlock @? @offset 20
+  ivar ship1 @"SKSpriteNode" @offset 24
+  ivar ship2 @"SKSpriteNode" @offset 28
+  ivar ship3 @"SKSpriteNode" @offset 32
+  ivar nebula @"SKSpriteNode" @offset 36
+  ivar dossierMissao1 @"SKSpriteNode" @offset 40
+  ivar shipsAroundPlanet @"SKSpriteNode" @offset 44
+  ivar destroyedShip @"SKSpriteNode" @offset 48
+  ivar spaceBG @"SKSpriteNode" @offset 52
+  ivar loadingFilesComplete c @offset 56
+  property hash TI,R
+  property superclass T#,R
+  property description T@"NSString",R,C
+  property debugDescription T@"NSString",R,C
+  - init  @8@0:4  imp 0x4b391
+  - playIntroCutSceneChapter:completition:  v16@0:4i8@?12  imp 0x4b3f9
+  - executeCutScene1  v8@0:4  imp 0x4b4a7
+  - createScene2  v8@0:4  imp 0x4c019
+  - createScene3  v8@0:4  imp 0x4c8a1
+  - createScene4  v8@0:4  imp 0x4ce5d
+  - createScene5  v8@0:4  imp 0x4d0ef
+  - createScene6  v8@0:4  imp 0x4d633
+  - createScene7  v8@0:4  imp 0x4d96b
+  - executeCutScene2  v8@0:4  imp 0x4dbdd
+  - createScene8  v8@0:4  imp 0x4dff5
+  - createScene9  v8@0:4  imp 0x4e1c1
+  - executeCutScene3  v8@0:4  imp 0x4e3a9
+  - createScene10  v8@0:4  imp 0x4e7e5
+  - createScene11  v8@0:4  imp 0x4ebf9
+  - createScene12  v8@0:4  imp 0x4f015
+  - executeCutScene4  v8@0:4  imp 0x4f297
+  - createScene13  v8@0:4  imp 0x4f831
+  - createScene14  v8@0:4  imp 0x4fcb9
+  - createScene15  v8@0:4  imp 0x50171
+  - executeCutScene5  v8@0:4  imp 0x50621
+  - createScene16  v8@0:4  imp 0x50b81
+  - createScene17  v8@0:4  imp 0x50e59
+  - createScene18  v8@0:4  imp 0x5106d
+  - createScene19  v8@0:4  imp 0x51329
+  - executeCutScene6  v8@0:4  imp 0x5159d
+  - executeCutScene7  v8@0:4  imp 0x51a81
+  - createScene21  v8@0:4  imp 0x52043
+  - executeCutScene8  v8@0:4  imp 0x52479
+  - createScene22  v8@0:4  imp 0x52909
+  - createScene25  v8@0:4  imp 0x52b81
+  - createScene26  v8@0:4  imp 0x52c41
+  - executeCutScene9  v8@0:4  imp 0x52d0b
+  - createScene23  v8@0:4  imp 0x53059
+  - createScene24  v8@0:4  imp 0x534e1
+  - capIntroWithName  v8@0:4  imp 0x53811
+  - executeSceneFromCapNumber  v8@0:4  imp 0x54031
+  - numberToRoman:  @12@0:4i8  imp 0x540f9
+  - runBlockOnDifferentThread:withPriority:  v16@0:4@?8l12  imp 0x54193
+  - skipCutScene  v8@0:4  imp 0x541c9
+  - playAudioFileNamed:completion:  v16@0:4@8@?12  imp 0x54267
+  - audioPlayerDidFinishPlaying:successfully:  v16@0:4@8c12  imp 0x543e3
+  - .cxx_destruct  v8@0:4  imp 0x54401
+@end
+
+@interface PowerUp : SKSpriteNode  // instanceSize 8
+  ivar powerType i @offset 4
+  - initPowerUpOfType:inParentScene:  @16@0:4i8@12  imp 0x54501
+  - getRandomNumberBetween:maxNumber:  i16@0:4i8i12  imp 0x54bb5
+  - getPowerUpType  i8@0:4  imp 0x54bcf
+@end
+
+@interface Chapter5Scene : BaseScene  // instanceSize 89
+  ivar theBoss @"Boss" @offset 48
+  ivar bossLife i @offset 52
+  ivar boss @"SKSpriteNode" @offset 56
+  ivar releasedPowerUp c @offset 60
+  ivar smallEnemy i @offset 64
+  ivar mediumEnemy i @offset 68
+  ivar laserEnemy i @offset 72
+  ivar mediumEnemyInScene i @offset 76
+  ivar smallEnemyInScene i @offset 80
+  ivar laserEnemyInScene i @offset 84
+  ivar theEnd c @offset 88
+  - initWithSize:  @16@0:4{CGSize=ff}8  imp 0x54be1
+  - didMoveToView:  v12@0:4@8  imp 0x54f39
+  - nextStage  v8@0:4  imp 0x552f1
+  - intro1  v8@0:4  imp 0x55435
+  - destroyEnemy:  v12@0:4i8  imp 0x55845
+  - createSmallEnemy1  v8@0:4  imp 0x55c73
+  - createSmallEnemy2  v8@0:4  imp 0x55cd1
+  - createMediumEnemy1  v8@0:4  imp 0x55d2f
+  - createLaserEnemy1  v8@0:4  imp 0x55d8d
+  - stage4Loop  v8@0:4  imp 0x55deb
+  - endLvl  v8@0:4  imp 0x5603f
+  - makePlayerTurnAround  v8@0:4  imp 0x56285
+  - baseActions  v8@0:4  imp 0x569d7
+  - makeBossEntrance  v8@0:4  imp 0x56a79
+  - endGameVictorious  v8@0:4  imp 0x56af1
+  - endGame  v8@0:4  imp 0x56bd1
+  - .cxx_destruct  v8@0:4  imp 0x56cc1
+@end
+
+@interface CompraCampanhaViewController : UIViewController  // instanceSize 40
+  protocols: SKPaymentTransactionObserver, SKProductsRequestDelegate
+  ivar titleInApp @"UILabel" @offset 4
+  ivar descriptionInApp @"UITextView" @offset 8
+  ivar buyInAppButton @"UIButton" @offset 12
+  ivar restoreButton @"UIButton" @offset 16
+  ivar backButton @"UIButton" @offset 20
+  ivar loading @"UIView" @offset 24
+  ivar _inAppProduct @"SKProduct" @offset 28
+  ivar _inAppID @"NSString" @offset 32
+  ivar _homeViewController @"UIViewController" @offset 36
+  property inAppProduct T@"SKProduct",&,N,V_inAppProduct
+  property inAppID T@"NSString",&,N,V_inAppID
+  property homeViewController T@"UIViewController",&,N,V_homeViewController
+  property hash TI,R
+  property superclass T#,R
+  property description T@"NSString",R,C
+  property debugDescription T@"NSString",R,C
+  - viewDidLoad  v8@0:4  imp 0x56cf9
+  - declareLoadingWhithCancel:  v12@0:4c8  imp 0x58139
+  - restoreAction:  v12@0:4^@8  imp 0x58e3b
+  - buyInAppAction:  v12@0:4^@8  imp 0x58ea3
+  - getProdInfo:  v12@0:4@8  imp 0x58f4d
+  - productsRequest:didReceiveResponse:  v16@0:4@8@12  imp 0x59081
+  - paymentQueue:restoreCompletedTransactionsFailedWithError:  v16@0:4@8@12  imp 0x59499
+  - paymentQueueRestoreCompletedTransactionsFinished:  v12@0:4@8  imp 0x595fd
+  - paymentQueue:updatedTransactions:  v16@0:4@8@12  imp 0x596d1
+  - backAction:  v12@0:4^@8  imp 0x59ab5
+  - inAppUnlocked  v8@0:4  imp 0x59af9
+  - .cxx_destruct  v8@0:4  imp 0x59dab
+  - inAppProduct  @8@0:4  imp 0x59d09
+  - setInAppProduct:  v12@0:4@8  imp 0x59d19
+  - inAppID  @8@0:4  imp 0x59d3f
+  - setInAppID:  v12@0:4@8  imp 0x59d4f
+  - homeViewController  @8@0:4  imp 0x59d75
+  - setHomeViewController:  v12@0:4@8  imp 0x59d85
+@end
+
+@interface Aureal : NSObject  // instanceSize 44
+  protocols: AVAudioPlayerDelegate
+  ivar soundLibrary @"NSMutableDictionary" @offset 4
+  ivar audioUpdate @"NSTimer" @offset 8
+  ivar _parentScene @"SKScene" @offset 12
+  ivar _soundIDEnumerator l @offset 16
+  ivar _listenerPosition {CGPoint="x"f"y"f} @offset 20
+  ivar _maxDistance d @offset 28
+  ivar _max_X d @offset 36
+  property listenerPosition T{CGPoint=ff},V_listenerPosition
+  property maxDistance Td,V_maxDistance
+  property max_X Td,V_max_X
+  property parentScene T@"SKScene",&,V_parentScene
+  property soundIDEnumerator Tl,V_soundIDEnumerator
+  property hash TI,R
+  property superclass T#,R
+  property description T@"NSString",R,C
+  property debugDescription T@"NSString",R,C
+  + sharedManager  @8@0:4  imp 0x59e69
+  - enterBackground  v8@0:4  imp 0x59f21
+  - returnBackground  v8@0:4  imp 0x5a071
+  - init  @8@0:4  imp 0x5a191
+  - configureMaxDistance:andListenerPosition:inScene:  v28@0:4d8{CGPoint=ff}16@24  imp 0x5a2b1
+  - configureMax_Y_Distance:max_X_distance:andListenerPosition:inScene:  v36@0:4d8d16{CGPoint=ff}24@32  imp 0x5a381
+  - addSoundIntoDictionary:ofType:withKey:  c20@0:4@8@12@16  imp 0x5a461
+  - executeOnceSoundNamed:inPosition:  c20@0:4@8{CGPoint=ff}12  imp 0x5a5ed
+  - executeForeverSoundNamed:inPosition:  c20@0:4@8{CGPoint=ff}12  imp 0x5a671
+  - stopSoundNamed:withOptions:  c16@0:4@8I12  imp 0x5a6f7
+  - doVolumeFadeOutOnPlayer:  v12@0:4@8  imp 0x5a771
+  - changeSoundNamed:toPosition:  c20@0:4@8{CGPoint=ff}12  imp 0x5a839
+  - linkSound:toObject:  c16@0:4@8@12  imp 0x5a897
+  - updateAudio:  v12@0:4@8  imp 0x5a963
+  - configurePlayer:toExecuteInPosition:  v20@0:4@8{CGPoint=ff}12  imp 0x5ac25
+  - getNewVolume:  d16@0:4{CGPoint=ff}8  imp 0x5ad43
+  - getAngularPan:  d16@0:4{CGPoint=ff}8  imp 0x5adc5
+  - getLinearPan:  d16@0:4{CGPoint=ff}8  imp 0x5ade1
+  - getPanBasedOnMaxX:  d16@0:4{CGPoint=ff}8  imp 0x5ae1b
+  - getAngleBetweenListenerAndObjectWithPosition:  d16@0:4{CGPoint=ff}8  imp 0x5af2d
+  - maskNormalSound:  d16@0:4d8  imp 0x5af69
+  - maskMuffledSound:  d16@0:4d8  imp 0x5afb9
+  - stopAllSounds  v8@0:4  imp 0x5b009
+  - pauseAllSounds  v8@0:4  imp 0x5b101
+  - resumeAllSounds  v8@0:4  imp 0x5b1df
+  - .cxx_destruct  v8@0:4  imp 0x5b41d
+  - listenerPosition  {CGPoint=ff}8@0:4  imp 0x5b2bd
+  - setListenerPosition:  v16@0:4{CGPoint=ff}8  imp 0x5b2e1
+  - maxDistance  d8@0:4  imp 0x5b30b
+  - setMaxDistance:  v16@0:4d8  imp 0x5b33f
+  - max_X  d8@0:4  imp 0x5b373
+  - setMax_X:  v16@0:4d8  imp 0x5b3a7
+  - parentScene  @8@0:4  imp 0x5b3db
+  - setParentScene:  v12@0:4@8  imp 0x5b3ed
+  - soundIDEnumerator  l8@0:4  imp 0x5b3fd
+  - setSoundIDEnumerator:  v12@0:4l8  imp 0x5b40d
+@end
+
+@interface InfoViewController : UIViewController  // instanceSize 72
+  protocols: MFMailComposeViewControllerDelegate, UITableViewDataSource, UITableViewDelegate
+  ivar infoLabel @"UILabel" @offset 4
+  ivar creditosButton @"UIButton" @offset 8
+  ivar gameNameLabel @"UILabel" @offset 12
+  ivar paginaButton @"UIButton" @offset 16
+  ivar emailButton @"UIButton" @offset 20
+  ivar rightsLabel @"UILabel" @offset 24
+  ivar backFromInfoToMenu @"UIButton" @offset 28
+  ivar contato_img @"UIImageView" @offset 32
+  ivar creditos_img @"UIImageView" @offset 36
+  ivar email_img @"UIImageView" @offset 40
+  ivar site_img @"UIImageView" @offset 44
+  ivar sobre_img @"UIImageView" @offset 48
+  ivar divisoriaLateral @"UIImageView" @offset 52
+  ivar leftDoor @"UIImageView" @offset 56
+  ivar rightDoor @"UIImageView" @offset 60
+  ivar creditados @"NSArray" @offset 64
+  ivar _tableView @"UITableView" @offset 68
+  property tableView T@"UITableView",W,N,V_tableView
+  property hash TI,R
+  property superclass T#,R
+  property description T@"NSString",R,C
+  property debugDescription T@"NSString",R,C
+  - viewDidLoad  v8@0:4  imp 0x5b469
+  - viewDidAppear:  v12@0:4c8  imp 0x5d967
+  - backPressed  v8@0:4  imp 0x5dbb5
+  - paginaAction:  v12@0:4@8  imp 0x5de71
+  - sendMailAction:  v12@0:4^@8  imp 0x5deeb
+  - mailComposeController:didFinishWithResult:error:  v20@0:4@8i12@16  imp 0x5dfe9
+  - creditosPressed  v8@0:4  imp 0x5e085
+  - tableView:heightForRowAtIndexPath:  f16@0:4@8@12  imp 0x5ec21
+  - numberOfSectionsInTableView:  i12@0:4@8  imp 0x5ed41
+  - tableView:numberOfRowsInSection:  i16@0:4@8i12  imp 0x5ed45
+  - tableView:cellForRowAtIndexPath:  @16@0:4@8@12  imp 0x5ed9d
+  - buttonListAction:  v12@0:4@8  imp 0x5f4cd
+  - .cxx_destruct  v8@0:4  imp 0x5f773
+  - tableView  @8@0:4  imp 0x5f741
+  - setTableView:  v12@0:4@8  imp 0x5f75f
+@end
+
+@interface BaseScene : SKScene  // instanceSize 272
+  protocols: SKPhysicsContactDelegate
+  ivar currentMaxAccelX d @offset 4
+  ivar currentMaxAccelY d @offset 12
+  ivar screenRect {CGRect="origin"{CGPoint="x"f"y"f}"size"{CGSize="width"f"height"f}} @offset 20
+  ivar screenHeight f @offset 36
+  ivar screenWidth f @offset 40
+  ivar avAudioPlayer @"AVAudioPlayer" @offset 44
+  ivar synthesizer @"VoiceSynthesizer" @offset 48
+  ivar toaster @"Shoot" @offset 52
+  ivar lastShoot @"Shoot" @offset 56
+  ivar swipeRecognizer @"UISwipeGestureRecognizer" @offset 60
+  ivar swipeRecognizerUp @"UISwipeGestureRecognizer" @offset 64
+  ivar swipeRecognizerRight @"UISwipeGestureRecognizer" @offset 68
+  ivar swipeRecognizerLeft @"UISwipeGestureRecognizer" @offset 72
+  ivar lastMove i @offset 76
+  ivar shouldLateralPlayHitSound c @offset 80
+  ivar talkingMovement c @offset 81
+  ivar sizeBotao {CGSize="width"f"height"f} @offset 84
+  ivar sizeImagemFundo {CGSize="width"f"height"f} @offset 92
+  ivar sizeBotaoPause {CGSize="width"f"height"f} @offset 100
+  ivar pointBotaoMenu f @offset 108
+  ivar ajustePosicao f @offset 112
+  ivar controleultimafase i @offset 116
+  ivar controleTelaMenu i @offset 120
+  ivar namedFireball @"NSMutableArray" @offset 124
+  ivar numeroTutorial i @offset 128
+  ivar valorPosicao f @offset 132
+  ivar _powerUpShot c @offset 136
+  ivar _canShoot c @offset 137
+  ivar _swiping c @offset 138
+  ivar _isActive c @offset 139
+  ivar _allowMove c @offset 140
+  ivar _allowShoot c @offset 141
+  ivar _talkingMove c @offset 142
+  ivar _gamePaused c @offset 143
+  ivar _inMenu c @offset 144
+  ivar _arrayPower_1 @"NSArray" @offset 148
+  ivar _arrayPower_2 @"NSArray" @offset 152
+  ivar _arrayPower_3 @"NSArray" @offset 156
+  ivar _arrayPower_4 @"NSArray" @offset 160
+  ivar _deathCounter i @offset 164
+  ivar _random_1_4 i @offset 168
+  ivar _random_3_5 i @offset 172
+  ivar _nivel_FreeMode i @offset 176
+  ivar _enemyType i @offset 180
+  ivar _segundos i @offset 184
+  ivar _controleMovimentoSpaceship i @offset 188
+  ivar _scoreCounter i @offset 192
+  ivar _score @"SKLabelNode" @offset 196
+  ivar _count @"SKLabelNode" @offset 200
+  ivar _timeToNextPoweUp i @offset 204
+  ivar _timeBetweenPowerUps i @offset 208
+  ivar _introCutScene @"CutScene" @offset 212
+  ivar _cutSceneOn i @offset 216
+  ivar _doubleTapRecognizer @"UITapGestureRecognizer" @offset 220
+  ivar _playerShip @"SpaceShip" @offset 224
+  ivar _velocidadeMovimento f @offset 228
+  ivar _shipSounds @"NSDictionary" @offset 232
+  ivar _audioManager @"Aureal" @offset 236
+  ivar _synthesizer @"VoiceSynthesizer" @offset 240
+  ivar _generator @"MapGenerator" @offset 244
+  ivar _motionManager @"CMMotionManager" @offset 248
+  ivar _stageNumber i @offset 252
+  ivar _menuObjects @"NSArray" @offset 256
+  ivar _menuSelection i @offset 260
+  ivar _powerUpType1 i @offset 264
+  ivar _powerUpType2 i @offset 268
+  property arrayPower_1 T@"NSArray",&,V_arrayPower_1
+  property arrayPower_2 T@"NSArray",&,V_arrayPower_2
+  property arrayPower_3 T@"NSArray",&,V_arrayPower_3
+  property arrayPower_4 T@"NSArray",&,V_arrayPower_4
+  property deathCounter Ti,V_deathCounter
+  property random_1_4 Ti,V_random_1_4
+  property random_3_5 Ti,V_random_3_5
+  property nivel_FreeMode Ti,V_nivel_FreeMode
+  property enemyType Ti,V_enemyType
+  property segundos Ti,V_segundos
+  property controleMovimentoSpaceship Ti,V_controleMovimentoSpaceship
+  property scoreCounter Ti,V_scoreCounter
+  property score T@"SKLabelNode",&,V_score
+  property count T@"SKLabelNode",&,V_count
+  property timeToNextPoweUp Ti,V_timeToNextPoweUp
+  property timeBetweenPowerUps Ti,V_timeBetweenPowerUps
+  property powerUpShot Tc,V_powerUpShot
+  property canShoot Tc,V_canShoot
+  property swiping Tc,V_swiping
+  property isActive Tc,V_isActive
+  property introCutScene T@"CutScene",&,N,V_introCutScene
+  property allowMove Tc,V_allowMove
+  property allowShoot Tc,V_allowShoot
+  property talkingMove Tc,V_talkingMove
+  property cutSceneOn Ti,V_cutSceneOn
+  property doubleTapRecognizer T@"UITapGestureRecognizer",&,V_doubleTapRecognizer
+  property playerShip T@"SpaceShip",&,V_playerShip
+  property gamePaused Tc,V_gamePaused
+  property velocidadeMovimento Tf,V_velocidadeMovimento
+  property shipSounds T@"NSDictionary",&,V_shipSounds
+  property audioManager T@"Aureal",W,N,V_audioManager
+  property synthesizer T@"VoiceSynthesizer",&,N,V_synthesizer
+  property generator T@"MapGenerator",&,V_generator
+  property motionManager T@"CMMotionManager",&,N,V_motionManager
+  property stageNumber Ti,V_stageNumber
+  property menuObjects T@"NSArray",&,N,V_menuObjects
+  property menuSelection Ti,V_menuSelection
+  property inMenu Tc,V_inMenu
+  property powerUpType1 Ti,V_powerUpType1
+  property powerUpType2 Ti,V_powerUpType2
+  property hash TI,R
+  property superclass T#,R
+  property description T@"NSString",R,C
+  property debugDescription T@"NSString",R,C
+  - initBaseScene  v8@0:4  imp 0x5f8d1
+  - createPlayerShip  v8@0:4  imp 0x60011
+  - returnBackground  v8@0:4  imp 0x60271
+  - enterBackground  v8@0:4  imp 0x6031b
+  - initializingTexture  v8@0:4  imp 0x603a7
+  - baseActions  v8@0:4  imp 0x60531
+  - talkingMoveAction  v8@0:4  imp 0x609e7
+  - playerShoot  v8@0:4  imp 0x60c19
+  - didBeginContact:  v12@0:4@8  imp 0x61169
+  - didEndContact:  v12@0:4@8  imp 0x63517
+  - destroyEnemy:  v12@0:4i8  imp 0x6364d
+  - inflictDamageInEnemy:  v12@0:4i8  imp 0x6364f
+  - inicializarCoreMotion  v8@0:4  imp 0x63651
+  - outputAccelerationData:  v32@0:4{?=ddd}8  imp 0x63841
+  - update:  v16@0:4d8  imp 0x63909
+  - createEnemyWithType:  @12@0:4i8  imp 0x63dd1
+  - releasePowerUpOfType:  v12@0:4i8  imp 0x64107
+  - endPowerUpOfType:  v12@0:4i8  imp 0x642b7
+  - destroyScene  v8@0:4  imp 0x644a1
+  - endGame  v8@0:4  imp 0x64609
+  - didMoveToView:  v12@0:4@8  imp 0x64889
+  - startingShootLoop  v8@0:4  imp 0x64b25
+  - willMoveFromView:  v12@0:4@8  imp 0x64cd1
+  - touchesBegan:withEvent:  v16@0:4@8@12  imp 0x64db7
+  - touchesEnded:withEvent:  v16@0:4@8@12  imp 0x65043
+  - callPause  v8@0:4  imp 0x6510d
+  - pauseGame  v8@0:4  imp 0x658b9
+  - continueGame  v8@0:4  imp 0x6594f
+  - swipeUpDetected:  v12@0:4@8  imp 0x659f9
+  - swipeDownDetected:  v12@0:4@8  imp 0x65a59
+  - swipeRightDetected:  v12@0:4@8  imp 0x65b83
+  - swipeLeftDetected:  v12@0:4@8  imp 0x65ddb
+  - doubleTapDetected:  v12@0:4@8  imp 0x65f1d
+  - createSwooshSoundFields  v8@0:4  imp 0x666c9
+  - removeLifeBar  v8@0:4  imp 0x66f09
+  - createSideWalls  v8@0:4  imp 0x66f41
+  - getRandomNumberBetween:maxNumber:  i16@0:4i8i12  imp 0x672fb
+  - tutorialCompleto  v8@0:4  imp 0x6731b
+  - telaGameOver  v8@0:4  imp 0x67c59
+  - telaGameOverCampanha  v8@0:4  imp 0x68a4d
+  - missionComplete  v8@0:4  imp 0x692d7
+  - endMultiplayerGame  v8@0:4  imp 0x6a1bd
+  - cancelEndMultplayer  v8@0:4  imp 0x6a243
+  - playSound:  v12@0:4@8  imp 0x6a2c9
+  - addScore:  v12@0:4@8  imp 0x6a3e9
+  - regularSizeBotaoIpadMenu  v8@0:4  imp 0x6a5d9
+  - defaultVictoriousAnimation  v8@0:4  imp 0x6a7b1
+  - blockTouch:  v12@0:4c8  imp 0x6ab43
+  - destroiTudo  v8@0:4  imp 0x6ab87
+  - didBeginStage:onChapter:onMode:  v20@0:4i8i12@16  imp 0x6b097
+  - didWinStage:onChapter:onMode:  v20@0:4i8i12@16  imp 0x6b145
+  - didFailStage:onChapter:onMode:  v20@0:4i8i12@16  imp 0x6b1f3
+  - .cxx_destruct  v8@0:4  imp 0x6b831
+  - arrayPower_1  @8@0:4  imp 0x6b2a1
+  - setArrayPower_1:  v12@0:4@8  imp 0x6b2b3
+  - arrayPower_2  @8@0:4  imp 0x6b2c3
+  - setArrayPower_2:  v12@0:4@8  imp 0x6b2d5
+  - arrayPower_3  @8@0:4  imp 0x6b2e5
+  - setArrayPower_3:  v12@0:4@8  imp 0x6b2f7
+  - arrayPower_4  @8@0:4  imp 0x6b307
+  - setArrayPower_4:  v12@0:4@8  imp 0x6b319
+  - deathCounter  i8@0:4  imp 0x6b329
+  - setDeathCounter:  v12@0:4i8  imp 0x6b339
+  - random_1_4  i8@0:4  imp 0x6b349
+  - setRandom_1_4:  v12@0:4i8  imp 0x6b359
+  - random_3_5  i8@0:4  imp 0x6b369
+  - setRandom_3_5:  v12@0:4i8  imp 0x6b379
+  - nivel_FreeMode  i8@0:4  imp 0x6b389
+  - setNivel_FreeMode:  v12@0:4i8  imp 0x6b399
+  - enemyType  i8@0:4  imp 0x6b3a9
+  - setEnemyType:  v12@0:4i8  imp 0x6b3b9
+  - segundos  i8@0:4  imp 0x6b3c9
+  - setSegundos:  v12@0:4i8  imp 0x6b3d9
+  - controleMovimentoSpaceship  i8@0:4  imp 0x6b3e9
+  - setControleMovimentoSpaceship:  v12@0:4i8  imp 0x6b3f9
+  - scoreCounter  i8@0:4  imp 0x6b409
+  - setScoreCounter:  v12@0:4i8  imp 0x6b419
+  - score  @8@0:4  imp 0x6b429
+  - setScore:  v12@0:4@8  imp 0x6b43b
+  - count  @8@0:4  imp 0x6b44b
+  - setCount:  v12@0:4@8  imp 0x6b45d
+  - timeToNextPoweUp  i8@0:4  imp 0x6b46d
+  - setTimeToNextPoweUp:  v12@0:4i8  imp 0x6b47d
+  - timeBetweenPowerUps  i8@0:4  imp 0x6b48d
+  - setTimeBetweenPowerUps:  v12@0:4i8  imp 0x6b49d
+  - powerUpShot  c8@0:4  imp 0x6b4ad
+  - setPowerUpShot:  v12@0:4c8  imp 0x6b4bf
+  - canShoot  c8@0:4  imp 0x6b4cf
+  - setCanShoot:  v12@0:4c8  imp 0x6b4e1
+  - swiping  c8@0:4  imp 0x6b4f1
+  - setSwiping:  v12@0:4c8  imp 0x6b503
+  - isActive  c8@0:4  imp 0x6b513
+  - setIsActive:  v12@0:4c8  imp 0x6b525
+  - introCutScene  @8@0:4  imp 0x6b535
+  - setIntroCutScene:  v12@0:4@8  imp 0x6b545
+  - allowMove  c8@0:4  imp 0x6b56b
+  - setAllowMove:  v12@0:4c8  imp 0x6b57d
+  - allowShoot  c8@0:4  imp 0x6b58d
+  - setAllowShoot:  v12@0:4c8  imp 0x6b59f
+  - talkingMove  c8@0:4  imp 0x6b5af
+  - setTalkingMove:  v12@0:4c8  imp 0x6b5c1
+  - cutSceneOn  i8@0:4  imp 0x6b5d1
+  - setCutSceneOn:  v12@0:4i8  imp 0x6b5e1
+  - doubleTapRecognizer  @8@0:4  imp 0x6b5f1
+  - setDoubleTapRecognizer:  v12@0:4@8  imp 0x6b603
+  - playerShip  @8@0:4  imp 0x6b613
+  - setPlayerShip:  v12@0:4@8  imp 0x6b625
+  - gamePaused  c8@0:4  imp 0x6b635
+  - setGamePaused:  v12@0:4c8  imp 0x6b647
+  - velocidadeMovimento  f8@0:4  imp 0x6b657
+  - setVelocidadeMovimento:  v12@0:4f8  imp 0x6b667
+  - shipSounds  @8@0:4  imp 0x6b677
+  - setShipSounds:  v12@0:4@8  imp 0x6b689
+  - audioManager  @8@0:4  imp 0x6b699
+  - setAudioManager:  v12@0:4@8  imp 0x6b6b7
+  - synthesizer  @8@0:4  imp 0x6b6cb
+  - setSynthesizer:  v12@0:4@8  imp 0x6b6db
+  - generator  @8@0:4  imp 0x6b701
+  - setGenerator:  v12@0:4@8  imp 0x6b713
+  - motionManager  @8@0:4  imp 0x6b723
+  - setMotionManager:  v12@0:4@8  imp 0x6b733
+  - stageNumber  i8@0:4  imp 0x6b759
+  - setStageNumber:  v12@0:4i8  imp 0x6b769
+  - menuObjects  @8@0:4  imp 0x6b779
+  - setMenuObjects:  v12@0:4@8  imp 0x6b789
+  - menuSelection  i8@0:4  imp 0x6b7af
+  - setMenuSelection:  v12@0:4i8  imp 0x6b7bf
+  - inMenu  c8@0:4  imp 0x6b7cf
+  - setInMenu:  v12@0:4c8  imp 0x6b7e1
+  - powerUpType1  i8@0:4  imp 0x6b7f1
+  - setPowerUpType1:  v12@0:4i8  imp 0x6b801
+  - powerUpType2  i8@0:4  imp 0x6b811
+  - setPowerUpType2:  v12@0:4i8  imp 0x6b821
+@end
+
+@interface Chapter1Scene : BaseScene  // instanceSize 81
+  ivar theBoss @"Boss" @offset 48
+  ivar releasedPowerUp c @offset 52
+  ivar smallEnemy i @offset 56
+  ivar mediumEnemy i @offset 60
+  ivar laserEnemy i @offset 64
+  ivar mediumEnemyInScene i @offset 68
+  ivar smallEnemyInScene i @offset 72
+  ivar laserEnemyInScene i @offset 76
+  ivar theEnd c @offset 80
+  - initWithSize:  @16@0:4{CGSize=ff}8  imp 0x6ba19
+  - intro  v8@0:4  imp 0x6bd71
+  - intro2  v8@0:4  imp 0x6bfb5
+  - intro3  v8@0:4  imp 0x6bff3
+  - didMoveToView:  v12@0:4@8  imp 0x6c24b
+  - nextStage  v8@0:4  imp 0x6c655
+  - destroyEnemy:  v12@0:4i8  imp 0x6c775
+  - createSmallEnemy  v8@0:4  imp 0x6cabb
+  - createTank  v8@0:4  imp 0x6cb19
+  - createMediumEnemy  v8@0:4  imp 0x6cb77
+  - createLaserEnemy1  v8@0:4  imp 0x6cbd5
+  - createLaserEnemy2  v8@0:4  imp 0x6cc33
+  - releaseLife  v8@0:4  imp 0x6cc91
+  - baseActions  v8@0:4  imp 0x6ce3f
+  - stage4Loop  v8@0:4  imp 0x6cedf
+  - endLvl  v8@0:4  imp 0x6d381
+  - makeBossEntrance  v8@0:4  imp 0x6dc61
+  - endGameVictorious  v8@0:4  imp 0x6e145
+  - endGame  v8@0:4  imp 0x6e225
+  - .cxx_destruct  v8@0:4  imp 0x6e315
+@end
+
+@interface MapGenerator : NSObject  // instanceSize 56
+  ivar _shouldStopRotation c @offset 4
+  ivar _shouldGenerateForeground c @offset 5
+  ivar _scene @"SKScene" @offset 8
+  ivar _bg1_part1 @"SKSpriteNode" @offset 12
+  ivar _bg1_part2 @"SKSpriteNode" @offset 16
+  ivar _bg2_part1 @"SKSpriteNode" @offset 20
+  ivar _bg2_part2 @"SKSpriteNode" @offset 24
+  ivar _mapEmitter @"SKEmitterNode" @offset 28
+  ivar _mapAuxilliaryEmitter @"SKEmitterNode" @offset 32
+  ivar _mapTimerBGDetails @"NSTimer" @offset 36
+  ivar _backgroundTimerDetail f @offset 40
+  ivar _mapTimerBG @"NSTimer" @offset 44
+  ivar _mapTimerFG @"NSTimer" @offset 48
+  ivar _mapBGRotationTimer @"NSTimer" @offset 52
+  property scene T@"SKScene",&,N,V_scene
+  property bg1_part1 T@"SKSpriteNode",&,N,V_bg1_part1
+  property bg1_part2 T@"SKSpriteNode",&,N,V_bg1_part2
+  property bg2_part1 T@"SKSpriteNode",&,N,V_bg2_part1
+  property bg2_part2 T@"SKSpriteNode",&,N,V_bg2_part2
+  property mapEmitter T@"SKEmitterNode",&,N,V_mapEmitter
+  property mapAuxilliaryEmitter T@"SKEmitterNode",&,N,V_mapAuxilliaryEmitter
+  property mapTimerBGDetails T@"NSTimer",&,N,V_mapTimerBGDetails
+  property backgroundTimerDetail Tf,V_backgroundTimerDetail
+  property mapTimerBG T@"NSTimer",&,N,V_mapTimerBG
+  property mapTimerFG T@"NSTimer",&,N,V_mapTimerFG
+  property mapBGRotationTimer T@"NSTimer",&,N,V_mapBGRotationTimer
+  property shouldStopRotation Tc,N,V_shouldStopRotation
+  property shouldGenerateForeground Tc,N,V_shouldGenerateForeground
+  - initFreemodeMapInScene:  @12@0:4@8  imp 0x6e329
+  - initVersusMapInScene:  @12@0:4@8  imp 0x6e4c9
+  - beginNebulaGenerationForVersus  v8@0:4  imp 0x6e7d1
+  - enterBackground  v8@0:4  imp 0x6e889
+  - returnBackground  v8@0:4  imp 0x6e951
+  - createSpaceBackground1  v8@0:4  imp 0x6ea79
+  - createSpaceBackground2  v8@0:4  imp 0x6eb81
+  - createSpaceForeground  v8@0:4  imp 0x6ec31
+  - makeANebula:  v12@0:4@8  imp 0x6ecc1
+  - makeAPlanet:  v12@0:4@8  imp 0x6f111
+  - initChapter1Stage:onScene:  @16@0:4i8@12  imp 0x6f329
+  - createChapter1_Scene1BG2  v8@0:4  imp 0x6f569
+  - createChapter1_Scene2BG2  v8@0:4  imp 0x6f579
+  - createChapter1_Scene3BG2  v8@0:4  imp 0x6f60f
+  - createChapter1_Scene4BG2  v8@0:4  imp 0x6f6a5
+  - makeAFuelTank:  v12@0:4@8  imp 0x6f741
+  - initChapter2Stage:onScene:  @16@0:4i8@12  imp 0x6fa29
+  - createChapter2_Scene1BG2  v8@0:4  imp 0x6fc69
+  - createChapter2_Scene2BG2  v8@0:4  imp 0x6fc79
+  - createChapter2_Scene3BG2  v8@0:4  imp 0x6fd41
+  - createChapter2_Scene4BG2  v8@0:4  imp 0x6fe29
+  - initChapter3Stage:onScene:  @16@0:4i8@12  imp 0x700d1
+  - createChapter3_Scene1BG2  v8@0:4  imp 0x703c1
+  - createChapter3_Scene2BG2  v8@0:4  imp 0x70783
+  - createChapter3_Scene3BG2  v8@0:4  imp 0x70793
+  - createChapter3_Scene4BG2  v8@0:4  imp 0x70871
+  - initChapter4Stage:onScene:  @16@0:4i8@12  imp 0x70bc9
+  - createChapter4_Scene1BG2  v8@0:4  imp 0x70de9
+  - createChapter4_Scene2BG2  v8@0:4  imp 0x71101
+  - createSaturnDistantDebreeEmitter:  v12@0:4@8  imp 0x713d1
+  - createChapter4_Scene3BG2  v8@0:4  imp 0x718a1
+  - createChapter4_Scene4BG2  v8@0:4  imp 0x71bc1
+  - initChapter5Stage:onScene:  @16@0:4i8@12  imp 0x71f19
+  - createChapter5_Scene1BG2  v8@0:4  imp 0x72209
+  - createChapter5_Scene2BG2  v8@0:4  imp 0x726d9
+  - createChapter5_Scene3BG2  v8@0:4  imp 0x72b31
+  - createChapter5_Scene4BG2  v8@0:4  imp 0x72e31
+  - initChapter6Stage:onScene:  @16@0:4i8@12  imp 0x72e89
+  - createChapter6_Scene1BG2  v8@0:4  imp 0x73051
+  - createChapter6_Scene2BG2  v8@0:4  imp 0x73061
+  - createChapter6_Scene3BG2  v8@0:4  imp 0x73071
+  - createChapter6_Scene4BG2  v8@0:4  imp 0x73111
+  - startBackgroundSpaceshipsGoingUp  v8@0:4  imp 0x73121
+  - createSpaceshipsGoingUpOnBackground:  v12@0:4@8  imp 0x7317d
+  - startBackgroundSpaceshipsGoingDown  v8@0:4  imp 0x737bf
+  - createSpaceshipsGoingDownOnBackground:  v12@0:4@8  imp 0x73821
+  - initChapter7Stage:onScene:  @16@0:4i8@12  imp 0x73e49
+  - createChapter7_Scene1BG2  v8@0:4  imp 0x73fe9
+  - initChapter8Stage:onScene:  @16@0:4i8@12  imp 0x740f9
+  - createChapter8_Scene1BG2  v8@0:4  imp 0x742d1
+  - createChapter8_Scene2BG2  v8@0:4  imp 0x743e1
+  - createChapter8_Scene3BG2  v8@0:4  imp 0x743e3
+  - createChapter8_Scene4BG2  v8@0:4  imp 0x743e5
+  - initChapter9Stage:onScene:  @16@0:4i8@12  imp 0x743e7
+  - createChapter9_Scene1BG2  v8@0:4  imp 0x744f9
+  - createChapter9_Scene2BG2  v8@0:4  imp 0x745ab
+  - createChapter9_Scene3BG2  v8@0:4  imp 0x7465d
+  - createChapter9_Scene4BG2  v8@0:4  imp 0x74711
+  - rotateBackground:colorize:rotationTime:use2Layers:  v28@0:4@8@12d16c24  imp 0x749a1
+  - initializeBackground1LayersWithTexture:andColor:  v16@0:4@8@12  imp 0x74ac1
+  - initializeBackground2LayersWithTexture:andColor:  v16@0:4@8@12  imp 0x74eab
+  - calculateRotationSize:  d16@0:4d8  imp 0x75209
+  - continueRotating:  v12@0:4@8  imp 0x75271
+  - makeItem:crossTheScreenWithDuration:onZPosition:xPosition:andRotation:colorizeWithColor:  v44@0:4@8d12I20d24d32@40  imp 0x75ab1
+  - makeItemWithTexture:crossTheScreenWithDuration:onZPosition:xPosition:andSize:colorizeWithColor:  v44@0:4@8d12I20d24{CGSize=ff}32@40  imp 0x75de1
+  - initializeRandomDetailsWithInterval:andColor:  v20@0:4d8@16  imp 0x76131
+  - initializeRandomDetailsWithInterval:color:onZPosition:  v24@0:4d8@16I20  imp 0x76295
+  - createMapDetail:  v12@0:4@8  imp 0x76425
+  - initializeStarEmitter  v8@0:4  imp 0x766b9
+  - initializeFTLParticleEmitter  v8@0:4  imp 0x76ad9
+  - runBlockOnDifferentThread:withPriority:  v16@0:4@?8l12  imp 0x76e4f
+  - suspendGeneratingForeground  v8@0:4  imp 0x76e85
+  - resumeForegroundGeneration  v8@0:4  imp 0x76e97
+  - stopTheMapGenerator  v8@0:4  imp 0x76ea9
+  - .cxx_destruct  v8@0:4  imp 0x7735f
+  - scene  @8@0:4  imp 0x770ad
+  - setScene:  v12@0:4@8  imp 0x770bd
+  - bg1_part1  @8@0:4  imp 0x770e3
+  - setBg1_part1:  v12@0:4@8  imp 0x770f3
+  - bg1_part2  @8@0:4  imp 0x77119
+  - setBg1_part2:  v12@0:4@8  imp 0x77129
+  - bg2_part1  @8@0:4  imp 0x7714f
+  - setBg2_part1:  v12@0:4@8  imp 0x7715f
+  - bg2_part2  @8@0:4  imp 0x77185
+  - setBg2_part2:  v12@0:4@8  imp 0x77195
+  - mapEmitter  @8@0:4  imp 0x771bb
+  - setMapEmitter:  v12@0:4@8  imp 0x771cb
+  - mapAuxilliaryEmitter  @8@0:4  imp 0x771f1
+  - setMapAuxilliaryEmitter:  v12@0:4@8  imp 0x77201
+  - mapTimerBGDetails  @8@0:4  imp 0x77227
+  - setMapTimerBGDetails:  v12@0:4@8  imp 0x77237
+  - backgroundTimerDetail  f8@0:4  imp 0x7725d
+  - setBackgroundTimerDetail:  v12@0:4f8  imp 0x7726d
+  - mapTimerBG  @8@0:4  imp 0x7727d
+  - setMapTimerBG:  v12@0:4@8  imp 0x7728d
+  - mapTimerFG  @8@0:4  imp 0x772b3
+  - setMapTimerFG:  v12@0:4@8  imp 0x772c3
+  - mapBGRotationTimer  @8@0:4  imp 0x772e9
+  - setMapBGRotationTimer:  v12@0:4@8  imp 0x772f9
+  - shouldStopRotation  c8@0:4  imp 0x7731f
+  - setShouldStopRotation:  v12@0:4c8  imp 0x7732f
+  - shouldGenerateForeground  c8@0:4  imp 0x7733f
+  - setShouldGenerateForeground:  v12@0:4c8  imp 0x7734f
+@end
+
+@interface Capitulo : NSObject  // instanceSize 44
+  ivar intro @"NSString" @offset 4
+  ivar title @"NSString" @offset 8
+  ivar labelLvl1 @"NSString" @offset 12
+  ivar labelLvl2 @"NSString" @offset 16
+  ivar labelLvl3 @"NSString" @offset 20
+  ivar labelLvl4 @"NSString" @offset 24
+  ivar sceneLvl @"SKScene" @offset 28
+  ivar arrayImages @"NSArray" @offset 32
+  ivar parentScene @"SKScene" @offset 36
+  ivar romanNumber @"NSString" @offset 40
+  - initCapitulo:onParentScene:  @16@0:4@8@12  imp 0x77449
+  - buildImages  v8@0:4  imp 0x77871
+  - getIntro  @8@0:4  imp 0x78001
+  - getLabel:  @12@0:4i8  imp 0x78019
+  - getNode:  @12@0:4i8  imp 0x78079
+  - numberToRoman:  @12@0:4i8  imp 0x780cd
+  - .cxx_destruct  v8@0:4  imp 0x78167
+@end
+
+@interface Chapter7Scene : BaseScene  // instanceSize 101
+  ivar theBoss @"Boss" @offset 48
+  ivar bossLife i @offset 52
+  ivar boss @"SKSpriteNode" @offset 56
+  ivar bossRight @"SpaceShip" @offset 60
+  ivar bossLeft @"SpaceShip" @offset 64
+  ivar bossCenter @"SpaceShip" @offset 68
+  ivar remove c @offset 72
+  ivar releasedPowerUp c @offset 73
+  ivar smallEnemy i @offset 76
+  ivar mediumEnemy i @offset 80
+  ivar laserEnemy i @offset 84
+  ivar mediumEnemyInScene i @offset 88
+  ivar smallEnemyInScene i @offset 92
+  ivar laserEnemyInScene i @offset 96
+  ivar theEnd c @offset 100
+  - initWithSize:  @16@0:4{CGSize=ff}8  imp 0x78239
+  - didMoveToView:  v12@0:4@8  imp 0x78591
+  - nextStage  v8@0:4  imp 0x78949
+  - intro1  v8@0:4  imp 0x78a69
+  - intro2  v8@0:4  imp 0x78e57
+  - intro3  v8@0:4  imp 0x7908b
+  - destroyEnemy:  v12@0:4i8  imp 0x792c1
+  - createSmallEnemy1  v8@0:4  imp 0x7988f
+  - createSmallEnemy2  v8@0:4  imp 0x798ed
+  - createSmallEnemy3  v8@0:4  imp 0x7994b
+  - createMediumEnemy1  v8@0:4  imp 0x799a9
+  - createMediumEnemy2  v8@0:4  imp 0x79a07
+  - createMediumEnemy3  v8@0:4  imp 0x79a65
+  - createLaserEnemy1  v8@0:4  imp 0x79ac3
+  - stage4Loop  v8@0:4  imp 0x79b21
+  - endLvl  v8@0:4  imp 0x79f35
+  - baseActions  v8@0:4  imp 0x7a17b
+  - makeBossEntrance  v8@0:4  imp 0x7a21d
+  - endGameVictorious  v8@0:4  imp 0x7a295
+  - endGame  v8@0:4  imp 0x7a375
+  - .cxx_destruct  v8@0:4  imp 0x7a465
+@end
+
+@interface SettingsViewController : UIViewController  // instanceSize 72
+  ivar global @"Global" @offset 4
+  ivar lbl_life @"FXLabel" @offset 8
+  ivar lbl_shield @"FXLabel" @offset 12
+  ivar lbl_speed @"FXLabel" @offset 16
+  ivar lbl_atkSpeed @"FXLabel" @offset 20
+  ivar lbl_power @"FXLabel" @offset 24
+  ivar pntsDisponiveis @"FXLabel" @offset 28
+  ivar lbl_lifeAcces @"UILabel" @offset 32
+  ivar lbl_shieldAcces @"UILabel" @offset 36
+  ivar lbl_speedAcces @"UILabel" @offset 40
+  ivar lbl_atkSpeedAcces @"UILabel" @offset 44
+  ivar lbl_powerAcces @"UILabel" @offset 48
+  ivar backFromInfoToMenu @"UIButton" @offset 52
+  ivar leftDoor @"UIImageView" @offset 56
+  ivar rightDoor @"UIImageView" @offset 60
+  ivar shipNodeView @"UIImageView" @offset 64
+  ivar base_view2 @"UIImageView" @offset 68
+  - viewDidLoad  v8@0:4  imp 0x7a4d9
+  - viewWillAppear:  v12@0:4c8  imp 0x7c329
+  - buildPoints  v8@0:4  imp 0x7c4e1
+  - criaPontoAtributoWithX:withY:withFilled:withTag:  v32@0:4d8d16c24i28  imp 0x7d799
+  - criaMaisIconWithX:withY:withSize:withTag:  v36@0:4d8d16{CGSize=ff}24i32  imp 0x7d985
+  - actionUpPower:  v12@0:4@8  imp 0x7dc19
+  - checkForButtonLock  v8@0:4  imp 0x7e171
+  - remakeAcessibleLabels  v8@0:4  imp 0x7e681
+  - backPressed  v8@0:4  imp 0x7f1b5
+  - viewDidAppear:  v12@0:4c8  imp 0x7f58f
+  - .cxx_destruct  v8@0:4  imp 0x7f93d
+@end
+
+@interface VersusScene : BaseScene  // instanceSize 144
+  protocols: UIAccelerometerDelegate, GameKitHelperDelegate
+  ivar vencedor @"NSString" @offset 48
+  ivar sizeImagemPlayer {CGSize="width"f"height"f} @offset 52
+  ivar sizeMenu {CGSize="width"f"height"f} @offset 60
+  ivar gameViewController @"GameViewController" @offset 68
+  ivar controleSpeckMenu i @offset 72
+  ivar enemyShip @"SpaceShip" @offset 76
+  ivar sendData @"NSTimer" @offset 80
+  ivar endTimer @"NSTimer" @offset 84
+  ivar regressiveContage @"NSTimer" @offset 88
+  ivar counter i @offset 92
+  ivar gameStarter c @offset 96
+  ivar endGame c @offset 97
+  ivar device i @offset 100
+  ivar otherDevice i @offset 104
+  ivar counterLabel @"SKLabelNode" @offset 108
+  ivar doorAudio @"AVAudioPlayer" @offset 112
+  ivar pauseButton @"SKSpriteNode" @offset 116
+  ivar generator @"MapGenerator" @offset 120
+  ivar waitingResponse c @offset 124
+  ivar waitingStart c @offset 125
+  ivar multiplayer_BG @"SKSpriteNode" @offset 128
+  ivar restarMathNode @"SKSpriteNode" @offset 132
+  ivar lobbyMusic @"AVAudioPlayer" @offset 136
+  ivar _pegaReferencia @"UIView" @offset 140
+  property pegaReferencia T@"UIView",&,N,V_pegaReferencia
+  property hash TI,R
+  property superclass T#,R
+  property description T@"NSString",R,C
+  property debugDescription T@"NSString",R,C
+  - initWithSize:  @16@0:4{CGSize=ff}8  imp 0x7faa1
+  - dealloc  v8@0:4  imp 0x80229
+  - searchCanceled  v8@0:4  imp 0x80295
+  - matchStarted  v8@0:4  imp 0x80337
+  - matchEnded  v8@0:4  imp 0x805e1
+  - match:didReceiveData:fromPlayer:  v20@0:4@8@12@16  imp 0x80631
+  - teste  v8@0:4  imp 0x811b7
+  - restartGame  v8@0:4  imp 0x812af
+  - regressiveCount:  v12@0:4@8  imp 0x8165d
+  - Fim  v8@0:4  imp 0x818d3
+  - sendMove:  v12@0:4@8  imp 0x818f1
+  - playerShoot  v8@0:4  imp 0x81a61
+  - getRandomNumberBetween:maxNumber:  i16@0:4i8i12  imp 0x82019
+  - didBeginContact:  v12@0:4@8  imp 0x82039
+  - update:  v16@0:4d8  imp 0x82c49
+  - screenBeforeRestart  v8@0:4  imp 0x83129
+  - doubleTapDetected:  v12@0:4@8  imp 0x840d5
+  - touchesMoved:withEvent:  v16@0:4@8@12  imp 0x8413d
+  - backToMenu  v8@0:4  imp 0x844f3
+  - willMoveFromView:  v12@0:4@8  imp 0x8460d
+  - didMoveToView:  v12@0:4@8  imp 0x84639
+  - createBG  v8@0:4  imp 0x84669
+  - wait:toExecute:  v16@0:4i8@?12  imp 0x84a11
+  - regularSizeBotaoIpadMenu  v8@0:4  imp 0x84a71
+  - destroyScene  v8@0:4  imp 0x84b89
+  - swipeUpDetected:  v12@0:4@8  imp 0x84d39
+  - alertView:clickedButtonAtIndex:  v16@0:4@8i12  imp 0x84f0f
+  - .cxx_destruct  v8@0:4  imp 0x84f5b
+  - pegaReferencia  @8@0:4  imp 0x84f25
+  - setPegaReferencia:  v12@0:4@8  imp 0x84f35
+@end
+
+@interface Chapter9Scene : BaseScene  // instanceSize 81
+  ivar theBoss @"Boss" @offset 48
+  ivar releasedPowerUp c @offset 52
+  ivar smallEnemy i @offset 56
+  ivar mediumEnemy i @offset 60
+  ivar laserEnemy i @offset 64
+  ivar mediumEnemyInScene i @offset 68
+  ivar smallEnemyInScene i @offset 72
+  ivar laserEnemyInScene i @offset 76
+  ivar theEnd c @offset 80
+  - initWithSize:  @16@0:4{CGSize=ff}8  imp 0x85081
+  - didMoveToView:  v12@0:4@8  imp 0x853d9
+  - nextStage  v8@0:4  imp 0x85791
+  - intro1  v8@0:4  imp 0x858b1
+  - finalBossIntro  v8@0:4  imp 0x85ae5
+  - destroyEnemy:  v12@0:4i8  imp 0x85ed9
+  - createSmallEnemy1  v8@0:4  imp 0x86243
+  - createSmallEnemy2  v8@0:4  imp 0x862a1
+  - createMediumEnemy1  v8@0:4  imp 0x862ff
+  - createMediumEnemy2  v8@0:4  imp 0x8635d
+  - createLaserEnemy1  v8@0:4  imp 0x863bb
+  - baseActions  v8@0:4  imp 0x86419
+  - stage4Loop  v8@0:4  imp 0x864bb
+  - endLvl  v8@0:4  imp 0x864ff
+  - enterGround  v8@0:4  imp 0x8676d
+  - endItAll  v8@0:4  imp 0x86c6f
+  - makeBossEntrance  v8@0:4  imp 0x878ad
+  - endGameVictorious  v8@0:4  imp 0x87925
+  - endGame  v8@0:4  imp 0x87a05
+  - runFastCredits  v8@0:4  imp 0x87af5
+  - .cxx_destruct  v8@0:4  imp 0x88099
+@end
+
+@interface GameNavigationControllerViewController : UINavigationController  // instanceSize 4
+  - viewDidAppear:  v12@0:4c8  imp 0x880ad
+  - showAuthenticationViewController  v8@0:4  imp 0x88177
+  - dealloc  v8@0:4  imp 0x88209
+@end
+
+@interface AurealAudioObject : AVAudioPlayer  // instanceSize 32
+  ivar _isLinked c @offset 8
+  ivar _maxAudio f @offset 12
+  ivar _linkedObject @"SKSpriteNode" @offset 16
+  ivar _keyName @"NSString" @offset 20
+  ivar _lastKnownPosition {CGPoint="x"f"y"f} @offset 24
+  property maxAudio Tf,V_maxAudio
+  property lastKnownPosition T{CGPoint=ff},V_lastKnownPosition
+  property linkedObject T@"SKSpriteNode",&,V_linkedObject
+  property keyName T@"NSString",&,V_keyName
+  property isLinked Tc,V_isLinked
+  - initWithContentsOfURL:error:  @16@0:4@8^@12  imp 0x88275
+  - init  @8@0:4  imp 0x882c5
+  - .cxx_destruct  v8@0:4  imp 0x883e7
+  - maxAudio  f8@0:4  imp 0x88313
+  - setMaxAudio:  v12@0:4f8  imp 0x88323
+  - lastKnownPosition  {CGPoint=ff}8@0:4  imp 0x88333
+  - setLastKnownPosition:  v16@0:4{CGPoint=ff}8  imp 0x88357
+  - linkedObject  @8@0:4  imp 0x88381
+  - setLinkedObject:  v12@0:4@8  imp 0x88393
+  - keyName  @8@0:4  imp 0x883a3
+  - setKeyName:  v12@0:4@8  imp 0x883b5
+  - isLinked  c8@0:4  imp 0x883c5
+  - setIsLinked:  v12@0:4c8  imp 0x883d7
+@end
+
+@interface FXLabel : UILabel  // instanceSize 28
+  ivar shadowBlur f @offset 4
+  ivar innerShadowColor @"UIColor" @offset 8
+  ivar gradientStartColor @"UIColor" @offset 12
+  ivar gradientEndColor @"UIColor" @offset 16
+  ivar innerShadowOffset {CGSize="width"f"height"f} @offset 20
+  property shadowBlur Tf,N,VshadowBlur
+  property innerShadowOffset T{CGSize=ff},N,VinnerShadowOffset
+  property innerShadowColor T@"UIColor",&,N,VinnerShadowColor
+  property gradientStartColor T@"UIColor",&,N,VgradientStartColor
+  property gradientEndColor T@"UIColor",&,N,VgradientEndColor
+  - initWithFrame:  @24@0:4{CGRect={CGPoint=ff}{CGSize=ff}}8  imp 0x88419
+  - setShadowBlur:  v12@0:4f8  imp 0x88469
+  - setInnerShadowOffset:  v16@0:4{CGSize=ff}8  imp 0x8849f
+  - setInnerShadowColor:  v12@0:4@8  imp 0x884f1
+  - setGradientStartColor:  v12@0:4@8  imp 0x88547
+  - setGradientEndColor:  v12@0:4@8  imp 0x8859d
+  - drawRect:  v24@0:4{CGRect={CGPoint=ff}{CGSize=ff}}8  imp 0x885f3
+  - dealloc  v8@0:4  imp 0x88c95
+  - shadowBlur  f8@0:4  imp 0x88ce1
+  - innerShadowOffset  {CGSize=ff}8@0:4  imp 0x88cf1
+  - innerShadowColor  @8@0:4  imp 0x88d09
+  - gradientStartColor  @8@0:4  imp 0x88d19
+  - gradientEndColor  @8@0:4  imp 0x88d29
+@end
+
+@interface Chapter8Scene : BaseScene  // instanceSize 101
+  ivar theBoss @"Boss" @offset 48
+  ivar bossLife i @offset 52
+  ivar boss @"SKSpriteNode" @offset 56
+  ivar bossRight @"SpaceShip" @offset 60
+  ivar bossLeft @"SpaceShip" @offset 64
+  ivar bossCenter @"SpaceShip" @offset 68
+  ivar releasedPowerUp c @offset 72
+  ivar smallEnemy i @offset 76
+  ivar mediumEnemy i @offset 80
+  ivar laserEnemy i @offset 84
+  ivar mediumEnemyInScene i @offset 88
+  ivar smallEnemyInScene i @offset 92
+  ivar laserEnemyInScene i @offset 96
+  ivar theEnd c @offset 100
+  - initWithSize:  @16@0:4{CGSize=ff}8  imp 0x88d39
+  - didMoveToView:  v12@0:4@8  imp 0x89091
+  - nextStage  v8@0:4  imp 0x89449
+  - intro1  v8@0:4  imp 0x8958d
+  - destroyEnemy:  v12@0:4i8  imp 0x897ef
+  - createSmallEnemy1  v8@0:4  imp 0x89cbd
+  - createSmallEnemy2  v8@0:4  imp 0x89d1b
+  - createMediumEnemy1  v8@0:4  imp 0x89d79
+  - createMediumEnemy2  v8@0:4  imp 0x89dd7
+  - createLaserEnemy1  v8@0:4  imp 0x89e35
+  - stage4Loop  v8@0:4  imp 0x89e93
+  - endLvl  v8@0:4  imp 0x8a0ed
+  - baseActions  v8@0:4  imp 0x8a333
+  - makeBossEntrance  v8@0:4  imp 0x8a3d5
+  - endGameVictorious  v8@0:4  imp 0x8a44d
+  - endGame  v8@0:4  imp 0x8a52d
+  - .cxx_destruct  v8@0:4  imp 0x8a61d
+@end
+
+@interface GameKitHelper : NSObject  // instanceSize 32
+  protocols: GKMatchmakerViewControllerDelegate, GKMatchDelegate
+  ivar _enableGameCenter c @offset 4
+  ivar _matchStarted c @offset 5
+  ivar _authenticationViewController @"UIViewController" @offset 8
+  ivar _lastError @"NSError" @offset 12
+  ivar _match @"GKMatch" @offset 16
+  ivar _oponent @"GKPlayer" @offset 20
+  ivar _delegate @"<GameKitHelperDelegate>" @offset 24
+  ivar _playersDict @"NSMutableDictionary" @offset 28
+  property authenticationViewController T@"UIViewController",R,N,V_authenticationViewController
+  property lastError T@"NSError",R,N,V_lastError
+  property match T@"GKMatch",&,N,V_match
+  property oponent T@"GKPlayer",&,N,V_oponent
+  property delegate T@"<GameKitHelperDelegate>",N,V_delegate
+  property playersDict T@"NSMutableDictionary",&,N,V_playersDict
+  property hash TI,R
+  property superclass T#,R
+  property description T@"NSString",R,C
+  property debugDescription T@"NSString",R,C
+  + sharedGameKitHelper  @8@0:4  imp 0x8a68b
+  - init  @8@0:4  imp 0x8a717
+  - authenticateLocalPlayer  v8@0:4  imp 0x8a755
+  - lookupPlayers  v8@0:4  imp 0x8a937
+  - endMath  v8@0:4  imp 0x8abf5
+  - setAuthenticationViewController:  v12@0:4@8  imp 0x8ac67
+  - setLastError:  v12@0:4@8  imp 0x8ace5
+  - startMathWithInvite:viewController:delegate:  v20@0:4@8@12@16  imp 0x8ad6b
+  - findMatchWithMinPlayers:maxPlayers:viewController:delegate:  v24@0:4i8i12@16@20  imp 0x8ae73
+  - matchmakerViewControllerWasCancelled:  v12@0:4@8  imp 0x8aff5
+  - matchmakerViewController:didFailWithError:  v16@0:4@8@12  imp 0x8b041
+  - matchmakerViewController:didFindMatch:  v16@0:4@8@12  imp 0x8b0dd
+  - match:didReceiveData:fromPlayer:  v20@0:4@8@12@16  imp 0x8b193
+  - match:player:didChangeState:  v20@0:4@8@12i16  imp 0x8b1f7
+  - match:connectionWithPlayerFailed:withError:  v20@0:4@8@12@16  imp 0x8b2c7
+  - match:didFailWithError:  v16@0:4@8@12  imp 0x8b351
+  - .cxx_destruct  v8@0:4  imp 0x8b4cb
+  - authenticationViewController  @8@0:4  imp 0x8b3e9
+  - lastError  @8@0:4  imp 0x8b3f9
+  - match  @8@0:4  imp 0x8b409
+  - setMatch:  v12@0:4@8  imp 0x8b419
+  - oponent  @8@0:4  imp 0x8b43f
+  - setOponent:  v12@0:4@8  imp 0x8b44f
+  - delegate  @8@0:4  imp 0x8b475
+  - setDelegate:  v12@0:4@8  imp 0x8b485
+  - playersDict  @8@0:4  imp 0x8b495
+  - setPlayersDict:  v12@0:4@8  imp 0x8b4a5
+@end
+
+@interface GAThreading : NSObject  // instanceSize 8
+  ivar _queue @"NSObject<OS_dispatch_queue>" @offset 4
+  property queue T@"NSObject<OS_dispatch_queue>",&,N,V_queue
+  + sharedInstance  @8@0:4  imp 0x8b539
+  + setSharedInstance:  v12@0:4@8  imp 0x8b5cd
+  + performTaskOnGAThreadWithBlock:  v12@0:4@?8  imp 0x8b68d
+  + performTaskOnMainThreadWithBlock:  v12@0:4@?8  imp 0x8b701
+  + isGAThread  c8@0:4  imp 0x8b7b1
+  - init  @8@0:4  imp 0x8b5fd
+  - .cxx_destruct  v8@0:4  imp 0x8b899
+  - queue  @8@0:4  imp 0x8b861
+  - setQueue:  v12@0:4@8  imp 0x8b871
+@end
+
+@interface GAEvents : NSObject  // instanceSize 36
+  ivar _eventQueueTimer @"NSTimer" @offset 4
+  ivar _categorySessionStart @"NSString" @offset 8
+  ivar _categorySessionEnd @"NSString" @offset 12
+  ivar _categoryDesign @"NSString" @offset 16
+  ivar _categoryBusiness @"NSString" @offset 20
+  ivar _categoryProgression @"NSString" @offset 24
+  ivar _categoryResource @"NSString" @offset 28
+  ivar _categoryError @"NSString" @offset 32
+  property eventQueueTimer T@"NSTimer",&,N,V_eventQueueTimer
+  property categorySessionStart T@"NSString",&,N,V_categorySessionStart
+  property categorySessionEnd T@"NSString",&,N,V_categorySessionEnd
+  property categoryDesign T@"NSString",&,N,V_categoryDesign
+  property categoryBusiness T@"NSString",&,N,V_categoryBusiness
+  property categoryProgression T@"NSString",&,N,V_categoryProgression
+  property categoryResource T@"NSString",&,N,V_categoryResource
+  property categoryError T@"NSString",&,N,V_categoryError
+  + sharedInstance  @8@0:4  imp 0x8b8ad
+  + setSharedInstance:  v12@0:4@8  imp 0x8b941
+  + startEventQueue  v8@0:4  imp 0x8ba91
+  + stopEventQueue  v8@0:4  imp 0x8bbb1
+  + processEventQueue:  v12@0:4@8  imp 0x8bca1
+  + processEventsWithCategory:andPerformCleanup:  v16@0:4@8c12  imp 0x8bd85
+  + cleanupEvents  v8@0:4  imp 0x8c4d9
+  + deleteAllEvents  v8@0:4  imp 0x8c511
+  + fixMissingSessionEndEvents  v8@0:4  imp 0x8c515
+  + addSessionStartEvent  v8@0:4  imp 0x8c909
+  + addSessionEndEvent  v8@0:4  imp 0x8cb19
+  + addBusinessEventWithCurrency:andAmount:andItemType:andItemId:andCartType:andReceipt:  v32@0:4@8i12@16@20@24@28  imp 0x8cd51
+  + addResourceEventWithFlowType:andCurrency:andAmount:andItemType:andItemId:  v28@0:4i8@12@16@20@24  imp 0x8d1d9
+  + addProgressionEventWithProgressionStatus:andProgression01:andProgression02:andProgression03:andScore:  v28@0:4i8@12@16@20@24  imp 0x8d439
+  + addDesignEventWithEventId:andValue:  v16@0:4@8@12  imp 0x8d7d5
+  + addErrorEventWithSeverity:andMessage:  v16@0:4i8@12  imp 0x8d939
+  + addEventToStoreWithEventData:  v12@0:4@8  imp 0x8db19
+  + addDimensionsToEventWithEventData:  v12@0:4@8  imp 0x8e0a1
+  + progressionStatusString:  @12@0:4i8  imp 0x8e1dd
+  + errorSeverityString:  @12@0:4i8  imp 0x8e225
+  + resourceFlowTypeString:  @12@0:4i8  imp 0x8e289
+  - init  @8@0:4  imp 0x8b971
+  - .cxx_destruct  v8@0:4  imp 0x8e481
+  - eventQueueTimer  @8@0:4  imp 0x8e2c1
+  - setEventQueueTimer:  v12@0:4@8  imp 0x8e2d1
+  - categorySessionStart  @8@0:4  imp 0x8e2f9
+  - setCategorySessionStart:  v12@0:4@8  imp 0x8e309
+  - categorySessionEnd  @8@0:4  imp 0x8e331
+  - setCategorySessionEnd:  v12@0:4@8  imp 0x8e341
+  - categoryDesign  @8@0:4  imp 0x8e369
+  - setCategoryDesign:  v12@0:4@8  imp 0x8e379
+  - categoryBusiness  @8@0:4  imp 0x8e3a1
+  - setCategoryBusiness:  v12@0:4@8  imp 0x8e3b1
+  - categoryProgression  @8@0:4  imp 0x8e3d9
+  - setCategoryProgression:  v12@0:4@8  imp 0x8e3e9
+  - categoryResource  @8@0:4  imp 0x8e411
+  - setCategoryResource:  v12@0:4@8  imp 0x8e421
+  - categoryError  @8@0:4  imp 0x8e449
+  - setCategoryError:  v12@0:4@8  imp 0x8e459
+@end
+
+@interface GALogger : NSObject  // instanceSize 12
+  ivar _infoLogEnabled c @offset 4
+  ivar _infoLogAdvancedEnabled c @offset 5
+  ivar _debugEnabled c @offset 6
+  ivar _tag @"NSString" @offset 8
+  property infoLogEnabled Tc,N,V_infoLogEnabled
+  property infoLogAdvancedEnabled Tc,N,V_infoLogAdvancedEnabled
+  property debugEnabled Tc,N,V_debugEnabled
+  property tag T@"NSString",&,N,V_tag
+  + sharedInstance  @8@0:4  imp 0x8e52d
+  + setSharedInstance:  v12@0:4@8  imp 0x8e5c1
+  + setInfoLog:  v12@0:4c8  imp 0x8e669
+  + setAdvancedInfoLog:  v12@0:4c8  imp 0x8e6b1
+  + w:  v12@0:4@8  imp 0x8e6f9
+  + e:  v12@0:4@8  imp 0x8e8f1
+  + d:  v12@0:4@8  imp 0x8eae9
+  + i:  v12@0:4@8  imp 0x8ecf1
+  + ii:  v12@0:4@8  imp 0x8eef9
+  - init  @8@0:4  imp 0x8e5f1
+  - sendNotificationMessage:ofType:  v16@0:4@8i12  imp 0x8f101
+  - .cxx_destruct  v8@0:4  imp 0x8f29d
+  - infoLogEnabled  c8@0:4  imp 0x8f205
+  - setInfoLogEnabled:  v12@0:4c8  imp 0x8f215
+  - infoLogAdvancedEnabled  c8@0:4  imp 0x8f225
+  - setInfoLogAdvancedEnabled:  v12@0:4c8  imp 0x8f235
+  - debugEnabled  c8@0:4  imp 0x8f245
+  - setDebugEnabled:  v12@0:4c8  imp 0x8f255
+  - tag  @8@0:4  imp 0x8f265
+  - setTag:  v12@0:4@8  imp 0x8f275
+@end
+
+@interface GAHTTPApi : NSObject  // instanceSize 36
+  ivar _useGzip c @offset 4
+  ivar _protocol @"NSString" @offset 8
+  ivar _hostname @"NSString" @offset 12
+  ivar _port @"NSString" @offset 16
+  ivar _version @"NSString" @offset 20
+  ivar _baseUrl @"NSString" @offset 24
+  ivar _initializeUrlPath @"NSString" @offset 28
+  ivar _eventsUrlPath @"NSString" @offset 32
+  property protocol T@"NSString",&,V_protocol
+  property hostname T@"NSString",&,V_hostname
+  property port T@"NSString",&,V_port
+  property version T@"NSString",&,V_version
+  property baseUrl T@"NSString",&,V_baseUrl
+  property initializeUrlPath T@"NSString",&,V_initializeUrlPath
+  property eventsUrlPath T@"NSString",&,V_eventsUrlPath
+  property useGzip Tc,N,V_useGzip
+  + sharedInstance  @8@0:4  imp 0x8f2b1
+  + setSharedInstance:  v12@0:4@8  imp 0x8f345
+  - init  @8@0:4  imp 0x8f375
+  - requestInitReturningDict:  i12@0:4^@8  imp 0x8f505
+  - sendEventsInArray:ReturningDict:  i16@0:4@8^@12  imp 0x8f85d
+  - getApiHostname  @8@0:4  imp 0x8fba9
+  - validateAndCleanInitRequestResponse:  @12@0:4@8  imp 0x8fbb9
+  - makeRequestAuthSha256Hash:  @12@0:4@8  imp 0x90109
+  - createRequestWithPayload:andUrl:usingGzip:  @20@0:4@8@12c16  imp 0x901e5
+  - processRequestResponse:withResponse:andError:withRequestId:  i24@0:4@8@12@16@20  imp 0x90415
+  - .cxx_destruct  v8@0:4  imp 0x906cd
+  - protocol  @8@0:4  imp 0x905b1
+  - setProtocol:  v12@0:4@8  imp 0x905c5
+  - hostname  @8@0:4  imp 0x905d5
+  - setHostname:  v12@0:4@8  imp 0x905e9
+  - port  @8@0:4  imp 0x905f9
+  - setPort:  v12@0:4@8  imp 0x9060d
+  - version  @8@0:4  imp 0x9061d
+  - setVersion:  v12@0:4@8  imp 0x90631
+  - baseUrl  @8@0:4  imp 0x90641
+  - setBaseUrl:  v12@0:4@8  imp 0x90655
+  - initializeUrlPath  @8@0:4  imp 0x90665
+  - setInitializeUrlPath:  v12@0:4@8  imp 0x90679
+  - eventsUrlPath  @8@0:4  imp 0x90689
+  - setEventsUrlPath:  v12@0:4@8  imp 0x9069d
+  - useGzip  c8@0:4  imp 0x906ad
+  - setUseGzip:  v12@0:4c8  imp 0x906bd
+@end
+
+@interface GAStore : NSObject  // instanceSize 20
+  ivar _database ^{sqlite3=} @offset 4
+  ivar _dbReady c @offset 8
+  ivar _tableReady c @offset 9
+  ivar _dbPath @"NSString" @offset 12
+  ivar _maxDbSizeBytes i @offset 16
+  property dbPath T@"NSString",&,N,V_dbPath
+  property maxDbSizeBytes Ti,N,V_maxDbSizeBytes
+  property dbReady Tc,N,V_dbReady
+  property tableReady Tc,N,V_tableReady
+  + sharedInstance  @8@0:4  imp 0x90765
+  + setSharedInstance:  v12@0:4@8  imp 0x907f9
+  + setStateWithKey:andValue:  v16@0:4@8@12  imp 0x90f4d
+  + executeQuerySyncWithSql:  @12@0:4@8  imp 0x91085
+  + executeQuerySyncWithSql:andParameters:  @16@0:4@8@12  imp 0x910a5
+  + executeQuerySyncWithSql:andParameters:andUseTransaction:  @20@0:4@8@12c16  imp 0x910e9
+  + executeQueryWithSql:andCallback:  v16@0:4@8@?12  imp 0x91659
+  + executeQueryWithSql:andParameters:andCallback:  v20@0:4@8@12@?16  imp 0x91691
+  + getDbSize  i8@0:4  imp 0x918e1
+  - init  @8@0:4  imp 0x90829
+  - getDatabase  ^{sqlite3=}8@0:4  imp 0x908ed
+  - trimEventTable  c8@0:4  imp 0x908fd
+  - ensureDatabase:  c12@0:4c8  imp 0x90a81
+  - .cxx_destruct  v8@0:4  imp 0x91a51
+  - dbPath  @8@0:4  imp 0x919b9
+  - setDbPath:  v12@0:4@8  imp 0x919c9
+  - maxDbSizeBytes  i8@0:4  imp 0x919f1
+  - setMaxDbSizeBytes:  v12@0:4i8  imp 0x91a01
+  - dbReady  c8@0:4  imp 0x91a11
+  - setDbReady:  v12@0:4c8  imp 0x91a21
+  - tableReady  c8@0:4  imp 0x91a31
+  - setTableReady:  v12@0:4c8  imp 0x91a41
+@end
+
+@interface GAHelpers : NSObject  // instanceSize 4
+  + generateUUID  @8@0:4  imp 0x91a65
+  + stringToMd5:  @12@0:4@8  imp 0x91ab9
+  + dataToMd5:  @12@0:4@8  imp 0x91bd1
+  + encryptString:withKey:  @16@0:4@8@12  imp 0x91cf9
+  + getIdfa  @8@0:4  imp 0x91f85
+  + base64forData:  @12@0:4@8  imp 0x91ff9
+  + sha256HashForData:  @12@0:4@8  imp 0x92161
+  + hmacWithKey:andData:  @16@0:4@8@12  imp 0x92231
+  + querystringWithDictionary:  @12@0:4@8  imp 0x92381
+  + escapeValueForURLParameter:  @12@0:4@8  imp 0x92591
+  + jsonStringWithObject:  @12@0:4@8  imp 0x925c1
+  + dictionaryWithJsonString:  @12@0:4@8  imp 0x926cd
+  + dictionaryWithJsonData:  @12@0:4@8  imp 0x92745
+  + stringMatchWithString:andPattern:  c16@0:4@8@12  imp 0x92861
+  + gzipEnflateWithData:  @12@0:4@8  imp 0x929f5
+  + gzipDeflateWithData:  @12@0:4@8  imp 0x92b5d
+@end
+
+@interface GADevice : NSObject  // instanceSize 36
+  ivar _hostReachability @"GAReachability" @offset 4
+  ivar _os @"NSString" @offset 8
+  ivar _os_version @"NSString" @offset 12
+  ivar _device_model @"NSString" @offset 16
+  ivar _device_make @"NSString" @offset 20
+  ivar _connection_type @"NSString" @offset 24
+  ivar _jail_broken @"NSNumber" @offset 28
+  ivar _carrier @"NSString" @offset 32
+  property hostReachability T@"GAReachability",&,N,V_hostReachability
+  property os T@"NSString",&,N,V_os
+  property os_version T@"NSString",&,N,V_os_version
+  property device_model T@"NSString",&,N,V_device_model
+  property device_make T@"NSString",&,N,V_device_make
+  property connection_type T@"NSString",&,N,V_connection_type
+  property jail_broken T@"NSNumber",&,N,V_jail_broken
+  property carrier T@"NSString",&,N,V_carrier
+  + sharedInstance  @8@0:4  imp 0x92e29
+  + setSharedInstance:  v12@0:4@8  imp 0x92ebd
+  + os  @8@0:4  imp 0x937c5
+  + osVersion  @8@0:4  imp 0x9380d
+  + deviceModel  @8@0:4  imp 0x93855
+  + deviceMake  @8@0:4  imp 0x9389d
+  + connection_type  @8@0:4  imp 0x938e5
+  + idfa  @8@0:4  imp 0x9392d
+  + idfv  @8@0:4  imp 0x939a1
+  + limitedAdTracking  c8@0:4  imp 0x93a15
+  + isJailbroken  c8@0:4  imp 0x93a61
+  + isAppInstalledWithUrlScheme:  c12@0:4@8  imp 0x93a9d
+  + deviceIsLowerOrEqualToIos6  c8@0:4  imp 0x93b81
+  - get_os  @8@0:4  imp 0x92eed
+  - get_os_version  @8@0:4  imp 0x92f39
+  - get_device_model  @8@0:4  imp 0x92fa9
+  - get_device_make  @8@0:4  imp 0x930ad
+  - get_connection_type  @8@0:4  imp 0x930f9
+  - check_jailbroken  c8@0:4  imp 0x931bd
+  - is_jailbroken  c8@0:4  imp 0x934e1
+  - init  @8@0:4  imp 0x9359d
+  - reachabilityChanged:  v12@0:4@8  imp 0x936ad
+  - dealloc  v8@0:4  imp 0x93b11
+  - .cxx_destruct  v8@0:4  imp 0x93d81
+  - hostReachability  @8@0:4  imp 0x93bc1
+  - setHostReachability:  v12@0:4@8  imp 0x93bd1
+  - os  @8@0:4  imp 0x93bf9
+  - setOs:  v12@0:4@8  imp 0x93c09
+  - os_version  @8@0:4  imp 0x93c31
+  - setOs_version:  v12@0:4@8  imp 0x93c41
+  - device_model  @8@0:4  imp 0x93c69
+  - setDevice_model:  v12@0:4@8  imp 0x93c79
+  - device_make  @8@0:4  imp 0x93ca1
+  - setDevice_make:  v12@0:4@8  imp 0x93cb1
+  - connection_type  @8@0:4  imp 0x93cd9
+  - setConnection_type:  v12@0:4@8  imp 0x93ce9
+  - jail_broken  @8@0:4  imp 0x93d11
+  - setJail_broken:  v12@0:4@8  imp 0x93d21
+  - carrier  @8@0:4  imp 0x93d49
+  - setCarrier:  v12@0:4@8  imp 0x93d59
+@end
+
+@interface GAReachability : NSObject  // instanceSize 12
+  ivar localWiFiRef c @offset 4
+  ivar reachabilityRef ^{__SCNetworkReachability=} @offset 8
+  + reachabilityWithHostName:  @12@0:4@8  imp 0x93e2d
+  + reachabilityWithAddress:  @12@0:4r^{sockaddr_in=CCS{in_addr=I}[8c]}8  imp 0x93eb9
+  + reachabilityForInternetConnection  @8@0:4  imp 0x93f29
+  + reachabilityForLocalWiFi  @8@0:4  imp 0x93f75
+  - startNotifier  c8@0:4  imp 0x93fd9
+  - stopNotifier  v8@0:4  imp 0x9409d
+  - dealloc  v8@0:4  imp 0x940d5
+  - localWiFiStatusForFlags:  i12@0:4I8  imp 0x9412d
+  - networkStatusForFlags:  i12@0:4I8  imp 0x9413d
+  - currentReachabilityStatus  i8@0:4  imp 0x94169
+  - connectionRequired  c8@0:4  imp 0x941c1
+  - isConnectionRequired  c8@0:4  imp 0x941ed
+  - isReachable  c8@0:4  imp 0x941fd
+  - isReachableViaWWAN  c8@0:4  imp 0x9421d
+  - isReachableViaWiFi  c8@0:4  imp 0x9423d
+@end
+
+@interface GAState : NSObject  // instanceSize 120
+  ivar _restartEventQueue c @offset 4
+  ivar _initAuthorized c @offset 5
+  ivar _isInitialized c @offset 6
+  ivar _sdkConfig @"NSDictionary" @offset 8
+  ivar _sdkConfigCached @"NSDictionary" @offset 12
+  ivar _sdkConfigDefault @"NSDictionary" @offset 16
+  ivar _availableCustomDimensions01 @"NSArray" @offset 20
+  ivar _availableCustomDimensions02 @"NSArray" @offset 24
+  ivar _availableCustomDimensions03 @"NSArray" @offset 28
+  ivar _currentCustomDimension01 @"NSString" @offset 32
+  ivar _currentCustomDimension02 @"NSString" @offset 36
+  ivar _currentCustomDimension03 @"NSString" @offset 40
+  ivar _availableResourceCurrencies @"NSArray" @offset 44
+  ivar _availableResourceItemTypes @"NSArray" @offset 48
+  ivar _build @"NSString" @offset 52
+  ivar _sdkWrapperVersion @"NSString" @offset 56
+  ivar _engineVersion @"NSString" @offset 60
+  ivar _idfa @"NSString" @offset 64
+  ivar _idfaEncrypted @"NSString" @offset 68
+  ivar _sessionId @"NSString" @offset 72
+  ivar _sessionStart @"NSString" @offset 76
+  ivar _progressionTries @"NSMutableDictionary" @offset 80
+  ivar _sessionNum @"NSNumber" @offset 84
+  ivar _transactionNum @"NSNumber" @offset 88
+  ivar _facebookId @"NSString" @offset 92
+  ivar _gender @"NSString" @offset 96
+  ivar _birthYear @"NSNumber" @offset 100
+  ivar _progression @"NSString" @offset 104
+  ivar _gameKey @"NSString" @offset 108
+  ivar _gameSecret @"NSString" @offset 112
+  ivar _clientServerTimeOffset @"NSNumber" @offset 116
+  property restartEventQueue Tc,N,V_restartEventQueue
+  property sdkConfig T@"NSDictionary",&,N,V_sdkConfig
+  property sdkConfigCached T@"NSDictionary",&,N,V_sdkConfigCached
+  property sdkConfigDefault T@"NSDictionary",&,N,V_sdkConfigDefault
+  property initAuthorized Tc,N,V_initAuthorized
+  property availableCustomDimensions01 T@"NSArray",&,N,V_availableCustomDimensions01
+  property availableCustomDimensions02 T@"NSArray",&,N,V_availableCustomDimensions02
+  property availableCustomDimensions03 T@"NSArray",&,N,V_availableCustomDimensions03
+  property currentCustomDimension01 T@"NSString",&,N,V_currentCustomDimension01
+  property currentCustomDimension02 T@"NSString",&,N,V_currentCustomDimension02
+  property currentCustomDimension03 T@"NSString",&,N,V_currentCustomDimension03
+  property availableResourceCurrencies T@"NSArray",&,N,V_availableResourceCurrencies
+  property availableResourceItemTypes T@"NSArray",&,N,V_availableResourceItemTypes
+  property build T@"NSString",&,N,V_build
+  property sdkWrapperVersion T@"NSString",&,N,V_sdkWrapperVersion
+  property engineVersion T@"NSString",&,N,V_engineVersion
+  property idfa T@"NSString",&,N,V_idfa
+  property idfaEncrypted T@"NSString",&,N,V_idfaEncrypted
+  property sessionId T@"NSString",&,N,V_sessionId
+  property sessionStart T@"NSString",&,N,V_sessionStart
+  property progressionTries T@"NSMutableDictionary",&,N,V_progressionTries
+  property sessionNum T@"NSNumber",&,N,V_sessionNum
+  property transactionNum T@"NSNumber",&,N,V_transactionNum
+  property facebookId T@"NSString",&,N,V_facebookId
+  property gender T@"NSString",&,N,V_gender
+  property birthYear T@"NSNumber",&,N,V_birthYear
+  property progression T@"NSString",&,N,V_progression
+  property gameKey T@"NSString",&,N,V_gameKey
+  property gameSecret T@"NSString",&,N,V_gameSecret
+  property isInitialized Tc,N,V_isInitialized
+  property clientServerTimeOffset T@"NSNumber",&,N,V_clientServerTimeOffset
+  + sharedInstance  @8@0:4  imp 0x94259
+  + setSharedInstance:  v12@0:4@8  imp 0x942ed
+  + ensurePersistedStates  v8@0:4  imp 0x94415
+  + setSdkWrapperVersion:  v12@0:4@8  imp 0x94ea5
+  + setEngineVersion:  v12@0:4@8  imp 0x94efd
+  + setKeysWithGameKey:andGameSecret:  v16@0:4@8@12  imp 0x94f55
+  + setInitialized:  v12@0:4c8  imp 0x95051
+  + setBuild:  v12@0:4@8  imp 0x95099
+  + incrementSessionNum  v8@0:4  imp 0x95111
+  + incrementTransactionNum  v8@0:4  imp 0x951b5
+  + incrementProgressionTries:  v12@0:4@8  imp 0x95259
+  + clearProgressionTries:  v12@0:4@8  imp 0x95445
+  + setCustomDimension01:  v12@0:4@8  imp 0x95525
+  + setCustomDimension02:  v12@0:4@8  imp 0x955c5
+  + setCustomDimension03:  v12@0:4@8  imp 0x95665
+  + validateAndFixCurrentDimensions  v8@0:4  imp 0x95705
+  + setFacebookId:  v12@0:4@8  imp 0x95989
+  + setGender:  v12@0:4@8  imp 0x95a29
+  + setBirthYear:  v12@0:4i8  imp 0x95ac9
+  + setAvailableCustomDimensions01:  v12@0:4@8  imp 0x95ba5
+  + setAvailableCustomDimensions02:  v12@0:4@8  imp 0x95c7d
+  + setAvailableCustomDimensions03:  v12@0:4@8  imp 0x95d55
+  + setAvailableResourceCurrencies:  v12@0:4@8  imp 0x95e2d
+  + setAvailableResourceItemTypes:  v12@0:4@8  imp 0x95ef1
+  + setProgression:  v12@0:4@8  imp 0x95fb5
+  + cacheIdfaAndEncryptWithGameSecret  v8@0:4  imp 0x9602d
+  + getIdfa  @8@0:4  imp 0x96185
+  + getGameKey  @8@0:4  imp 0x96229
+  + getGameSecret  @8@0:4  imp 0x962c1
+  + getIdfaEncrypted  @8@0:4  imp 0x96359
+  + getSdkConfig  @8@0:4  imp 0x963fd
+  + getSdkVersion  @8@0:4  imp 0x964f5
+  + getEngineVersion  @8@0:4  imp 0x96595
+  + getBuild  @8@0:4  imp 0x96629
+  + getSessionNum  @8@0:4  imp 0x966cd
+  + getTransactionNum  @8@0:4  imp 0x96785
+  + getProgressionTries:  @12@0:4@8  imp 0x9683d
+  + getDimension01  @8@0:4  imp 0x96941
+  + getDimension02  @8@0:4  imp 0x969d5
+  + getDimension03  @8@0:4  imp 0x96a69
+  + getFacebookId  @8@0:4  imp 0x96afd
+  + getGender  @8@0:4  imp 0x96b91
+  + getBirthYear  @8@0:4  imp 0x96c25
+  + getProgression  @8@0:4  imp 0x96cb9
+  + hasAvailableCustomDimensions01:  c12@0:4@8  imp 0x96d4d
+  + hasAvailableCustomDimensions02:  c12@0:4@8  imp 0x96df9
+  + hasAvailableCustomDimensions03:  c12@0:4@8  imp 0x96ea5
+  + hasAvailableResourceItemType:  c12@0:4@8  imp 0x96f51
+  + hasAvailableResourceCurrency:  c12@0:4@8  imp 0x96ffd
+  + startNewSession  v8@0:4  imp 0x970a9
+  + getClientTsAdjustedWithServertimeOffset  @8@0:4  imp 0x97999
+  + getEventAnnotations  @8@0:4  imp 0x97ad9
+  + getInitAnnotations  @8@0:4  imp 0x981d1
+  + isInitialized  c8@0:4  imp 0x98349
+  + isEnabled  c8@0:4  imp 0x98395
+  - init  @8@0:4  imp 0x9431d
+  - setupSleepObserve  v8@0:4  imp 0x9847d
+  - dealloc  v8@0:4  imp 0x9853d
+  - sendEventsInBackground  v8@0:4  imp 0x985a9
+  - headingToBackground:  v12@0:4@8  imp 0x98829
+  - headingToForeground:  v12@0:4@8  imp 0x9893d
+  - .cxx_destruct  v8@0:4  imp 0x9910d
+  - restartEventQueue  c8@0:4  imp 0x98a8d
+  - setRestartEventQueue:  v12@0:4c8  imp 0x98a9d
+  - sdkConfig  @8@0:4  imp 0x98aad
+  - setSdkConfig:  v12@0:4@8  imp 0x98abd
+  - sdkConfigCached  @8@0:4  imp 0x98ae5
+  - setSdkConfigCached:  v12@0:4@8  imp 0x98af5
+  - sdkConfigDefault  @8@0:4  imp 0x98b1d
+  - setSdkConfigDefault:  v12@0:4@8  imp 0x98b2d
+  - initAuthorized  c8@0:4  imp 0x98b55
+  - setInitAuthorized:  v12@0:4c8  imp 0x98b65
+  - availableCustomDimensions01  @8@0:4  imp 0x98b75
+  - setAvailableCustomDimensions01:  v12@0:4@8  imp 0x98b85
+  - availableCustomDimensions02  @8@0:4  imp 0x98bad
+  - setAvailableCustomDimensions02:  v12@0:4@8  imp 0x98bbd
+  - availableCustomDimensions03  @8@0:4  imp 0x98be5
+  - setAvailableCustomDimensions03:  v12@0:4@8  imp 0x98bf5
+  - currentCustomDimension01  @8@0:4  imp 0x98c1d
+  - setCurrentCustomDimension01:  v12@0:4@8  imp 0x98c2d
+  - currentCustomDimension02  @8@0:4  imp 0x98c55
+  - setCurrentCustomDimension02:  v12@0:4@8  imp 0x98c65
+  - currentCustomDimension03  @8@0:4  imp 0x98c8d
+  - setCurrentCustomDimension03:  v12@0:4@8  imp 0x98c9d
+  - availableResourceCurrencies  @8@0:4  imp 0x98cc5
+  - setAvailableResourceCurrencies:  v12@0:4@8  imp 0x98cd5
+  - availableResourceItemTypes  @8@0:4  imp 0x98cfd
+  - setAvailableResourceItemTypes:  v12@0:4@8  imp 0x98d0d
+  - build  @8@0:4  imp 0x98d35
+  - setBuild:  v12@0:4@8  imp 0x98d45
+  - sdkWrapperVersion  @8@0:4  imp 0x98d6d
+  - setSdkWrapperVersion:  v12@0:4@8  imp 0x98d7d
+  - engineVersion  @8@0:4  imp 0x98da5
+  - setEngineVersion:  v12@0:4@8  imp 0x98db5
+  - idfa  @8@0:4  imp 0x98ddd
+  - setIdfa:  v12@0:4@8  imp 0x98ded
+  - idfaEncrypted  @8@0:4  imp 0x98e15
+  - setIdfaEncrypted:  v12@0:4@8  imp 0x98e25
+  - sessionId  @8@0:4  imp 0x98e4d
+  - setSessionId:  v12@0:4@8  imp 0x98e5d
+  - sessionStart  @8@0:4  imp 0x98e85
+  - setSessionStart:  v12@0:4@8  imp 0x98e95
+  - progressionTries  @8@0:4  imp 0x98ebd
+  - setProgressionTries:  v12@0:4@8  imp 0x98ecd
+  - sessionNum  @8@0:4  imp 0x98ef5
+  - setSessionNum:  v12@0:4@8  imp 0x98f05
+  - transactionNum  @8@0:4  imp 0x98f2d
+  - setTransactionNum:  v12@0:4@8  imp 0x98f3d
+  - facebookId  @8@0:4  imp 0x98f65
+  - setFacebookId:  v12@0:4@8  imp 0x98f75
+  - gender  @8@0:4  imp 0x98f9d
+  - setGender:  v12@0:4@8  imp 0x98fad
+  - birthYear  @8@0:4  imp 0x98fd5
+  - setBirthYear:  v12@0:4@8  imp 0x98fe5
+  - progression  @8@0:4  imp 0x9900d
+  - setProgression:  v12@0:4@8  imp 0x9901d
+  - gameKey  @8@0:4  imp 0x99045
+  - setGameKey:  v12@0:4@8  imp 0x99055
+  - gameSecret  @8@0:4  imp 0x9907d
+  - setGameSecret:  v12@0:4@8  imp 0x9908d
+  - isInitialized  c8@0:4  imp 0x990b5
+  - setIsInitialized:  v12@0:4c8  imp 0x990c5
+  - clientServerTimeOffset  @8@0:4  imp 0x990d5
+  - setClientServerTimeOffset:  v12@0:4@8  imp 0x990e5
+@end
+
+@interface GAValidator : NSObject  // instanceSize 4
+  + validateBusinessEventWithCurrency:andAmount:andCartType:andItemType:andItemId:andReceipt:  c32@0:4@8i12@16@20@24@28  imp 0x99349
+  + validateResourceEventWithFlowType:andCurrency:andAmount:andItemType:andItemId:  c28@0:4i8@12@16@20@24  imp 0x99541
+  + validateProgressionEventWithProgressionStatus:andProgression01:andProgression02:andProgression03:  c24@0:4i8@12@16@20  imp 0x99879
+  + validateDesignEventWithEventId:andValue:  c16@0:4@8@12  imp 0x99b1d
+  + validateErrorEventWithSeverity:andMessage:  c16@0:4i8@12  imp 0x99bc5
+  + validateKeysWithGameKey:gameSecret:  c16@0:4@8@12  imp 0x99c81
+  + validateCurrency:  c12@0:4@8  imp 0x99d05
+  + validateEventPartLength:andAllowNull:  c16@0:4@8c12  imp 0x99d41
+  + validateEventPartCharacters:  c12@0:4@8  imp 0x99d99
+  + validateEventIdLength:  c12@0:4@8  imp 0x99dcd
+  + validateEventIdCharacters:  c12@0:4@8  imp 0x99e31
+  + validateShortString:  c12@0:4@8  imp 0x99e6d
+  + validateShortString:andCanBeEmpty:  c16@0:4@8c12  imp 0x99e81
+  + validateString:  c12@0:4@8  imp 0x99eed
+  + validateString:andCanBeEmpty:  c16@0:4@8c12  imp 0x99f01
+  + validateLongString:  c12@0:4@8  imp 0x99f6d
+  + validateLongString:andCanBeEmpty:  c16@0:4@8c12  imp 0x99f81
+  + validateSdkWrapperVersion:  c12@0:4@8  imp 0x99fed
+  + validateBuild:  c12@0:4@8  imp 0x9a021
+  + validateEngineVersion:  c12@0:4@8  imp 0x9a04d
+  + validateCustomDimensionsWithCustomDimensions:  c12@0:4@8  imp 0x9a081
+  + validateResourceCurrenciesWithResourceCurrencies:  c12@0:4@8  imp 0x9a0c1
+  + validateResourceItemTypesWithResourceItemTypes:  c12@0:4@8  imp 0x9a229
+  + validateDimension01:  c12@0:4@8  imp 0x9a385
+  + validateDimension02:  c12@0:4@8  imp 0x9a3b9
+  + validateDimension03:  c12@0:4@8  imp 0x9a3ed
+  + validateArrayOfStringsWithArray:andMaxCount:andMaxStringLength:andAllowNoValues:andTag:  c28@0:4@8I12I16c20@24  imp 0x9a421
+  + validateFacebookId:  c12@0:4@8  imp 0x9a6d5
+  + validateGender:  c12@0:4@8  imp 0x9a729
+  + validateBirthyear:  c12@0:4i8  imp 0x9a7a9
+  + validateClientTs:  c12@0:4i8  imp 0x9a7e5
+@end
+
+@interface GameAnalytics : NSObject  // instanceSize 4
+  + internalInitialize  c8@0:4  imp 0x9a801
+  + sharedInstance  @8@0:4  imp 0x9a86d
+  + initialize  v8@0:4  imp 0x9a92d
+  + configureBuild:  v12@0:4@8  imp 0x9aa21
+  + configureSdkVersion:  v12@0:4@8  imp 0x9ab69
+  + configureEngineVersion:  v12@0:4@8  imp 0x9ac89
+  + configureAvailableCustomDimensions01:  v12@0:4@8  imp 0x9ada9
+  + configureAvailableCustomDimensions02:  v12@0:4@8  imp 0x9aea1
+  + configureAvailableCustomDimensions03:  v12@0:4@8  imp 0x9af99
+  + configureAvailableResourceCurrencies:  v12@0:4@8  imp 0x9b091
+  + configureAvailableResourceItemTypes:  v12@0:4@8  imp 0x9b189
+  + initializeWithGameKey:gameSecret:  v16@0:4@8@12  imp 0x9b281
+  + addBusinessEventWithCurrency:amount:itemType:itemId:cartType:autoFetchReceipt:  v32@0:4@8i12@16@20@24c28  imp 0x9b4a1
+  + addBusinessEventWithCurrency:amount:itemType:itemId:cartType:receipt:  v32@0:4@8i12@16@20@24@28  imp 0x9b509
+  + addBusinessEventWithCurrency:amount:itemType:itemId:cartType:receipt:getReceiptAutomatically:  v36@0:4@8i12@16@20@24@28c32  imp 0x9b57d
+  + addResourceEventWithFlowType:currency:amount:itemType:itemId:  v28@0:4i8@12@16@20@24  imp 0x9b935
+  + addProgressionEventWithProgressionStatus:progression01:progression02:progression03:  v24@0:4i8@12@16@20  imp 0x9bac9
+  + addProgressionEventWithProgressionStatus:progression01:progression02:progression03:score:  v28@0:4i8@12@16@20i24  imp 0x9bc2d
+  + addDesignEventWithEventId:  v12@0:4@8  imp 0x9bdc9
+  + addDesignEventWithEventId:value:  v16@0:4@8@12  imp 0x9bddd
+  + addErrorEventWithSeverity:message:  v16@0:4i8@12  imp 0x9c031
+  + isSdkReadyWithNeedsInitialized:  c12@0:4c8  imp 0x9c121
+  + isSdkReadyWithNeedsInitialized:andWarn:  c16@0:4c8c12  imp 0x9c135
+  + isSdkReadyWithNeedsInitialized:andWarn:andMessage:  c20@0:4c8c12@16  imp 0x9c159
+  + setEnabledInfoLog:  v12@0:4c8  imp 0x9c345
+  + setEnabledVerboseLog:  v12@0:4c8  imp 0x9c421
+  + setCustomDimension01:  v12@0:4@8  imp 0x9c4fd
+  + setCustomDimension02:  v12@0:4@8  imp 0x9c61d
+  + setCustomDimension03:  v12@0:4@8  imp 0x9c73d
+  + setFacebookId:  v12@0:4@8  imp 0x9c85d
+  + setGender:  v12@0:4@8  imp 0x9c955
+  + setBirthYear:  v12@0:4i8  imp 0x9ca4d
+  - init  @8@0:4  imp 0x9a9f5
+@end
+
+@category NSTimer (GABlocks)
+  + scheduledTimerWithTimeInterval:block:repeats:  @24@0:4d8@?16c20  imp 0x92cdd
+  + timerWithTimeInterval:block:repeats:  @24@0:4d8@?16c20  imp 0x92d59
+  + jdExecuteSimpleBlock:  v12@0:4@8  imp 0x92dd5
+@end
+
