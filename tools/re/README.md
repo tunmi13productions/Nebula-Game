@@ -22,3 +22,4 @@ Run Python scripts that read the binary with `python -I` (isolated mode). The tr
 - `scan_class.py <ClassName>`: walks a class's whole code range in address order, including blocks between methods, and prints each method's selectors, strings, constants and calls. It's the quickest way to see a scene's flow.
 - `trace_stage.py <chapter> <stage> [method]`: runs a campaign stage opening (or another scene method) in the tracing emulator, runs every captured block in order, and prints the narration, delays, spawns and boss creation. Its output is `decompiled/analysis/traces/chapterN_stageM.txt`.
 - `trace_tutorial.py <section>`: traces a tutorial section (narration order, enemy moves, waits) with audio playback mocked.
+- `trace_cutscene.py <chapter>`: traces a chapter intro cutscene (title card, narration order, images) with audio playback mocked.
