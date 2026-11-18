@@ -15,6 +15,7 @@ ALARM_INTERVAL = 4.0
 ENEMY_SHOT_FLIGHT = 1.5
 ENEMY_SHOT_1_CODES = {0, 21, 22, 41}
 BURST_FRAME = 0.02
+BANK_FRAME = 0.03                                   # the banking animations, per frame
 LASER_CODES = {3, 5, 7, 8, 15, 23, 27, 30, 42, 100, 101, 102}
 ALLY_CODES = {37, 38, 39}
 DRIFTER_CODES = {37, 38, 39, 46, 47, 48, 49, 50}     # allies, the fuel tank and rocks: they fall instead of fighting
@@ -86,6 +87,7 @@ class SpaceShip(Node):
         w = scene.size[0] / 4.5
         ship.ship_size = (w, w)
         ship.size = (w, w)
+        ship.add_sprite('Player_10')
         attach(ship, Body(player_hitbox(w), category=CAT_PLAYER, contact=CAT_ENEMY_SHOT | CAT_OBSTACLE, collision=CAT_OBSTACLE))
         ship.scale = 1.5
         bob = w / 15
@@ -105,11 +107,18 @@ class SpaceShip(Node):
         tex = TEXTURES.get('SpaceShips_%d' % code, (40.0, 40.0))
         ship.ship_size = fit_size(tex, scene.size[0] / 4.3)
         ship.size = ship.ship_size
+        ship.add_sprite('SpaceShips_%d' % code)
         ship.scale = 0.8
         ship.position = (float(ship.parent_width // 2), ship.parent_height + ship.ship_size[1])
         if entrance:
             ship.run_entrance()
         return ship
+
+    def add_sprite(self, texture):
+        """spaceshipNode: the ship's picture, a child sprite of ship_size (visual only)."""
+        self.sprite = Node(name='spaceshipNode', size=self.ship_size)
+        self.sprite.texture = texture
+        self.add_child(self.sprite)
 
     def run_entrance(self):
         W, H = self.parent_width, self.parent_height
@@ -372,14 +381,26 @@ class SpaceShip(Node):
                              A.run_block(beam_on), A.wait(hold), A.run_block(retreat)]))
 
     # visual-only in the original: sprite frame animations for banking and levelling out
+    # banking: the player's 21 Player_ frames, 10 being level, at 0.03 seconds a frame (visual only)
+
+    def _bank(self, frames):
+        sprite = getattr(self, 'sprite', None)
+        if sprite is not None:
+            sprite.remove_all_actions()
+            sprite.run(A.animate_with_textures(['Player_%02d' % i for i in frames], BANK_FRAME))
+
     def move_left(self):
-        pass
+        """moveSpaceshipToLeft: frames 11 to 20."""
+        self._bank(range(11, 21))
 
     def move_right(self):
-        pass
+        """moveSpaceshipToRight: frames 9 down to 0."""
+        self._bank(range(9, -1, -1))
 
     def stabilise_from_left(self):
-        pass
+        """estabilizaSpaceshipToLeft: frames 20 back to 10."""
+        self._bank(range(20, 9, -1))
 
     def stabilise_from_right(self):
-        pass
+        """estabilizaSpaceshipToRight: frames 0 up to 10."""
+        self._bank(range(0, 11))

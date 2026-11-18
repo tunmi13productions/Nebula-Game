@@ -64,3 +64,22 @@ def test_textures_come_from_the_atlas_the_bundle_and_the_catalog():
     assert STORE.get('leftDoor').get_size() == (531, 1229)
     assert STORE.get('nebulaMenu1').get_size() == (640, 1136)
     assert STORE.get('no such image') is None
+
+
+def test_ships_carry_their_pictures_and_the_player_banks():
+    from nebula.game.free_mode import FreeModeScene
+    from nebula.game.services import Services
+    from nebula.game.ship import SpaceShip
+    services = Services.silent('en')
+    scene = FreeModeScene(services)
+    player = scene.player
+    assert player.sprite.texture == 'Player_10' and player.sprite.size == player.ship_size
+    assert SpaceShip.enemy(12, scene, entrance=False).sprite.texture == 'SpaceShips_12'
+    player.move_left()
+    for _ in range(40):
+        player.sprite.update_actions(1 / 60)
+    assert player.sprite.texture == 'Player_20'
+    player.stabilise_from_left()
+    for _ in range(40):
+        player.sprite.update_actions(1 / 60)
+    assert player.sprite.texture == 'Player_10'

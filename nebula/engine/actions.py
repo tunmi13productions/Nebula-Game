@@ -122,6 +122,29 @@ class wait(_Timed):
         pass
 
 
+class animate_with_textures(_Timed):
+    """SKAction animateWithTextures:timePerFrame: (restore NO): each texture name in turn on node.texture,
+    frame i from i * time_per_frame. The last frame stays."""
+
+    def __init__(self, textures, time_per_frame):
+        self.textures, self.time_per_frame = list(textures), time_per_frame
+        self.duration = len(self.textures) * time_per_frame
+
+    def begin(self, node, state):
+        if self.textures:
+            node.texture = self.textures[0]
+
+    def apply(self, node, state, p0, p1):
+        if self.textures:
+            i = min(int(state['elapsed'] / self.time_per_frame + 1e-9), len(self.textures) - 1)
+            node.texture = self.textures[i]
+
+
+def set_texture(name):
+    """SKAction setTexture:."""
+    return _Instant(lambda node: setattr(node, 'texture', name))
+
+
 class move_to(_Timed):
     def __init__(self, x=None, y=None, duration=0.0):
         self.x, self.y, self.duration = x, y, duration
