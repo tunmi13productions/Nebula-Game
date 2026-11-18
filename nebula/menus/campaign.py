@@ -17,6 +17,9 @@ It shows one chapter at a time. With VoiceOver running (always, here) its items 
   then starts (presentChapterWithStage, which saves "capitulo" and "fase").
 - Swipe up (didSwipeUp) says "Back" and leaves.
 - The scene's background map is visual only.
+
+Deviation (DEVIATIONS.md): while an item is being spoken, any navigation key cuts the speech off and acts at
+once, and Control silences it, instead of input waiting for the line to finish.
 """
 
 RATE = 0.55
@@ -37,6 +40,7 @@ class CampaignSelectScene:
         self.chapter = chapter
         self.selection = 0
         self.swiping = False
+        self.reading = False      # an item is being spoken and input waits for it (interruptible here)
         self.started = False
 
     # what the window calls
@@ -66,6 +70,11 @@ class CampaignSelectScene:
         pass
 
     def handle_key(self, key):
+        if key == 'control':
+            self.services.voice.stop()
+            self._interrupt()
+            return True
+        self._interrupt()
         if key == 'right':
             self.did_swipe_left()
         elif key == 'left':
@@ -75,13 +84,23 @@ class CampaignSelectScene:
         return True
 
     def menu_next(self):
+        self._interrupt()
         self.swipe_right_detected()
 
     def menu_previous(self):
+        self._interrupt()
         self.swipe_left_detected()
 
     def menu_activate(self):
+        self._interrupt()
         self.double_tap_detected()
+
+    def _interrupt(self):
+        """Cuts off an item still being read, so the next key acts at once (a deviation)."""
+        if self.reading:
+            self.services.voice.stop()
+            self.reading = False
+            self.swiping = False
 
     # text
 
@@ -122,12 +141,14 @@ class CampaignSelectScene:
 
     def _done(self):
         self.swiping = False
+        self.reading = False
 
     def _error(self):
         self.services.effects.play('errorButton.mp3')
         self.services.scheduler.after(ERROR_HOLD, self._done)
 
     def _speak_item(self):
+        self.reading = True
         self.services.voice.speak_then(self.item_text(self.selection), RATE, 0.0, 0.0, self._done)
 
     def swipe_right_detected(self):

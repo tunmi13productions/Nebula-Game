@@ -81,3 +81,14 @@ def test_free_mode_pause_leaves_to_the_menu():
     scene.menu_next()
     scene.menu_activate()
     assert calls == ['menu']
+
+
+def test_control_silences_an_open_menu_but_not_play():
+    calls = []
+    scene, services = chapter(calls)
+    scene.services.voice.speak('a long line of play speech')
+    scene.handle_key('control')
+    assert services.voice.speaking          # during play nothing is cut
+    scene.swipe_up()
+    scene.handle_key('control')
+    assert not services.voice.speaking

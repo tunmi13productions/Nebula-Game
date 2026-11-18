@@ -363,6 +363,15 @@ class BaseScene(Scene):
 
     # in-game menus (menuObjects)
 
+    def handle_key(self, key):
+        """Control silences the game voice while an in-game menu is open (a deviation). Other keys go the
+        usual way."""
+        if key == 'control':
+            if self.in_menu:
+                self.services.voice.stop()
+            return True
+        return False
+
     def open_menu(self, title, items, end_screen=True):
         """Shows an in-game menu. items is a list of (label, action). Selection starts on the first item and
         the title and that item are spoken together, as "%@, %@"."""

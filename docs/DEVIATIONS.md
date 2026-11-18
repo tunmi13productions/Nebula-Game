@@ -102,3 +102,9 @@ Each entry is a settled decision. Don't change a deviated behaviour unless the u
 - Changed: the characters are restored as the Portuguese strings have them: Márcia, Raí and ©.
 - Reason: a screen reader would read the replacement character aloud or skip it, garbling the names. Decided by the user on 2026-11-18.
 
+## Spoken menu items can be interrupted
+
+- Original: in the campaign selector, moving to an item spoke it with the game voice and ignored all input (swipes, chapter changes, double tap, swipe up) until the line had finished (the swiping flag, cleared by the speech completion). The in-game menus (pause, game over, mission complete, tutorial complete) speak their items without locking, and their speech can't be stopped.
+- Changed: in the campaign selector, pressing a navigation key (the arrows, Enter or Escape) while an item is being read cuts the line off and acts at once. Control silences the line and unlocks input. In the in-game menus, Control silences the game voice. During play Control does nothing, because the level scripts wait for their spoken lines to finish.
+- Reason: waiting for every item to be read in full made moving through chapters and levels slow. Requested by the user on 2026-11-18.
+

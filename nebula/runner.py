@@ -42,7 +42,8 @@ class GameWindow:
     def handle(self, ev):
         s = self.scene
         down = ev.type == pygame.KEYDOWN
-        named = {pygame.K_ESCAPE: 'escape', pygame.K_LEFT: 'left', pygame.K_RIGHT: 'right'}.get(ev.key)
+        named = {pygame.K_ESCAPE: 'escape', pygame.K_LEFT: 'left', pygame.K_RIGHT: 'right',
+                 pygame.K_LCTRL: 'control', pygame.K_RCTRL: 'control'}.get(ev.key)
         if down and named and hasattr(s, 'handle_key') and s.handle_key(named):
             return
         if ev.key in (pygame.K_LSHIFT, pygame.K_RSHIFT):

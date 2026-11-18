@@ -232,11 +232,23 @@ def test_campaign_opens_on_the_furthest_chapter_and_reads_its_items():
     assert services.effects.played[-1] == 'errorButton.mp3'
 
 
-def test_campaign_ignores_input_until_the_item_is_spoken():
-    app, window, services, spoken = campaign()
+def test_campaign_moving_on_cuts_off_the_item_being_read():
+    app, window, services, spoken = campaign(2, 4)
     window.scene.menu_next()
     window.scene.menu_next()
-    assert window.scene.selection == 1
+    assert window.scene.selection == 2
+    assert spoken.lines[-2:] == ['Back', 'Level 1: The Coordinates']
+
+
+def test_campaign_control_silences_and_unlocks():
+    app, window, services, spoken = campaign(2, 4)
+    window.scene.menu_next()
+    assert window.scene.swiping
+    window.scene.handle_key('control')
+    assert not window.scene.swiping and not services.voice.speaking
+    window.scene.handle_key('left')
+    window.run(1.1)
+    assert window.scene.chapter == 1
 
 
 def test_campaign_changes_chapter_only_up_to_the_furthest():
