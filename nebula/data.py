@@ -13,6 +13,7 @@ def _load(name):
 SHIPS = {int(k): v for k, v in _load('ships.json').items()}
 SHIP_SOUNDS = {int(k): v for k, v in _load('ship_sounds.json').items()}
 TEXTURES = {k: tuple(v) for k, v in _load('textures.json').items()}
+BOSSES = {int(k): v for k, v in _load('bosses.json').items()}
 
 
 def engine_sound(code):

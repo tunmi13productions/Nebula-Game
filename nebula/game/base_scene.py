@@ -233,6 +233,13 @@ class BaseScene(Scene):
         self.add_child(ship)
         return ship
 
+    def spawn_boss(self, boss_code):
+        """[[Boss alloc] initBoss:code onParentScene:self]: the boss adds itself and starts its entrance."""
+        from .boss import Boss
+        boss = Boss(boss_code, self)
+        self.add_child(boss)
+        return boss
+
     # power-ups
 
     def release_power_up(self, kind):

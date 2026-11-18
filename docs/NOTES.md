@@ -344,10 +344,20 @@ Full call traces for every boss are in `decompiled/analysis/traces/boss_NN.txt`,
   - 6: +160 in 2, -320 in 4, back to (W/2, 0.75H) in 2.
   - 7: +32 in 5, -64 in 6, back in 4.
   - 9: +32 in 2, (-64, +56.8) in 4, back in 2.
-- Attack tick (block at 0x20958, shared by all bosses): if the scene is inactive the boss removes itself. atualShootPoint cycles 1, 2, 0. The boss tries a laser from that point: 0 is at (-5w/17, -h/2), 1 is at (0, -h/3) and 2 is at (+5w/17, -h/2), relative to the boss, where w and h are the boss size. The laser only starts if none is active. Then it fires one bullet from boss.x - 0.15*spriteWidth on odd ticks or boss.x + 0.15*spriteWidth on even ticks, at the boss's y. The bullet is a Fireball, size W/12, radius 5, moving to y = -20 over 1.5 seconds. It uses `Enemy_Shot_1.caf`, linked and positional.
-- The boss laser uses the same pattern as the ship laser: `Laser_Charge.caf`, wait 1 second, `Laser_Firing.mp3`, wait 1.5 seconds, then a W/50 by H beam, which stays for laserTime seconds before fading. laserTime is 0 by default, which means a random 3 to 7 seconds. In the traces, lasers appear for bosses 1, 5, 6, 7, 8 and 9 (fixed times: 5 gives 6 seconds, 6 gives 0.5, 7 gives 5, 8 and 9 give 4). Bosses 2, 3, 4 and 10 never started a laser in the traces. Confirm that's real and not a tracer artefact.
+- Attack interval: after the entrance, the boss waits its interval and then runs its attack block, forever. The intervals are 1.0 seconds for bosses 1, 2, 4 and 6, 0.6 for 3, 7, 8 and 10, 0.7 for 5, and 0.8 for 9.
+- Attack blocks: each boss has its own block (0x20958 for boss 1, 0x20c74 for boss 2, up to 0x2268c for boss 10). Each one steps through a fixed cycle of firing points, relative to the boss, using atualShootPoint. The cycles were traced with `tools/re/trace_boss_attacks.py`, and they're encoded in `nebula/game/boss.py` as ATTACKS and checked tick by tick against the original by `tests/test_bosses.py`. In outline:
+  - Boss 1: every tick tries a laser from one of three points, plus a bullet from 0.15 of the width to the left or right.
+  - Boss 2: bullets sweeping across five points.
+  - Bosses 3, 4 and 10: bullets from three points (left, centre, right), and 4 and 10 repeat the centre.
+  - Boss 5: right bullet, left bullet, a rest, then a laser.
+  - Boss 6: alternately a centre bullet and a laser.
+  - Boss 7: four steps including a laser. One of its bullet points is 708 points below the boss, so that bullet starts below the screen and drifts up to y = -20 out of earshot. Original oddity, kept.
+  - Boss 8: right bullet, laser, left bullet, left bullet.
+  - Boss 9: a double bullet on the left, a coin flip (getRandomNumberBetween(0, 100): laser when even, otherwise a centre bullet), then a double bullet on the right.
+- Boss bullets: a Fireball, size W/12, physics circle radius 5, starting at the firing point and moving to y = -20 over 1.5 seconds. Sound `Enemy_Shot_1.caf`, linked and positional.
+- Boss lasers: the same charge, firing and beam sequence as a laser ship, but the beam is a child of the boss. It sits at (point.x, point.y - h/2) relative to the boss centre, W/50 by H (6.4 points wide, not rounded like ships), and moves with the boss. It holds for a random 3 to 7 whole seconds: laserTime is never assigned anywhere, so it's always 0 and the random duration is always used. Then it retreats to y = h over 3 seconds while the firing sound fades.
 - `destroyBoss`: it plays `explosion_1.caf`, waits 0.3 seconds, plays `Explosion_.mp3`, waits 0.2 seconds, plays `explosion.mp3` (all non-positional). It removes the physics body, plays the explosion animation, then a completion block runs (not traced yet, probably the scene's boss-defeated hook).
-- Bosses don't seem to carry their own looping engine sound in this class. Check whether the chapter scenes attach one, or whether the invisible SpaceShip parts 100 to 105 provide the sound and hitboxes.
+- Bosses have no engine sound. They're heard only through their bullets, lasers and explosions. Boss getShipCode returns 100, which is what destroyEnemy: receives.
 
 ## Open questions
 

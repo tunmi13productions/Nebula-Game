@@ -5,6 +5,7 @@ Keys:
   Space: fire.
   F: spawn a fighter. It enters from the top, wanders and shoots.
   G: spawn a laser ship. It parks near a side and fires its laser: charge, firing sound, then the beam.
+  B: spawn the next boss (1 to 10 in turn). Bosses are heard through their bullets and lasers.
   P: drop a random power-up (life, shield, speed or fast shot). Follow its radar beep to collect it.
   R: spawn a rock, A: spawn an ally. Both fall past you. Allies are worth minus 100 points if destroyed.
   S: speak the score.
@@ -63,11 +64,13 @@ def main():
     scene.did_move_to_view()
     scene.talking_move = True
     engine = None
-    reader.say('Sandbox. Arrows steer, Space fires. F fighter, G laser ship, R rock, A ally, P power-up. L life, S score, '
+    reader.say('Sandbox. Arrows steer, Space fires. F fighter, G laser ship, R rock, A ally, B boss, P power-up. L life, S score, '
                'T talking movement, E enemy engine, up and down change tilt, now %.2f. Escape quits.' % keys.tilt)
 
     groups = {pygame.K_f: ('Fighter', [0, 1, 2, 9, 10, 11]), pygame.K_g: ('Laser ship', [3, 7, 8]),
               pygame.K_r: ('Rock', [47, 48, 49, 50]), pygame.K_a: ('Ally', [37, 38, 39])}
+
+    boss_turn = [0]
 
     def spawn(key):
         label, codes = groups[key]
@@ -93,6 +96,10 @@ def main():
                     scene.player_shoot()
                 elif down and ev.key in groups:
                     spawn(ev.key)
+                elif down and ev.key == pygame.K_b:
+                    boss_turn[0] = boss_turn[0] % 10 + 1
+                    scene.spawn_boss(boss_turn[0])
+                    reader.say('Boss %d incoming' % boss_turn[0])
                 elif down and ev.key == pygame.K_p:
                     scene.release_power_up(random.randint(1, 4))
                     reader.say('Power-up dropped')

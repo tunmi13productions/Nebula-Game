@@ -11,7 +11,6 @@ COUNTDOWN = 3
 FIRST_ENEMY_DELAY = 0.5
 BASES_BEFORE_SPECIALS = 10
 BOSS_EVERY = 10
-PLACEHOLDER_BOSS = 45   # until bosses are ported: the toughest ordinary ship stands in for the boss
 
 
 class FreeModeScene(BaseScene):
@@ -83,10 +82,6 @@ class FreeModeScene(BaseScene):
             self.spawn_boss(BOSS_LIST[self.boss_code])
         else:
             self.create_enemy_with_type(SPECIAL_POOL[between(self.ini_special, self.fin_special)])
-
-    def spawn_boss(self, code):
-        """Bosses arrive with the boss step. Until then a code 45 ship stands in and reports as a special."""
-        self.create_enemy_with_type(PLACEHOLDER_BOSS)
 
     def is_base_enemy(self, code):
         return code in BASE_POOL

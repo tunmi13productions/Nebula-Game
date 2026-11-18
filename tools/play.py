@@ -2,7 +2,7 @@ r"""Play the parts of the game that are built so far. This plays real sound: run
 
 usage:
   python tools/play.py tutorial [section]   sections: 1 Movement, 2 Enemies, 3 Attack, 4 Battle, 5 Basic, 6 Special
-  python tools/play.py free                 free mode (bosses are stand-ins until the boss step)
+  python tools/play.py free                 free mode
 
 Keys: arrows steer, Space fires, L speaks your life, Escape is swipe up (it ends a tutorial section).
 In menus: down and up arrows move, Enter activates. Menu items that lead to screens not built yet quit.
