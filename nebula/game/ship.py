@@ -56,20 +56,20 @@ def burst_and_remove(node, frames, textures=None):
         node.run(A.animate_with_textures(textures, BURST_FRAME))
 
 
-class LaserSoundSource:
-    """Where a laser's charge and firing sounds are heard from (a deviation, see DEVIATIONS.md).
+class DangerZoneSound:
+    """Where an enemy attack's sound is heard from (a deviation, see DEVIATIONS.md, "Attack sounds cover their
+    danger zone").
 
-    The original linked them to the laser ship, a single point, while the beam hits anywhere within the
-    player's hitbox half-width plus the beam's half-width of the beam's column. Here the sound sits at the
-    player's own x while the player is inside that zone, so it's heard straight ahead, and otherwise at the
-    distance past the zone's edge, so it starts to pan only once the player is clear. The zone is the real
-    hit range times services.laser_zone (1.5 by default, the "laser_zone" setting), since even a little past
-    the edge the cube-root pan already sounds clearly to one side. Aureal reads
-    `position` and `parent` from it as from a node.
+    The original linked laser and bullet sounds to a single point (the laser ship, or the bullet). But a laser
+    beam or a falling bullet hits the player anywhere its column comes within the player's hitbox half-width
+    plus its own half-width. Here the sound sits at the player's own x while the column is inside that zone,
+    times services.danger_zone (1.5 by default, the "danger_zone" setting), so it's heard straight ahead,
+    and otherwise at the distance past the zone's edge, so it pans only once the player is clear. The height
+    stays the source's. Aureal reads `position` and `parent` from it as from a node.
     """
 
-    def __init__(self, source, column_offset=0.0):
-        self.source, self.column_offset = source, column_offset
+    def __init__(self, source, half_width, column_offset=0.0):
+        self.source, self.half_width, self.column_offset = source, half_width, column_offset
 
     @property
     def parent(self):
@@ -78,15 +78,28 @@ class LaserSoundSource:
     @property
     def position(self):
         x, y = self.source.position
-        column = x + self.column_offset
-        game = self.source.game
+        game = self.game()
+        if game is None:
+            return (x, y)
         player = game.player
-        reach = (player.ship_size[0] * 0.5 * player.scale + game.size[0] / 100.0) * game.services.laser_zone
+        reach = (player.ship_size[0] * 0.5 * player.scale + self.half_width) * game.services.danger_zone
         px = player.position[0]
-        d = column - px
+        d = x + self.column_offset - px
         if abs(d) <= reach:
             return (px, y)
         return (px + d - reach if d > 0 else px + d + reach, y)
+
+    def game(self):
+        scene = self.source.scene
+        return scene if scene is not None and hasattr(scene, 'player') else None
+
+
+BULLET_RADIUS = 5.0
+
+
+def laser_sound(source, column_offset=0.0):
+    """A laser's charge and firing sounds: the beam is W/50 wide."""
+    return DangerZoneSound(source, source.game.size[0] / 100.0, column_offset)
 
 
 class Shot(Node):
@@ -362,9 +375,9 @@ class SpaceShip(Node):
         if self.is_player:
             self.services.effects.play('PlayerGun.caf')
         elif self.code in ENEMY_SHOT_1_CODES:
-            self.play_linked('Enemy_Shot_1', 'caf', bullet)
+            self.play_linked('Enemy_Shot_1', 'caf', DangerZoneSound(bullet, BULLET_RADIUS))
         else:
-            self.play_linked('Enemy_Shot_2', 'mp3', bullet)
+            self.play_linked('Enemy_Shot_2', 'mp3', DangerZoneSound(bullet, BULLET_RADIUS))
 
     # enemy shooting (startShooting:, shoot:)
 
@@ -412,7 +425,7 @@ class SpaceShip(Node):
         bullet.texture = looks.FIREBALL[2]
         bullet.tint, bullet.color_blend = looks.ship_color(self.code), 1.0
         bullet.run(A.repeat_forever(A.animate_with_textures(looks.FIREBALL, looks.BULLET_FRAME)))
-        attach(bullet, Body(Circle(5.0), category=CAT_ENEMY_SHOT, contact=CAT_PLAYER | CAT_PLAYER_SHOT, collision=CAT_ENEMY_SHOT))
+        attach(bullet, Body(Circle(BULLET_RADIUS), category=CAT_ENEMY_SHOT, contact=CAT_PLAYER | CAT_PLAYER_SHOT, collision=CAT_ENEMY_SHOT))
         bullet.position = (self.position[0], self.position[1] - self.ship_size[1] * 0.5)
         bullet.z = self.z
         bullet.run(A.sequence([A.move_to_y(-20.0, flight), A.remove_from_parent()]))
@@ -436,7 +449,7 @@ class SpaceShip(Node):
         keys = {}
 
         def charge():
-            keys['sound'] = self.play_linked('Laser_Charge', 'caf', LaserSoundSource(self))
+            keys['sound'] = self.play_linked('Laser_Charge', 'caf', laser_sound(self))
 
         def glow():
             """The charging glow: one of the four MyParticle emitters, picked with arc4random() % 4 (this
@@ -451,7 +464,7 @@ class SpaceShip(Node):
             self.game.add_child(em)
 
         def fire():
-            keys['sound'] = self.play_linked('Laser_Firing', 'mp3', LaserSoundSource(self))
+            keys['sound'] = self.play_linked('Laser_Firing', 'mp3', laser_sound(self))
 
         def stream():
             """The beam's look: the particles pour down."""

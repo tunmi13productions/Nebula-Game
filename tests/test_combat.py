@@ -74,7 +74,7 @@ def test_enemy_bullet_hits_the_player_with_sound_and_speech():
     scene, services, keys = make()
     enemy = target(scene, code=9)
     bullet = enemy.fire_bullet()
-    assert any(s.linked is bullet for s in services.aureal.library.values())
+    assert any(getattr(s.linked, 'source', s.linked) is bullet for s in services.aureal.library.values())
     run(scene, services, 1.5)
     assert 'player_hit.caf' in services.effects.played
     assert scene.player.life == 4
@@ -165,16 +165,33 @@ def test_death_stops_movement_and_ends_the_stage_after_a_delay():
 def test_laser_sound_is_centred_inside_the_danger_zone_and_pans_from_its_edge():
     from nebula.game.free_mode import FreeModeScene
     from nebula.game.services import Services
-    from nebula.game.ship import LaserSoundSource, SpaceShip
+    from nebula.game.ship import SpaceShip, laser_sound
     services = Services.silent('en')
     scene = FreeModeScene(services)
     px = scene.player.position[0]
     reach = (scene.player.ship_size[0] * 0.5 * scene.player.scale + scene.size[0] / 100.0) * 1.5
     ship = SpaceShip.enemy(3, scene, entrance=False)
     scene.add_child(ship)
-    source = LaserSoundSource(ship)
+    source = laser_sound(ship)
     ship.position = (px + reach - 1, 480.0)
     assert source.position == (px, 480.0)
     ship.position = (px - reach - 10, 480.0)
     assert abs(source.position[0] - (px - 10)) < 1e-9
     assert source.parent is scene
+
+
+def test_bullet_sounds_are_centred_while_the_bullet_can_hit():
+    from nebula.game.free_mode import FreeModeScene
+    from nebula.game.services import Services
+    from nebula.game.ship import SpaceShip
+    services = Services.silent('en')
+    scene = FreeModeScene(services)
+    px = scene.player.position[0]
+    reach = (scene.player.ship_size[0] * 0.5 * scene.player.scale + 5.0) * 1.5
+    ship = SpaceShip.enemy(1, scene, entrance=False)
+    scene.add_child(ship)
+    ship.position = (px + reach - 2, 400.0)
+    bullet = ship.fire_bullet()
+    key = [k for k, snd in services.aureal.library.items() if snd.linked is not None
+           and getattr(snd.linked, 'source', None) is bullet][0]
+    assert services.aureal.library[key].linked.position[0] == px

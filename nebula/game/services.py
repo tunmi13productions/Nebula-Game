@@ -22,7 +22,7 @@ class Services:
         self.voice = GameVoice(audio, self.scheduler, voice_renderer)
         self.screen_reader = screen_reader
         self.save = save if save is not None else SaveData.in_memory()
-        self.laser_zone = 1.5   # the laser sounds' centred zone, as a multiple of the real hit range
+        self.danger_zone = 1.5  # attack sounds' centred zone, as a multiple of the real hit range
 
     @staticmethod
     def sound_path(name, ext):

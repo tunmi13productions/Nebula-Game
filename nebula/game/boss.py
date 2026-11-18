@@ -13,8 +13,8 @@ from ..engine.particles import Emitter
 from ..engine.physics import Body, Circle, Polygon, attach, rectangle
 from . import looks
 from .rand import arc4random, between
-from .ship import (CAT_ENEMY, CAT_ENEMY_SHOT, CAT_LASER, CAT_OBSTACLE, CAT_PLAYER, CAT_PLAYER_SHOT, LaserSoundSource,
-                   Shot)
+from .ship import (CAT_ENEMY, CAT_ENEMY_SHOT, CAT_LASER, CAT_OBSTACLE, CAT_PLAYER, CAT_PLAYER_SHOT, BULLET_RADIUS, DangerZoneSound,
+                   Shot, laser_sound)
 
 BOSS_CODE = 100            # what Boss getShipCode reports to destroyEnemy:
 SHOT_FLIGHT = 1.5
@@ -112,11 +112,11 @@ class Boss(Node):
         bullet.texture = looks.FIREBALL[2]   # a colour is set, but with no blend factor it doesn't show
         bullet.blend_mode, bullet.z = 'add', -1.0
         bullet.run(A.repeat_forever(A.animate_with_textures(looks.FIREBALL, looks.BOSS_BULLET_FRAME)))
-        attach(bullet, Body(Circle(5.0), category=CAT_ENEMY_SHOT, contact=CAT_PLAYER | CAT_PLAYER_SHOT, collision=CAT_ENEMY_SHOT))
+        attach(bullet, Body(Circle(BULLET_RADIUS), category=CAT_ENEMY_SHOT, contact=CAT_PLAYER | CAT_PLAYER_SHOT, collision=CAT_ENEMY_SHOT))
         bullet.position = (x, y)
         bullet.run(A.sequence([A.move_to_y(-20.0, SHOT_FLIGHT), A.remove_from_parent()]))
         self.game.add_child(bullet)
-        self._play_linked('Enemy_Shot_1', 'caf', bullet)
+        self._play_linked('Enemy_Shot_1', 'caf', DangerZoneSound(bullet, BULLET_RADIUS))
         return bullet
 
     def _play_linked(self, name, ext, node):
@@ -145,7 +145,7 @@ class Boss(Node):
         bh = self.size[1]
 
         def charge():
-            keys['sound'] = self._play_linked('Laser_Charge', 'caf', LaserSoundSource(self, dx))
+            keys['sound'] = self._play_linked('Laser_Charge', 'caf', laser_sound(self, dx))
 
         def glow():
             """The beam's look: MyParticle as a child of the boss at the gun, red-tinted, slow while charging
@@ -159,7 +159,7 @@ class Boss(Node):
             self.add_child(em)
 
         def fire():
-            keys['sound'] = self._play_linked('Laser_Firing', 'mp3', LaserSoundSource(self, dx))
+            keys['sound'] = self._play_linked('Laser_Firing', 'mp3', laser_sound(self, dx))
             keys['emitter'].set(birth_rate=150.0, lifetime=2.0)
 
         def stop_stream():

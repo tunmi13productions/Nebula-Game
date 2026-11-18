@@ -20,7 +20,7 @@ def main():
     save = SaveData.default()
     services = Services(OpenALBackend(), PrismRenderer(lang), ScreenReader(), Strings(lang),
                         GlobalState.load(save), save=save)
-    services.laser_zone = float(settings.get('laser_zone', 1.5))
+    services.danger_zone = float(settings.get('danger_zone', settings.get('laser_zone', 1.5)))
     tilt = KeyboardTilt(float(settings.get('tilt', 0.3)), float(settings.get('fast_tilt', 0.6)))
     window = GameWindow(services, tilt, 'Nebula', float(settings.get('scale', 1.5)))
     App(window, services, tilt).start()

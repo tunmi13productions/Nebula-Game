@@ -68,7 +68,7 @@ def test_boss_bullets_carry_a_positional_sound():
     run(scene, services, 6.1)
     bullets = [n for n in scene.children if isinstance(n, Shot) and n.ship is boss]
     assert bullets
-    linked = [s for s in services.aureal.library.values() if s.linked in bullets]
+    linked = [s for s in services.aureal.library.values() if getattr(s.linked, 'source', s.linked) in bullets]
     assert linked and services.audio.state[linked[0].handle]['path'].endswith('Enemy_Shot_1.caf')
 
 
