@@ -90,11 +90,11 @@ Each entry is a settled decision. Don't change a deviated behaviour unless the u
 - Changed: the medium always respawns. When the player's life is 4 or less, the life power-up still drops as before, and at full life the 4th medium still drops one. Everything else in the stage is unchanged.
 - Reason: the original could leave the player stuck in an unwinnable stage with no way out except leaving. Decided by the user on 2026-11-17.
 
-## The About screen's mail and links open with the default Windows programs
+## The About screen's contact buttons are removed, and its credit links open in the browser
 
-- Original: SEND EMAIL opened the in-app mail composer (MFMailComposeViewController) to contato@graycompany.com.br with the subject "Gray Co. - Nebula", and was disabled when the device couldn't send mail. OUR PAGE and the credit links opened their pages in Safari.
-- Changed: SEND EMAIL opens a mailto: link with the same address and subject in the default mail program, and is always enabled. The pages open in the default browser.
-- Reason: Windows has no in-app mail composer, and there is no reliable way to know whether a mail program is set up. Decided by the user on 2026-11-18.
+- Original: the About screen had OUR PAGE, which opened http://www.graycompany.com.br in Safari, and SEND EMAIL, which opened the in-app mail composer (MFMailComposeViewController) to contato@graycompany.com.br with the subject "Gray Co. - Nebula" and was disabled when the device couldn't send mail. The credit links (FreeSFX, OpenGameArt, SoundJay, MillionthVector) opened their sites in Safari.
+- Changed: OUR PAGE and SEND EMAIL are removed. The credit links open in the default browser.
+- Reason: Gray Company no longer exists; its site is down and its address no longer works, so the buttons would lead nowhere. Windows has no Safari, so the default browser stands in for it. The contact buttons were first ported as a mailto link and a browser link (decided on 2026-11-18), then removed at the user's request on 2026-11-18.
 
 ## Garbled characters in the English About screen are restored
 

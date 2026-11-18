@@ -382,10 +382,10 @@ def open_about():
 
 def test_about_reads_its_elements_in_screen_order():
     app, window, services = open_about()
-    for _ in range(6):
+    for _ in range(4):
         window.scene.menu_next()
-    assert said(services)[-6:] == ['BACK, button', 'About', 'CREDITS, button', 'OUR PAGE, button',
-                                   'SEND EMAIL, button', 'GRAY COMPANY © All Rights Reserved']
+    assert said(services)[-4:] == ['BACK, button', 'About', 'CREDITS, button',
+                                   'GRAY COMPANY © All Rights Reserved']
 
 
 def test_credits_swap_in_and_their_sources_open():
@@ -404,15 +404,3 @@ def test_credits_swap_in_and_their_sources_open():
     for _ in range(20):
         screen.menu_next()
     assert said(services)[-2:] == ['Ricardo Rauber', 'GRAY COMPANY © All Rights Reserved']
-
-
-def test_page_and_mail_open_with_the_system():
-    app, window, services = open_about()
-    screen = window.scene
-    for _ in range(3):
-        screen.menu_next()
-    screen.menu_activate()
-    screen.menu_next()
-    screen.menu_activate()
-    assert app.opened == ['http://www.graycompany.com.br',
-                          'mailto:contato@graycompany.com.br?subject=Gray%20Co.%20-%20Nebula']

@@ -3,24 +3,19 @@
 Accessibility elements in screen order:
 - BACK (info_voltar), across the top.
 - An invisible label "About" (info_sobre) over the about image (the image itself is text drawn as a picture).
-- CREDITS (info_credito), OUR PAGE (contato_pagina), SEND EMAIL (contato_email).
+- CREDITS (info_credito).
 - The copyright line (info_gray).
 
+The original also had OUR PAGE (contato_pagina) and SEND EMAIL (contato_email). Gray Company no longer exists,
+so those two are removed (DEVIATIONS.md).
+
 CREDITS (creditosPressed) swaps the about part for the credits list and back. While the list shows, the
-"About" label, OUR PAGE and SEND EMAIL leave the accessibility order. The list has 18 rows: section headers
+"About" label leaves the accessibility order. The list has 18 rows: section headers
 (the cred_* strings, which start with a space) and names. FreeSFX, OpenGameArt, SoundJay, OpenGameArt and
 MillionthVector (rows 7, 8, 9, 11 and 12) are buttons that open the source's web site (buttonListAction).
-OUR PAGE opens http://www.graycompany.com.br. SEND EMAIL opens a mail to contato@graycompany.com.br with the
-subject "Gray Co. - Nebula" (the original used the in-app mail composer, and disabled the button when the
-device couldn't send mail).
 """
-from urllib.parse import quote
-
 from .screen import Element, Screen
 
-PAGE = 'http://www.graycompany.com.br'
-MAIL = 'contato@graycompany.com.br'
-SUBJECT = 'Gray Co. - Nebula'
 LINKS = {
     'FreeSFX': 'http://www.freesfx.co.uk/',
     'OpenGameArt': 'http://opengameart.org',
@@ -55,8 +50,6 @@ class AboutScreen(Screen):
             Element(s.get('info_sobre'), button=False, visible=about),
             Element(s.get('info_credito'), self.creditos_pressed),
         ] + rows + [
-            Element(s.get('contato_pagina'), lambda: self.app.open_url(PAGE), visible=about),
-            Element(s.get('contato_email'), self.send_mail, visible=about),
             Element(s.get('info_gray').replace('�', '©'), button=False),
         ]
 
@@ -65,9 +58,6 @@ class AboutScreen(Screen):
         current = self.focused()
         self.showing_credits = not self.showing_credits
         self.focus = self._visible().index(current)
-
-    def send_mail(self):
-        self.app.open_url('mailto:%s?subject=%s' % (MAIL, quote(SUBJECT)))
 
     def back(self):
         self.close_doors_then(self.app.pop)
