@@ -120,11 +120,11 @@ class FreeModeScene(BaseScene):
         self.game_over_screen()
 
     def game_over_screen(self):
-        """telaGameOver: "Game Over" with Back to menu and New game, announcing score and best score."""
+        """telaGameOver: "Game Over" with New game and Back to menu, announcing score and best score."""
         s = self.services.strings
         best = self.services.save.integer('bestScore')
         self.menu_title = s.get('game_over')
-        self.menu_items = [(s.get('game_selecionar'), self.on_menu), (s.get('game_proximo'), self.on_new_game)]
+        self.menu_items = [(s.get('game_proximo'), self.on_new_game), (s.get('game_selecionar'), self.on_menu)]
         self.menu_selection = 1
         self.in_menu = True
         summary = s.format('game_over_freemode', self.score_counter, best)

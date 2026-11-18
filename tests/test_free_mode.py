@@ -62,8 +62,7 @@ def test_game_over_saves_the_best_score_and_offers_the_menu(tmp_path):
     scene.score_counter = 120
     scene.end_game()
     assert SaveData(str(tmp_path / 'save.json')).integer('bestScore') == 120
-    assert services.voice.spoken[-1][0] == 'Game Over. You scored 120 points! Best score: 120 points. , Back to menu button'
-    scene.menu_next()
+    assert services.voice.spoken[-1][0] == 'Game Over. You scored 120 points! Best score: 120 points. , New game button'
     scene.menu_activate()
     assert calls == ['new']
     scene2, services2, _ = make(SaveData(str(tmp_path / 'save.json')))

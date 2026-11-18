@@ -211,9 +211,10 @@ class TutorialScene(BaseScene):
     def tutorial_completo(self):
         s = self.services.strings
         last = self.tutorial_type > 5
+        # Next tutorial, then Select tutorial. After the last tutorial both go back to the selection.
         self.open_menu(s.get('tutorial_completou'), [
-            (s.get('tutorial_selecionar'), self.on_select),
             (s.get('tutorial_proximo'), self.on_select if last else self.on_next),
+            (s.get('tutorial_selecionar'), self.on_select),
         ])
 
     def stop_audio(self):

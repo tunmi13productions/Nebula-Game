@@ -55,14 +55,13 @@ Recovered from the view controllers, `CampaignScene`, `CutScene`, `BaseScene` me
 
 ## In-game menus (BaseScene, SpriteKit menuObjects)
 
-All of these use the menu navigation described in NOTES (with VoiceOver: swipe to move, `chageButton.mp3`, `errorButton.mp3` at the ends, double tap to activate with `acceptButton.mp3`). Index 0 is the title.
+All of these use the menu navigation described in NOTES (with VoiceOver: swipe to move, `chageButton.mp3`, `errorButton.mp3` at the ends, double tap to activate with `acceptButton.mp3`). Index 0 of menuObjects is the background or title node, and the selection starts at 1. Each menu speaks "%@, %@" (the title and the first item) at rate 0.55. The item orders below were confirmed by running the original functions in the emulator: the "next" item always comes before the "back" item.
 
-- Pause (`callPause`, from swipe up): title "pause" (the `pause` key exists only in Portuguese, "Jogo Pausado", so English shows and speaks the raw key "pause"). Items: "Continue, button", "Restart, button", "Leave game, button". It speaks "%@, %@" (the title and first item). All Aureal sounds pause and the scene pauses. Continue resumes all sounds.
-- Free mode game over (`telaGameOver`): title "Game Over". It shows the score and best score. Items: "Back to menu button", "New game button". It speaks "Game Over. You scored N points! Best score: M points." (`game_over_freemode`) followed by the first item.
-- Campaign game over (`telaGameOverCampanha`): title "Game Over". Items: "Select level button", "New game button" (restart). It speaks the title and first item.
-- Mission complete (`missionComplete`): title "Mission completed". Items: "Select level button", "Next level button" (absent after level 4, which goes to the next chapter's level 1 through capitulo/fase). It speaks the title and first item. It also saves progress (below).
-- Tutorial complete (`tutorialCompleto`): title "Tutorial Completed". Items: "Select tutorial button", "Next tutorial button".
-- Activations post notifications that the GameViewController handles: "reinicia" (restart), "proximoTutorial", "backMenuCampanha", "novoJogo", "proximoMissao", "backMenuController".
+- Pause (`callPause`, from swipe up when not paused, not in a menu and no end screen is up): title "pause" (the `pause` key exists only in Portuguese, "Jogo Pausado", so English spoke the raw key "pause"; fixed by a deviation). Items: "Continue, button", "Restart, button", "Leave game, button". pauseGame sets gamePaused, pauses all speech (holding back completions), pauses all Aureal sounds and pauses the scene (its actions stop). Continue (continueGame) resumes them. Restart posts reinicia. Leave game posts backMenuCampanha, which in the campaign shows the level selection and otherwise acts as backMenuController.
+- Free mode game over (`telaGameOver`, controleTelaMenu 2): title "Game Over". Items: "New game button" (novoJogo), "Back to menu button" (backMenuController). It speaks "Game Over. You scored N points! Best score: M points." (`game_over_freemode`), then " , " and the first item.
+- Campaign game over (`telaGameOverCampanha`, 4): title "Game Over". Items: "New game button" (novoJogo, the same level again), "Select level button" (backMenuCampanha).
+- Mission complete (`missionComplete`, 3): title "Mission completed". Items: "Next level button" (proximoMissao), "Select level button" (backMenuCampanha). It also saves progress (below). After level 4 (controleultimafase), it saves `capitulo` as the chapter + 1 and `fase` as 1, and Next level posts backMenuCampanha instead, so the level selection opens on the next chapter. After chapter 9 that's "chapter 10", which has no strings: the selector says "Chapter 10: cap10_title, Locked", every level is locked, and the previous chapter is 9.
+- Tutorial complete (`tutorialCompleto`, 1): title "Tutorial Completed". Items: "Next tutorial button" (proximoTutorial), "Select tutorial button" (playMenuMusic, then backMenuController). After the last tutorial, Next tutorial also posts backMenuController.
 
 ## Hangar (`SettingsViewController`)
 

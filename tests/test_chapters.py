@@ -194,7 +194,7 @@ def test_victory_flies_off_and_opens_mission_complete_with_progress():
     assert services.save.get('Missao 3 Capitulo 1 Completa') is True
     assert services.save.integer('last_Level') == 3
     labels = [label for label, _ in scene.menu_items]
-    assert labels == ['Select level button', 'Next level button']
+    assert labels == ['Next level button', 'Select level button']
 
 
 def test_finishing_a_chapter_unlocks_the_next():
@@ -205,6 +205,17 @@ def test_finishing_a_chapter_unlocks_the_next():
     assert (g.last_chapter, g.last_level) == (2, 1)
     assert services.save.get('ControleCapitulo') == 'yes'
     assert services.save.get('Missao 1 Capitulo 2 Completa') is True
+
+
+def test_next_after_level_four_returns_to_the_selection_on_the_next_chapter():
+    services = Services.silent('en')
+    calls = []
+    scene = CHAPTERS[3](services, stage=4, on_select=lambda: calls.append('select'),
+                        on_next=lambda: calls.append('next'))
+    scene.mission_complete()
+    assert (services.save.integer('capitulo'), services.save.integer('fase')) == (4, 1)
+    scene.menu_activate()
+    assert calls == ['select']
 
 
 def test_replaying_an_earlier_level_records_nothing():
@@ -222,7 +233,7 @@ def test_dying_opens_the_campaign_game_over_menu():
     scene._schedule_end_game()      # what a fatal hit does
     run(scene, services, 1.6)
     assert scene.in_menu and not scene.is_active
-    assert [label for label, _ in scene.menu_items] == ['Select level button', 'New game button']
+    assert [label for label, _ in scene.menu_items] == ['New game button', 'Select level button']
 
 
 def test_boss_stage_spawns_the_boss_after_the_lines_and_the_approach():

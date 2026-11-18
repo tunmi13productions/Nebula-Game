@@ -143,11 +143,21 @@ class ChapterScene(BaseScene):
         self.say(key, pre, post, then)
 
     def mission_complete(self):
-        """missionComplete: records progress, then the "Mission completed" menu."""
+        """missionComplete: records progress, then the "Mission completed" menu: Next level, Select level.
+        After level 4 the saved chapter becomes the next one (level 1), and Next level goes back to the
+        level selection (backMenuCampanha), which then opens on that chapter. After chapter 9 that's a
+        "chapter 10" with no strings, as in the original."""
         self._record_progress()
         s = self.services.strings
-        self.open_menu(s.get('missao_completou'), [(s.get('missao_selecionar'), self.on_select),
-                                                   (s.get('missao_proximo'), self.on_next)])
+        on_next = self.on_next
+        if self.stage_number == 4:
+            save = self.services.save
+            save.set_integer('capitulo', self.CHAPTER + 1)
+            save.set_integer('fase', 1)
+            save.synchronize()
+            on_next = self.on_select
+        self.open_menu(s.get('missao_completou'), [(s.get('missao_proximo'), on_next),
+                                                   (s.get('missao_selecionar'), self.on_select)])
 
     def _record_progress(self):
         g, save = self.services.globals, self.services.save
@@ -180,10 +190,10 @@ class ChapterScene(BaseScene):
         self.game_over_screen()
 
     def game_over_screen(self):
-        """telaGameOverCampanha."""
+        """telaGameOverCampanha: New game (restart the level), then Select level."""
         s = self.services.strings
-        self.open_menu(s.get('game_over'), [(s.get('missao_selecionar'), self.on_select),
-                                            (s.get('game_proximo'), self.on_restart)])
+        self.open_menu(s.get('game_over'), [(s.get('game_proximo'), self.on_restart),
+                                            (s.get('missao_selecionar'), self.on_select)])
 
     def stop_audio(self):
         self.services.aureal.stop_all()

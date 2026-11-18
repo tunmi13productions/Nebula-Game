@@ -38,13 +38,14 @@ def test_escape_ends_the_tutorial_and_the_menu_works_like_the_original():
     scene, services, calls = make(1)
     run(scene, services, 2)
     scene.swipe_up()
-    assert scene.in_menu and lines(services)[-1] == 'Tutorial Completed, Select tutorial button'
+    assert scene.in_menu and lines(services)[-1] == 'Tutorial Completed, Next tutorial button'
     scene.menu_previous()
     assert services.effects.played[-1] == 'errorButton.mp3'
     scene.menu_next()
-    assert services.effects.played[-1] == 'chageButton.mp3' and lines(services)[-1] == 'Next tutorial button'
+    assert services.effects.played[-1] == 'chageButton.mp3' and lines(services)[-1] == 'Select tutorial button'
     scene.menu_next()
     assert services.effects.played[-1] == 'errorButton.mp3'
+    scene.menu_previous()
     scene.menu_activate()
     assert services.effects.played[-1] == 'acceptButton.mp3' and calls == ['next']
 
@@ -52,7 +53,6 @@ def test_escape_ends_the_tutorial_and_the_menu_works_like_the_original():
 def test_last_section_next_goes_back_to_selection():
     scene, services, calls = make(6)
     scene.swipe_up()
-    scene.menu_next()
     scene.menu_activate()
     assert calls == ['select']
 
