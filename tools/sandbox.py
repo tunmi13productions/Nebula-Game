@@ -5,6 +5,7 @@ Keys:
   Space: fire.
   F: spawn a fighter. It enters from the top, wanders and shoots.
   G: spawn a laser ship. It parks near a side and fires its laser: charge, firing sound, then the beam.
+  P: drop a random power-up (life, shield, speed or fast shot). Follow its radar beep to collect it.
   R: spawn a rock, A: spawn an ally. Both fall past you. Allies are worth minus 100 points if destroyed.
   S: speak the score.
   L: speak your life.
@@ -62,7 +63,7 @@ def main():
     scene.did_move_to_view()
     scene.talking_move = True
     engine = None
-    reader.say('Sandbox. Arrows steer, Space fires. F fighter, G laser ship, R rock, A ally. L life, S score, '
+    reader.say('Sandbox. Arrows steer, Space fires. F fighter, G laser ship, R rock, A ally, P power-up. L life, S score, '
                'T talking movement, E enemy engine, up and down change tilt, now %.2f. Escape quits.' % keys.tilt)
 
     groups = {pygame.K_f: ('Fighter', [0, 1, 2, 9, 10, 11]), pygame.K_g: ('Laser ship', [3, 7, 8]),
@@ -92,6 +93,9 @@ def main():
                     scene.player_shoot()
                 elif down and ev.key in groups:
                     spawn(ev.key)
+                elif down and ev.key == pygame.K_p:
+                    scene.release_power_up(random.randint(1, 4))
+                    reader.say('Power-up dropped')
                 elif down and ev.key == pygame.K_s:
                     reader.say('Score %d' % scene.score_counter)
                 elif down and ev.key == pygame.K_l:

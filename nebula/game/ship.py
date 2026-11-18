@@ -220,6 +220,10 @@ class SpaceShip(Node):
             if self.is_player:
                 self.services.voice.speak(self.services.strings.format('info_Shield', self.shield), RATE_STATUS)
 
+    def starting_power_up(self, kind):
+        """startingPowerUpOfTipe: the power bar fills in 0.3 s and drains over 10 s, then the effect ends."""
+        self.run(A.sequence([A.wait(0.3), A.wait(10.0), A.run_block(lambda: self.game.end_power_up(kind))]))
+
     # destruction (destroyShip)
 
     def destroy(self):

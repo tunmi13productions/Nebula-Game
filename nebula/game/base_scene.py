@@ -5,8 +5,10 @@ from ..engine import actions as A
 from ..engine.nodes import Node, Scene
 from ..engine.physics import Body, Circle, PhysicsWorld, attach, rectangle
 from ..data import engine_sound
-from .ship import (CAT_ENEMY, CAT_ENEMY_SHOT, CAT_LASER, CAT_OBSTACLE, CAT_PLAYER, CAT_PLAYER_SHOT, CAT_SWOOSH_LEFT,
-                   CAT_SWOOSH_RIGHT, CAT_WALL, Shot, SpaceShip, burst_and_remove)
+from .powerups import FAST_SHOT, LIFE, SHIELD, SPEED, PowerUp
+from .rand import between
+from .ship import (CAT_ENEMY, CAT_ENEMY_SHOT, CAT_LASER, CAT_OBSTACLE, CAT_PLAYER, CAT_PLAYER_SHOT, CAT_POWERUP,
+                   CAT_SWOOSH_LEFT, CAT_SWOOSH_RIGHT, CAT_WALL, Shot, SpaceShip, burst_and_remove)
 
 W, H = 320.0, 568.0
 ACCEL_INTERVAL = 0.2      # CMMotionManager accelerometerUpdateInterval
@@ -54,6 +56,10 @@ class BaseScene(Scene):
         self.should_lateral_play_hit_sound = True
         self.last_shot_hit = None          # lastShoot
         self.toaster = None                # the laser beam the player is touching
+        self.time_between_power_ups = 0    # timed drops are off unless a mode turns them on
+        self.time_to_next_power_up = 0
+        self.power_up_type1 = 0
+        self.power_up_type2 = 0
         self.score_counter = 0
         self.death_counter = 0
         self.velocidade = W / services.globals.get_speed()
@@ -156,6 +162,12 @@ class BaseScene(Scene):
                     self._schedule_end_game()
             elif beam.ship.parent is None:
                 self.toaster = None
+        if self.time_between_power_ups > 0:
+            self.time_to_next_power_up -= 1
+            if self.time_to_next_power_up < 0:
+                self.release_power_up(between(self.power_up_type1, self.power_up_type2))
+                tb = self.time_between_power_ups
+                self.time_to_next_power_up = between(tb, tb * 2)
         if self.talking_move and self.allow_move:
             if not self._talking_running:
                 self._talking_running = True
@@ -220,6 +232,52 @@ class BaseScene(Scene):
         self.add_child(ship)
         return ship
 
+    # power-ups
+
+    def release_power_up(self, kind):
+        """releasePowerUpOfType: a power-up with a looping radar beep linked to it."""
+        p = PowerUp(kind, self)
+        aureal = self.services.aureal
+        key = aureal.next_key()
+        aureal.add_sound('beep_radar', 'caf', key)
+        aureal.sound_id += 1
+        aureal.link(key, p)
+        aureal.play_forever(key, p.position)
+        self.add_child(p)
+        return p
+
+    def collect_power_up(self, p):
+        p.remove_from_parent()
+        s, voice, fx = self.services.strings, self.services.voice, self.services.effects
+        if p.kind == LIFE:
+            voice.speak(s.get('life_grabbed'), RATE_STATUS)
+            fx.play('Power-Up.caf')
+            self.player.restore_life()
+        elif p.kind == SHIELD:
+            voice.speak(s.get('shield_grabbed'), RATE_STATUS)
+            fx.play('Power-Up.caf')
+            self.player.restore_shield()
+        elif p.kind == SPEED:
+            voice.speak(s.get('speed_grabbed'), RATE_STATUS)
+            fx.play('Power-Up.caf')
+            self.velocidade = W / 10.0
+            self.player.starting_power_up(SPEED)
+        elif p.kind == FAST_SHOT:
+            self.power_up_shot = True
+            voice.speak(s.get('fastShot_grabbed'), RATE_STATUS)
+            fx.play('Power-Up.caf')
+            self.player.starting_power_up(FAST_SHOT)
+
+    def end_power_up(self, kind):
+        """endPowerUpOfType: after 10 seconds."""
+        s, voice = self.services.strings, self.services.voice
+        if kind == FAST_SHOT:
+            voice.speak(s.get('fastShot_end'), RATE_STATUS)
+            self.power_up_shot = False
+        elif kind == SPEED:
+            voice.speak(s.get('speed_end'), RATE_STATUS)
+            self.velocidade = W / self.services.globals.get_speed()
+
     # hooks for subclasses
 
     def destroy_enemy(self, code):
@@ -273,6 +331,9 @@ class BaseScene(Scene):
             fx.play('colisaoTiro.mp3')
             burst_and_remove(clash[1].node, SHOT_BURST_FRAMES)
             burst_and_remove(clash[0].node, SHOT_BURST_FRAMES)
+        grab = _pair(a, b, CAT_POWERUP, CAT_PLAYER)
+        if grab and grab[0].node.parent is not None:
+            self.collect_power_up(grab[0].node)
         laser = _pair(a, b, CAT_LASER, CAT_PLAYER)
         if laser:
             self.toaster = laser[0].node
