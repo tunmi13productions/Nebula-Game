@@ -13,6 +13,9 @@ from .ship import CAT_PLAYER, CAT_POWERUP
 LIFE, SHIELD, SPEED, FAST_SHOT = 1, 2, 3, 4
 NAMES = {LIFE: 'LIFE_POWERUP', SHIELD: 'SHIELD_POWERUP', SPEED: 'FF_POWERUP', FAST_SHOT: 'FS_POWERUP'}
 DRIFT = 10.0
+# the cube's picture: 25 frames looped at 0.05 seconds each (visual only)
+FRAMES = {LIFE: 'LifeCube_', SHIELD: 'ShieldCube_', SPEED: 'FastForward_', FAST_SHOT: 'FastShoot_'}
+FRAME_TIME = 0.05
 
 
 class PowerUp(Node):
@@ -26,3 +29,8 @@ class PowerUp(Node):
         attach(self, Body(Circle(self.size[0] / 2.0), category=CAT_POWERUP, contact=CAT_PLAYER, collision=CAT_POWERUP))
         target_x = between(int(w / 4), int(w / 2))
         self.run(A.sequence([A.move_to(float(target_x), -h, DRIFT), A.remove_from_parent()]))
+        prefix = FRAMES.get(kind)
+        if prefix:
+            frames = ['%s%02d' % (prefix, i) for i in range(25)]
+            self.texture = frames[0]
+            self.run(A.repeat_forever(A.animate_with_textures(frames, FRAME_TIME)))
