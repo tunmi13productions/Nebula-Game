@@ -1,5 +1,3 @@
-import pytest
-
 from nebula.game import rand
 from nebula.game.services import Services
 from nebula.game.tutorial import TutorialScene
