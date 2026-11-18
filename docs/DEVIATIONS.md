@@ -55,3 +55,20 @@ Each entry is a settled decision. Don't change a deviated behaviour unless the u
 - Original: each chapter intro cutscene starts with a title card, "Chapter" plus a Roman numeral and the chapter title (`chapterNNumber`, `capN_title`), shown while `Deep_Impact_3.mp3` plays. It was visual only and never spoken, even with VoiceOver.
 - Changed: the title card text is also spoken through Prism when it appears. Timing and sound are unchanged.
 - Reason: otherwise blind players never learn the chapter name at that point. Decided by the user on 2026-11-17.
+
+## Touch gestures are mapped to keys
+
+- Original: tap to fire (and to skip a cutscene), swipe up to pause, swipe down to hear your life. In menus with VoiceOver: swipe left and right to move between items, double tap to activate.
+- Changed:
+  - Space fires.
+  - Escape opens the pause menu.
+  - L speaks your life.
+  - In menus, the up and down arrows move between items (with the same change and error sounds), Enter activates (with the accept sound), and Escape goes back.
+  - Enter or Space skips a cutscene.
+- Reason: a PC has no touch screen. Decided by the user on 2026-11-17.
+
+## Language override file
+
+- Original: the language follows the device setting. Portuguese on a Portuguese device, otherwise English.
+- Changed: the port follows the Windows display language the same way. It also reads an optional settings file that can force English or Portuguese.
+- Reason: Windows players may use one language for the system and want the other for the game. Decided by the user on 2026-11-17.

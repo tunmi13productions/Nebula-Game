@@ -73,15 +73,12 @@ How the Windows port is laid out and built. It covers architecture, folders and 
 13. Chapters 1 to 9, one per commit, each with its differential test.
 14. Cutscenes, menus, Hangar, saving, the startup sequence.
 
-## Open questions for you
+## Decided
 
-1. Keys. Steering is decided (left and right arrows). Proposal for the rest:
-   - Space: fire (tap).
-   - Escape: pause menu (swipe up).
-   - L: speak your life (swipe down).
-   - In menus: up and down arrows move through the items (the original's swipes), Enter activates (double tap), Escape goes back. Menus keep the original's change, error and accept sounds.
-   - A tap skips a cutscene in the original: Enter or Space here.
-2. Language. The original follows the iPhone's language: Portuguese if the device is Portuguese, otherwise English. Proposal: follow the Windows display language the same way, with an override in a small settings file.
-3. Sound files in git. The game needs the original audio in `sounds/` (about 60 MB). Committing it to the private repo keeps the project self-contained. The alternative is a setup script that extracts it from `decompiled/Nebula.ipa`, which keeps the repo small.
-4. Speech completion. Several scripts wait for a line to finish before continuing (for example, enemies spawn after I.C.A.R.U.S. finishes speaking). Prism may not report when a screen reader finishes speaking. If it can't, the port needs a stand-in, such as an estimated duration from text length and rate, or using Prism's own speech engine where finish events exist. That would be a deviation to settle once step 4 shows what Prism supports.
-5. Pan law. AVAudioPlayer's pan from -1 to 1 needs reproducing in OpenAL. The proposal is a constant-power stereo pan, set per source. Checked by ear in step 3.
+- Keys, language and the override file are recorded in DEVIATIONS.md.
+- Sound files are committed to the private repository in `sounds/`.
+
+## Still open
+
+1. Speech completion. Several scripts wait for a line to finish before continuing (for example, enemies spawn after I.C.A.R.U.S. finishes speaking). Prism may not report when a screen reader finishes speaking. If it can't, the port needs a stand-in, such as an estimated duration from text length and rate, or using Prism's own speech engine where finish events exist. That would be a deviation to settle once step 4 shows what Prism supports.
+2. Pan law. AVAudioPlayer's pan from -1 to 1 needs reproducing in OpenAL. The proposal is a constant-power stereo pan, set per source. Checked by ear in step 3.
