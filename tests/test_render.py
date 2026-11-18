@@ -102,3 +102,19 @@ def test_tint_multiplies_the_texture():
     red = draw(n)
     assert red.get_at((160, 284))[1] <= plain.get_at((160, 284))[1]
     assert red.get_at((160, 284))[1] == 0
+
+
+def test_emitters_load_and_emit_without_touching_the_game_random_numbers():
+    from nebula.engine.particles import Emitter, keyframe
+    from nebula.game import rand
+    rand.seed(9)
+    before = rand.arc4random()
+    rand.seed(9)
+    em = Emitter('starField')
+    for _ in range(60):
+        em.update_actions(1 / 60)
+    assert 20 <= len(em.particles) <= 40          # 30 a second
+    assert rand.arc4random() == before
+    assert keyframe({'times': [0.0, 1.0], 'values': [[0.0], [1.0]]}, 0.25) == [0.25]
+    s = draw(em)
+    assert s.get_size() == (320, 568)

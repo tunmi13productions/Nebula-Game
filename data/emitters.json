@@ -1,0 +1,1361 @@
+{
+ "MyParticle": {
+  "texture": "particulaLaser.png",
+  "texture_size": [
+   256.0,
+   256.0
+  ],
+  "birth_rate": 150.0,
+  "to_emit": 0,
+  "lifetime": 1.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   0.0,
+   0.0
+  ],
+  "emission_angle": 0.0,
+  "emission_angle_range": 0.0,
+  "speed": 0.0,
+  "speed_range": 0.0,
+  "acceleration": [
+   0.0,
+   -500.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.20000000298023224,
+  "scale_range": 0.0,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 1.0,
+  "alpha_speed": 1.0,
+  "color": [
+   1.0,
+   0.7017074227333069,
+   0.23402847349643707,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 1.0,
+  "color_blend_range": 1.0,
+  "color_blend_speed": 1.0,
+  "color_sequence": {
+   "times": [
+    0.0,
+    0.2800121009349823,
+    0.47537961602211,
+    0.6139689683914185,
+    0.7252420783042908,
+    0.8276848793029785,
+    1.0
+   ],
+   "values": [
+    [
+     0.07918770709,
+     0.1576746374,
+     1.0,
+     1.0
+    ],
+    [
+     0.09358612448,
+     0.8547022343,
+     0.02267581783,
+     1.0
+    ],
+    [
+     0.8926416039,
+     0.8706200543,
+     0.8252738834,
+     1.0
+    ],
+    [
+     0.6661796479,
+     0.2298673129,
+     0.9043819308,
+     1.0
+    ],
+    [
+     0.0,
+     0.9996908307,
+     0.8343045538,
+     1.0
+    ],
+    [
+     0.1271396273,
+     0.4444333624,
+     0.9099825621,
+     1.0
+    ],
+    [
+     1.0,
+     0.2569511835,
+     0.1884289985,
+     1.0
+    ]
+   ],
+   "interpolation": 1,
+   "repeat": 1
+  },
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 1,
+  "z": 0.0
+ },
+ "MyParticle1": {
+  "texture": "particulaLaser.png",
+  "texture_size": [
+   256.0,
+   256.0
+  ],
+  "birth_rate": 150.0,
+  "to_emit": 0,
+  "lifetime": 1.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   0.0,
+   0.0
+  ],
+  "emission_angle": 0.0,
+  "emission_angle_range": 0.0,
+  "speed": 0.0,
+  "speed_range": 0.0,
+  "acceleration": [
+   0.0,
+   -500.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.20000000298023224,
+  "scale_range": 0.0,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 1.0,
+  "alpha_speed": 1.0,
+  "color": [
+   0.8607341051101685,
+   0.7924326658248901,
+   0.2573355734348297,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 1.0,
+  "color_blend_range": 1.0,
+  "color_blend_speed": 1.0,
+  "color_sequence": {
+   "times": [
+    0.0,
+    0.38204225897789,
+    0.6764689683914185,
+    0.9648712873458862
+   ],
+   "values": [
+    [
+     0.2027895494,
+     0.8267701864,
+     0.08660440762,
+     1.0
+    ],
+    [
+     0.486158288,
+     0.3957219276,
+     0.0270970663,
+     1.0
+    ],
+    [
+     0.0,
+     0.1911472706,
+     0.2865998641,
+     1.0
+    ],
+    [
+     0.0,
+     1.0,
+     0.074536898,
+     1.0
+    ]
+   ],
+   "interpolation": 1,
+   "repeat": 1
+  },
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 5,
+  "z": 0.0
+ },
+ "MyParticle2": {
+  "texture": "particulaLaser.png",
+  "texture_size": [
+   256.0,
+   256.0
+  ],
+  "birth_rate": 150.0,
+  "to_emit": 0,
+  "lifetime": 1.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   0.0,
+   0.0
+  ],
+  "emission_angle": 0.0,
+  "emission_angle_range": 0.0,
+  "speed": 0.0,
+  "speed_range": 0.0,
+  "acceleration": [
+   0.0,
+   -500.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.20000000298023224,
+  "scale_range": 0.0,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 1.0,
+  "alpha_speed": 1.0,
+  "color": [
+   0.3048642575740814,
+   0.13019143044948578,
+   0.023160237818956375,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 1.0,
+  "color_blend_range": 1.0,
+  "color_blend_speed": 1.0,
+  "color_sequence": {
+   "times": [
+    0.0,
+    0.40589237213134766,
+    0.7346500754356384,
+    1.0
+   ],
+   "values": [
+    [
+     0.5491253397,
+     0.2205381082,
+     0.06889256689,
+     1.0
+    ],
+    [
+     0.0,
+     0.9890438318,
+     0.813988756,
+     1.0
+    ],
+    [
+     0.1502337537,
+     0.2830210459,
+     0.988761723,
+     1.0
+    ],
+    [
+     0.2765794837,
+     0.1427323299,
+     0.0,
+     1.0
+    ]
+   ],
+   "interpolation": 1,
+   "repeat": 1
+  },
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 1,
+  "z": 0.0
+ },
+ "MyParticle3": {
+  "texture": "particulaLaser.png",
+  "texture_size": [
+   256.0,
+   256.0
+  ],
+  "birth_rate": 150.0,
+  "to_emit": 0,
+  "lifetime": 1.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   0.0,
+   0.0
+  ],
+  "emission_angle": 0.0,
+  "emission_angle_range": 0.0,
+  "speed": 0.0,
+  "speed_range": 0.0,
+  "acceleration": [
+   0.0,
+   -500.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.20000000298023224,
+  "scale_range": 0.0,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 1.0,
+  "alpha_speed": 1.0,
+  "color": [
+   0.3048642575740814,
+   0.13019143044948578,
+   0.023160237818956375,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 1.0,
+  "color_blend_range": 1.0,
+  "color_blend_speed": 1.0,
+  "color_sequence": {
+   "times": [
+    0.0,
+    0.05477002635598183,
+    0.34044894576072693,
+    0.5749064683914185,
+    1.0
+   ],
+   "values": [
+    [
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    [
+     0.1664277213,
+     1.0,
+     0.1437757588,
+     1.0
+    ],
+    [
+     0.1664277213,
+     1.0,
+     0.1437757588,
+     1.0
+    ],
+    [
+     0.06325482963,
+     0.3800738791,
+     0.05464541036,
+     1.0
+    ],
+    [
+     0.9569406167,
+     1.0,
+     0.897097994,
+     1.0
+    ]
+   ],
+   "interpolation": 1,
+   "repeat": 1
+  },
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 1,
+  "z": 0.0
+ },
+ "Ship37FlyParticle": {
+  "texture": "037Blur.png",
+  "texture_size": [
+   150.0,
+   273.0
+  ],
+  "birth_rate": 1.0,
+  "to_emit": 0,
+  "lifetime": 8.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   320.0,
+   0.0
+  ],
+  "emission_angle": 1.5707963705062866,
+  "emission_angle_range": 0.0,
+  "speed": 20.0,
+  "speed_range": 20.0,
+  "acceleration": [
+   0.0,
+   10.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.15000000596046448,
+  "scale_range": 0.0,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 0.0,
+  "alpha_speed": 0.0,
+  "color": [
+   0.545356273651123,
+   0.5672945976257324,
+   1.0,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 0.0,
+  "color_blend_range": 0.0,
+  "color_blend_speed": 0.0,
+  "color_sequence": {
+   "times": [
+    0.0
+   ],
+   "values": [
+    [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ]
+   ],
+   "interpolation": 1,
+   "repeat": 1
+  },
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 0,
+  "z": 0.0
+ },
+ "Ship37FlyParticleLessBlur": {
+  "texture": "037BlurLess.png",
+  "texture_size": [
+   150.0,
+   273.0
+  ],
+  "birth_rate": 1.0,
+  "to_emit": 0,
+  "lifetime": 8.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   320.0,
+   0.0
+  ],
+  "emission_angle": 1.5707963705062866,
+  "emission_angle_range": 0.0,
+  "speed": 20.0,
+  "speed_range": 20.0,
+  "acceleration": [
+   0.0,
+   10.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.30000001192092896,
+  "scale_range": 0.10000000149011612,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 0.0,
+  "alpha_speed": 0.0,
+  "color": [
+   0.545356273651123,
+   0.5672945976257324,
+   1.0,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 0.0,
+  "color_blend_range": 0.0,
+  "color_blend_speed": 0.0,
+  "color_sequence": {
+   "times": [
+    0.0
+   ],
+   "values": [
+    [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ]
+   ],
+   "interpolation": 1,
+   "repeat": 1
+  },
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 0,
+  "z": 0.0
+ },
+ "Ship38FlyParticle": {
+  "texture": "038Blur.png",
+  "texture_size": [
+   150.0,
+   273.0
+  ],
+  "birth_rate": 1.0,
+  "to_emit": 0,
+  "lifetime": 8.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   320.0,
+   0.0
+  ],
+  "emission_angle": 1.5707963705062866,
+  "emission_angle_range": 0.0,
+  "speed": 20.0,
+  "speed_range": 20.0,
+  "acceleration": [
+   0.0,
+   10.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.15000000596046448,
+  "scale_range": 0.0,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 0.0,
+  "alpha_speed": 0.0,
+  "color": [
+   0.545356273651123,
+   0.5672945976257324,
+   1.0,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 0.0,
+  "color_blend_range": 0.0,
+  "color_blend_speed": 0.0,
+  "color_sequence": {
+   "times": [
+    0.0
+   ],
+   "values": [
+    [
+     0.9793550424,
+     0.9835684555,
+     0.9986751676,
+     1.0
+    ]
+   ],
+   "interpolation": 1,
+   "repeat": 1
+  },
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 0,
+  "z": 0.0
+ },
+ "Ship38FlyParticleLessBlur": {
+  "texture": "038BlurLess.png",
+  "texture_size": [
+   150.0,
+   273.0
+  ],
+  "birth_rate": 1.0,
+  "to_emit": 0,
+  "lifetime": 8.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   320.0,
+   0.0
+  ],
+  "emission_angle": 1.5707963705062866,
+  "emission_angle_range": 0.0,
+  "speed": 20.0,
+  "speed_range": 20.0,
+  "acceleration": [
+   0.0,
+   10.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.30000001192092896,
+  "scale_range": 0.10000000149011612,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 0.0,
+  "alpha_speed": 0.0,
+  "color": [
+   0.545356273651123,
+   0.5672945976257324,
+   1.0,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 0.0,
+  "color_blend_range": 0.0,
+  "color_blend_speed": 0.0,
+  "color_sequence": {
+   "times": [
+    0.0
+   ],
+   "values": [
+    [
+     0.9793550424,
+     0.9835684555,
+     0.9986751676,
+     1.0
+    ]
+   ],
+   "interpolation": 1,
+   "repeat": 1
+  },
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 0,
+  "z": 0.0
+ },
+ "Ship39FlyParticle": {
+  "texture": "039Blur.png",
+  "texture_size": [
+   150.0,
+   273.0
+  ],
+  "birth_rate": 1.0,
+  "to_emit": 0,
+  "lifetime": 8.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   320.0,
+   0.0
+  ],
+  "emission_angle": 1.5707963705062866,
+  "emission_angle_range": 0.0,
+  "speed": 20.0,
+  "speed_range": 20.0,
+  "acceleration": [
+   0.0,
+   10.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.15000000596046448,
+  "scale_range": 0.0,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 0.0,
+  "alpha_speed": 0.0,
+  "color": [
+   0.545356273651123,
+   0.5672945976257324,
+   1.0,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 0.0,
+  "color_blend_range": 0.0,
+  "color_blend_speed": 0.0,
+  "color_sequence": {
+   "times": [
+    0.0
+   ],
+   "values": [
+    [
+     0.9793550424,
+     0.9835684555,
+     0.9986751676,
+     1.0
+    ]
+   ],
+   "interpolation": 1,
+   "repeat": 1
+  },
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 0,
+  "z": 0.0
+ },
+ "Ship39FlyParticleLessBlur": {
+  "texture": "039BlurLess.png",
+  "texture_size": [
+   150.0,
+   273.0
+  ],
+  "birth_rate": 1.0,
+  "to_emit": 0,
+  "lifetime": 8.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   320.0,
+   0.0
+  ],
+  "emission_angle": 1.5707963705062866,
+  "emission_angle_range": 0.0,
+  "speed": 20.0,
+  "speed_range": 20.0,
+  "acceleration": [
+   0.0,
+   10.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.30000001192092896,
+  "scale_range": 0.10000000149011612,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 0.0,
+  "alpha_speed": 0.0,
+  "color": [
+   0.545356273651123,
+   0.5672945976257324,
+   1.0,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 0.0,
+  "color_blend_range": 0.0,
+  "color_blend_speed": 0.0,
+  "color_sequence": {
+   "times": [
+    0.0
+   ],
+   "values": [
+    [
+     0.9793550424,
+     0.9835684555,
+     0.9986751676,
+     1.0
+    ]
+   ],
+   "interpolation": 1,
+   "repeat": 1
+  },
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 0,
+  "z": 0.0
+ },
+ "asteroid0particle": {
+  "texture": "pedra_1.png",
+  "texture_size": [
+   822.0,
+   822.0
+  ],
+  "birth_rate": 10.0,
+  "to_emit": 0,
+  "lifetime": 77.30239868164062,
+  "lifetime_range": 0.0,
+  "position_range": [
+   242.3,
+   5.0
+  ],
+  "emission_angle": 4.71238899230957,
+  "emission_angle_range": 0.0,
+  "speed": 340.0,
+  "speed_range": 150.0,
+  "acceleration": [
+   0.0,
+   0.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.10000000149011612,
+  "scale_range": 0.05000000074505806,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 0.20000000298023224,
+  "alpha_speed": 0.0,
+  "color": [
+   0.545356273651123,
+   0.5672945976257324,
+   1.0,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 1.0,
+  "color_blend_range": 0.0,
+  "color_blend_speed": 0.0,
+  "color_sequence": null,
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 0,
+  "z": 0.0
+ },
+ "asteroid1particle": {
+  "texture": "pedra_2.png",
+  "texture_size": [
+   783.0,
+   783.0
+  ],
+  "birth_rate": 10.0,
+  "to_emit": 0,
+  "lifetime": 8.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   242.3,
+   5.0
+  ],
+  "emission_angle": 4.71238899230957,
+  "emission_angle_range": 0.0,
+  "speed": 340.0,
+  "speed_range": 150.0,
+  "acceleration": [
+   0.0,
+   0.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.10000000149011612,
+  "scale_range": 0.05000000074505806,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 0.20000000298023224,
+  "alpha_speed": 0.0,
+  "color": [
+   0.545356273651123,
+   0.5672945976257324,
+   1.0,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 1.0,
+  "color_blend_range": 0.0,
+  "color_blend_speed": 0.0,
+  "color_sequence": null,
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 0,
+  "z": 0.0
+ },
+ "asteroid2particle": {
+  "texture": "pedra_3.png",
+  "texture_size": [
+   634.0,
+   634.0
+  ],
+  "birth_rate": 10.0,
+  "to_emit": 0,
+  "lifetime": 8.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   242.3,
+   5.0
+  ],
+  "emission_angle": 4.71238899230957,
+  "emission_angle_range": 0.0,
+  "speed": 340.0,
+  "speed_range": 150.0,
+  "acceleration": [
+   0.0,
+   0.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.10000000149011612,
+  "scale_range": 0.05000000074505806,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 0.20000000298023224,
+  "alpha_speed": 0.0,
+  "color": [
+   0.545356273651123,
+   0.5672945976257324,
+   1.0,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 1.0,
+  "color_blend_range": 0.0,
+  "color_blend_speed": 0.0,
+  "color_sequence": null,
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 0,
+  "z": 0.0
+ },
+ "asteroid3particle": {
+  "texture": "pedra_4.png",
+  "texture_size": [
+   543.0,
+   543.0
+  ],
+  "birth_rate": 10.0,
+  "to_emit": 0,
+  "lifetime": 8.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   242.3,
+   5.0
+  ],
+  "emission_angle": 4.71238899230957,
+  "emission_angle_range": 0.0,
+  "speed": 340.0,
+  "speed_range": 150.0,
+  "acceleration": [
+   0.0,
+   0.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.10000000149011612,
+  "scale_range": 0.05000000074505806,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 0.20000000298023224,
+  "alpha_speed": 0.0,
+  "color": [
+   0.545356273651123,
+   0.5672945976257324,
+   1.0,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 1.0,
+  "color_blend_range": 0.0,
+  "color_blend_speed": 0.0,
+  "color_sequence": null,
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 0,
+  "z": 0.0
+ },
+ "asteroid4particle": {
+  "texture": "asteroidBlurred00005.png",
+  "texture_size": [
+   773.0,
+   773.0
+  ],
+  "birth_rate": 150.0,
+  "to_emit": 0,
+  "lifetime": 8.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   242.3,
+   5.0
+  ],
+  "emission_angle": 4.71238899230957,
+  "emission_angle_range": 0.0,
+  "speed": 340.0,
+  "speed_range": 150.0,
+  "acceleration": [
+   0.0,
+   0.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.10000000149011612,
+  "scale_range": 0.05000000074505806,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 0.20000000298023224,
+  "alpha_speed": 0.0,
+  "color": [
+   0.545356273651123,
+   0.5672945976257324,
+   1.0,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 1.0,
+  "color_blend_range": 0.0,
+  "color_blend_speed": 0.0,
+  "color_sequence": {
+   "times": [
+    0.0
+   ],
+   "values": [
+    [
+     0.4620846508,
+     0.9986751676,
+     0.6807679543,
+     1.0
+    ]
+   ],
+   "interpolation": 1,
+   "repeat": 1
+  },
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 0,
+  "z": 0.0
+ },
+ "ftlparticle": {
+  "texture": "fltparticleImage.png",
+  "texture_size": [
+   1.0,
+   250.0
+  ],
+  "birth_rate": 50.0,
+  "to_emit": 0,
+  "lifetime": 5.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   270.0,
+   0.0
+  ],
+  "emission_angle": 4.71238899230957,
+  "emission_angle_range": 0.0,
+  "speed": 1000.0,
+  "speed_range": 1500.0,
+  "acceleration": [
+   0.0,
+   0.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.5,
+  "scale_range": 0.75,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 0.0,
+  "alpha_speed": 0.0,
+  "color": [
+   0.545356273651123,
+   0.5672945976257324,
+   1.0,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 0.0,
+  "color_blend_range": 0.0,
+  "color_blend_speed": 0.0,
+  "color_sequence": {
+   "times": [
+    0.0
+   ],
+   "values": [
+    [
+     0.9879858538,
+     0.9564925418,
+     0.9986751676,
+     1.0
+    ]
+   ],
+   "interpolation": 1,
+   "repeat": 1
+  },
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 0,
+  "z": 0.0
+ },
+ "score": {
+  "texture": "particulaLaser.png",
+  "texture_size": [
+   256.0,
+   256.0
+  ],
+  "birth_rate": 20.0,
+  "to_emit": 0,
+  "lifetime": 0.30000001192092896,
+  "lifetime_range": 0.0,
+  "position_range": [
+   100.0,
+   100.0
+  ],
+  "emission_angle": 1.7453292608261108,
+  "emission_angle_range": 1.7453292608261108,
+  "speed": 1.0,
+  "speed_range": 1.0,
+  "acceleration": [
+   0.0,
+   -100.0
+  ],
+  "rotation": 0.3490658402442932,
+  "rotation_range": 0.6981316804885864,
+  "rotation_speed": 0.0,
+  "scale": 0.20000000298023224,
+  "scale_range": 0.0,
+  "scale_speed": 0.44999998807907104,
+  "alpha": 1.0,
+  "alpha_range": 2.0,
+  "alpha_speed": -0.20000000298023224,
+  "color": [
+   0.34962698817253113,
+   0.883720874786377,
+   0.29299455881118774,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 1.0,
+  "color_blend_range": 0.0,
+  "color_blend_speed": 0.0,
+  "color_sequence": {
+   "times": [
+    0.0,
+    1.0
+   ],
+   "values": [
+    [
+     1.0,
+     1.0,
+     0.0,
+     1.0
+    ],
+    [
+     1.0,
+     1.0,
+     0.03254181749,
+     1.0
+    ]
+   ],
+   "interpolation": 1,
+   "repeat": 1
+  },
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 0,
+  "z": 0.0
+ },
+ "starField": {
+  "texture": "StarParticle.png",
+  "texture_size": [
+   44.0,
+   800.0
+  ],
+  "birth_rate": 30.0,
+  "to_emit": 0,
+  "lifetime": 5.0,
+  "lifetime_range": 0.0,
+  "position_range": [
+   320.0,
+   0.0
+  ],
+  "emission_angle": 4.71238899230957,
+  "emission_angle_range": 0.0,
+  "speed": 500.0,
+  "speed_range": 1000.0,
+  "acceleration": [
+   0.0,
+   0.0
+  ],
+  "rotation": 0.0,
+  "rotation_range": 0.0,
+  "rotation_speed": 0.0,
+  "scale": 0.05000000074505806,
+  "scale_range": 0.09000000357627869,
+  "scale_speed": 0.0,
+  "alpha": 1.0,
+  "alpha_range": 0.0,
+  "alpha_speed": 1.0,
+  "color": [
+   0.545356273651123,
+   0.5672945976257324,
+   1.0,
+   1.0
+  ],
+  "color_range": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_speed": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "color_blend": 0.0,
+  "color_blend_range": 0.0,
+  "color_blend_speed": 0.0,
+  "color_sequence": {
+   "times": [
+    0.0
+   ],
+   "values": [
+    [
+     0.9986751676,
+     0.9771624804,
+     0.9804417336,
+     1.0
+    ]
+   ],
+   "interpolation": 1,
+   "repeat": 1
+  },
+  "alpha_sequence": null,
+  "scale_sequence": null,
+  "blend_mode": 0,
+  "z": 0.0
+ }
+}
