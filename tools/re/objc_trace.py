@@ -293,7 +293,9 @@ class Tracer:
                 self.w32(r[0], 0xffffffff)
                 uc.reg_write(UC_ARM_REG_R0, r[1]); uc.reg_write(UC_ARM_REG_PC, self.r32(r[1] + 12)); return
             return self.ret(0)
-        if name == '_arc4random': self.log('arc4random -> %d' % self.rand_value); return self.ret(self.rand_value)
+        if name == '_arc4random':
+            v = self.rand_source() if self.rand_source else self.rand_value
+            self.log('arc4random -> %d' % v); return self.ret(v & 0xffffffff)
         if name == '_arc4random_uniform': self.log('arc4random_uniform(%d) -> 0' % r[0]); return self.ret(0)
         if name in ('_NSLog', '_UIAccessibilityIsVoiceOverRunning'):
             if name == '_NSLog': self.log('NSLog %s' % self.desc(r[0]))
@@ -386,8 +388,52 @@ class Tracer:
                  'speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:', 'speakSentence:withRate:'}
     trace_internal = True
     rand_value = 0
+    rand_source = None    # optional callable returning the next arc4random value
+
+    def array_value(self, recv, sel, regs, sp):
+        """Models NSArray contents and NSNumber values so table-driven code runs for real."""
+        arrays = self.__dict__.setdefault('arrays', {})
+        numbers = self.__dict__.setdefault('numbers', {})
+        if sel in ('numberWithInt:', 'numberWithInteger:'):
+            h = self.new_handle('num(%d)' % struct.unpack('<i', struct.pack('<I', regs[2]))[0])
+            numbers[h] = struct.unpack('<i', struct.pack('<I', regs[2]))[0]
+            return h
+        if sel in ('intValue', 'integerValue') and recv in numbers:
+            return numbers[recv] & 0xffffffff
+        if sel in ('arrayWithObjects:count:', 'initWithObjects:count:'):
+            ptr, cnt = regs[2], regs[3]
+            items = [self.r32(ptr + 4 * k) for k in range(cnt)]
+            h = self.new_handle('array[%d]' % cnt)
+            arrays[h] = items
+            return h
+        if recv in arrays:
+            items = arrays[recv]
+            if sel == 'count':
+                return len(items)
+            if sel in ('objectAtIndex:', 'objectAtIndexedSubscript:'):
+                i = regs[2]
+                return items[i] if i < len(items) else 0
+            if sel == 'countByEnumeratingWithState:objects:count:':
+                state, buf = regs[2], regs[3]
+                cap = self.r32(sp)
+                done = self.r32(state + 12)  # extra[0] holds how many items were handed out so far
+                if self.r32(state) == 0:
+                    done = 0
+                batch = items[done:done + cap]
+                if not batch:
+                    return 0
+                for k, it in enumerate(batch):
+                    self.w32(buf + 4 * k, it)
+                if self.r32(state) == 0:
+                    self.w32(state + 8, self.alloc(4))
+                self.w32(state, 1); self.w32(state + 4, buf); self.w32(state + 12, done + len(batch))
+                return len(batch)
+        return None
 
     def mock_value(self, recv, sel, args, regs, sp):
+        v = self.array_value(recv, sel, regs, sp)
+        if v is not None:
+            return v
         if sel in ('integerForKey:', 'boolForKey:', 'count', 'userInterfaceIdiom', 'isActive', 'gamePaused', 'zPosition', 'isEqualToString:', 'floatForKey:'):
             return self.int_answers.get(sel, 0)
         if sel.startswith('set') and sel.endswith(':') or sel in ('addChild:', 'removeFromParent', 'removeAllActions',

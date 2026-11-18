@@ -60,6 +60,7 @@ class BaseScene(Scene):
         self.time_to_next_power_up = 0
         self.power_up_type1 = 0
         self.power_up_type2 = 0
+        self.stage_number = 0              # 0 is free mode; campaign stages are 1 to 4
         self.score_counter = 0
         self.death_counter = 0
         self.velocidade = W / services.globals.get_speed()
@@ -285,6 +286,9 @@ class BaseScene(Scene):
 
     def add_score(self, ship):
         self.score_counter += ship.score
+        if self.stage_number == 0:
+            # VoiceOver-only in the original, always on here (see DEVIATIONS).
+            self.services.voice.speak(self.services.strings.format('freemode_Score', self.score_counter), RATE_MOVE)
         self.death_counter += 1
 
     def end_game(self):

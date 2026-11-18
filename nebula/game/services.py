@@ -6,12 +6,13 @@ from ..audio.backend import NullBackend
 from ..audio.players import Effects
 from ..engine.scheduler import Scheduler
 from ..speech.speech import GameVoice, NullRenderer, NullScreenReader
+from ..save import SaveData
 from ..strings import SOUNDS, Strings
 from .globals import GlobalState
 
 
 class Services:
-    def __init__(self, audio, voice_renderer, screen_reader, strings, global_state=None, scheduler=None):
+    def __init__(self, audio, voice_renderer, screen_reader, strings, global_state=None, scheduler=None, save=None):
         self.audio = audio
         self.scheduler = scheduler or Scheduler()
         self.strings = strings
@@ -20,6 +21,7 @@ class Services:
         self.effects = Effects(audio, SOUNDS)
         self.voice = GameVoice(audio, self.scheduler, voice_renderer)
         self.screen_reader = screen_reader
+        self.save = save if save is not None else SaveData.in_memory()
 
     @staticmethod
     def sound_path(name, ext):
