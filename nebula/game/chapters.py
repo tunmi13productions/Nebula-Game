@@ -494,6 +494,110 @@ class Chapter4Scene(ChapterScene):
         self.end_lvl_speech('chap4_icarus5', 0.5, 0.5, self.default_victorious_animation, stop_controls=True)
 
 
+class Chapter5Scene(ChapterScene):
+    """Burning."""
+    CHAPTER = 5
+    SPAWNS = {'small1': ('small', 28), 'small2': ('small', 29), 'medium1': ('medium', 31), 'laser1': ('laser', 30)}
+
+    def opening(self, stage):
+        if stage == 1:
+            def go():
+                self.create('small1')
+                self.later(DELAYED_SPAWN, lambda: self.create('small2'))
+            self.say_chain([('chap5_icarus1', 0.0, 0.0), ('chap5_icarus2', 0.0, 0.0)], go)
+        elif stage == 2:
+            self.create('small1')
+            self.create('small2')
+        elif stage == 3:
+            self.create('medium1')
+            self.create('laser1')
+        else:
+            self.stage4_loop([('chap5_icarus3', 0.0, 0.0)], lambda: self.boss_now(5))
+
+    def destroy_enemy(self, code):
+        st = self.stage_number
+        if st == 3:
+            if code == 28:
+                if self._dec('small_in') < 6:
+                    self.create('laser1')
+            elif code == 29:
+                if self._dec('small_in') < 3 and self.laser < 5:
+                    self.create('medium1')
+            elif code == 30:
+                if self._dec('laser_in') <= 1 and self.laser < 5:
+                    if self.laser == 2:
+                        self.release_power_up(FAST_SHOT)
+                        if self.laser == 5:
+                            self.release_power_up(SHIELD)
+                    self.create('small1')
+            elif code == 31:
+                self.medium_in -= 1
+                if self.laser < 5:
+                    self.create('small2')
+            if self.laser >= 5 and self.small_in == 0 and self.medium_in == 0 and self.laser_in == 0:
+                self.default_victorious_animation()
+        elif st == 2:
+            if code == 28:
+                if self._dec('small_in') < 3:
+                    if self.small < 3:
+                        self.create('small1')
+                    elif self.laser < 4:
+                        self.create('laser1')
+            elif code == 29:
+                if self._dec('small_in') < 3 and self.laser < 4:
+                    self.create('small2')
+                elif self.small < 1 and self.laser == 4:
+                    self.create('laser1')
+                    self.release_power_up(FAST_SHOT)
+            elif code == 30:
+                if self._dec('laser_in') <= 1:
+                    if self.laser < 4:
+                        self.create('laser1')
+                    elif self.laser == 4:
+                        self.create('medium1')
+            elif code == 31:
+                self.medium_in -= 1
+            if self.laser == 4 and self.small_in == 0 and self.laser_in == 0 and self.medium_in == 0:
+                self.default_victorious_animation()
+        elif st == 1:
+            if code == 31:
+                self.medium_in -= 1
+            elif code == 29:
+                old = self._dec('small_in')
+                if old < 3:
+                    if self.small < 6:
+                        self.create('small2')
+                    elif old < 2 and self.small <= 6:
+                        self.create('medium1')
+                        self.create('small1')
+            elif code == 28:
+                old = self._dec('small_in')
+                if old < 3:
+                    if self.small < 5:
+                        self.create('small1')
+                    elif old < 2 and self.small <= 6:
+                        self.create('medium1')
+                        self.create('small2')
+            if self.small >= 6 and self.small_in == 0 and self.medium_in == 0 and self.laser_in == 0:
+                self.default_victorious_animation()
+        else:
+            self.end_lvl()
+
+    def end_lvl(self):
+        self.end_lvl_speech('chap5_icarus4', 0.5, 0.5, self.make_player_turn_around)
+
+    def make_player_turn_around(self):
+        """The ship swings right, loops back across and dives off the bottom (4.5 seconds)."""
+        self.allow_move = False
+        self.allow_shoot = False
+        p = self.player
+        loop = A.group([A.move_by(-300.0, 0.0, 1.5),
+                        A.sequence([A.move_by(0.0, H / 2, 0.75), A.move_by(0.0, -H / 2, 0.75)]),
+                        A.rotate_by(3.14159, 1.5)])
+        p.run(A.move_to(300.0, H / 2, 1.0), completion=lambda: p.run(loop, completion=lambda: p.run(
+            A.move_by(0.0, -H, 2.0), completion=self.end_game_victorious)))
+
+
 CHAPTERS = {c.CHAPTER: c for c in (
-    Chapter1Scene, Chapter2Scene, Chapter3Scene, Chapter4Scene,
+    Chapter1Scene, Chapter2Scene, Chapter3Scene, Chapter4Scene, Chapter5Scene,
 )}
