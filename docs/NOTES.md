@@ -379,3 +379,11 @@ Continue the study through the open questions above, in roughly that order. Enem
 
 - SpriteKit timing modes (easeIn, easeOut, easeInEaseOut, used for enemy and boss moves) aren't documented by Apple. `nebula/engine/actions.py` uses the usual sine curves: 1 - cos(t*pi/2), sin(t*pi/2) and (1 - cos(t*pi))/2. They only affect positions in the middle of a move, so their effect on audio is a slightly different pan and volume path during movement.
 - Possible future input: a DualSense (or other controller) accelerometer could feed accelX directly, which would be closer to the original tilt than the arrow keys. SDL2 exposes controller sensors, but pygame doesn't, so it needs SDL2 access beyond pygame. Raised by the user on 2026-11-17, not scheduled.
+
+## Images
+
+- `tools/extract_images.py` copies the iPhone images, the `gameTextures` atlas and `HACKED_Title.ttf` into `images/`, and decodes the asset catalog into `images/catalog/`.
+- `Assets.car` is a BOM store (`tools/re/car.py`). Its 17 bitmaps are BGRA with premultiplied alpha, compressed with LZVN (`tools/re/lzvn.py`), either in one block or as KCBC row chunks. Facets: FotoPadrao, backbar, base_score, crack1, enemyLife, lifeBar, lifeEnemy, mais (stored as the rendition "as.png"), mais_block, nebulaMenu1 (the 640 by 1136 main menu background with the NEBULA title), nebulaMenu1_3.5 (the 3.5 inch version), nebulaMenu_iPad, phones (the headphones picture), powerUpBar, shieldBar, ship (the Hangar ship), shot.
+- The `gameTextures` atlas has 7 sheets and 310 textures. Entries give textureRect, spriteOffset, spriteSourceSize and textureRotated (rotated entries are stored turned 90 degrees). The `tch_` atlas and `tch_` images are the lower quality set used on iPod touch and older iPads; the port uses the full set.
+- The 18 `.sks` files are SpriteKit particle emitters (keyed archives).
+
