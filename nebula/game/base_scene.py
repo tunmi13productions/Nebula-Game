@@ -6,6 +6,7 @@ from ..engine.nodes import Node, Scene
 from ..engine.physics import Body, Circle, PhysicsWorld, attach, rectangle
 from ..data import engine_sound
 from . import looks
+from .hud import PlayerBars
 from .powerups import FAST_SHOT, LIFE, SHIELD, SPEED, PowerUp
 from .rand import between
 from .ship import (CAT_ENEMY, CAT_ENEMY_SHOT, CAT_LASER, CAT_OBSTACLE, CAT_PLAYER, CAT_PLAYER_SHOT, CAT_POWERUP,
@@ -71,6 +72,7 @@ class BaseScene(Scene):
         self.player.position = (W * 0.5, h + (H / 3) * POSITION_FACTOR_IPHONE)
         self.player.z = 5
         self.add_child(self.player)
+        self.player_bars = PlayerBars(self, self.player)    # visual only
         services.aureal.configure(H * 1.25, self.player.position, self, max_x=W)
         self._create_swoosh_fields()
         self._create_side_walls()
@@ -123,6 +125,14 @@ class BaseScene(Scene):
 
     # per frame (update:)
 
+    def _update_bars(self):
+        """The bars follow life and shield (visual only)."""
+        self.player_bars.update()
+        for node in self.children:
+            bar = getattr(node, 'life_bar', None)
+            if bar is not None:
+                bar.update()
+
     def on_update(self, dt):
         if self.game_paused or not self.allow_move:
             return
@@ -152,6 +162,7 @@ class BaseScene(Scene):
         px, py = self.player.position
         for field, (ox, oy) in self._swoosh_offsets:
             field.position = (px + ox, py + oy)
+        self._update_bars()
 
     # BaseActions, every second
 

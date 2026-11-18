@@ -4,7 +4,7 @@ from ..engine import actions as A
 from ..engine.nodes import Node
 from ..engine.particles import Emitter
 from ..engine.physics import Body, Circle, Polygon, attach, rectangle
-from . import looks
+from . import hud, looks
 from .rand import arc4random, between
 
 PLAYER_CODE = 98
@@ -113,6 +113,8 @@ class SpaceShip(Node):
         ship.ship_size = fit_size(tex, scene.size[0] / 4.3)
         ship.size = ship.ship_size
         ship.add_sprite('SpaceShips_%d' % code)
+        if code not in hud.NO_BAR:
+            ship.life_bar = hud.EnemyBar(ship)
         ship.scale = 0.8
         ship.position = (float(ship.parent_width // 2), ship.parent_height + ship.ship_size[1])
         if entrance:
@@ -236,6 +238,9 @@ class SpaceShip(Node):
 
     def starting_power_up(self, kind):
         """startingPowerUpOfTipe: the power bar fills in 0.3 s and drains over 10 s, then the effect ends."""
+        bars = getattr(self.game, 'player_bars', None)
+        if self.is_player and bars is not None:
+            bars.power_up(10.0)
         self.run(A.sequence([A.wait(0.3), A.wait(10.0), A.run_block(lambda: self.game.end_power_up(kind))]))
 
     # destruction (destroyShip)

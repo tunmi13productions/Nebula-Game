@@ -120,3 +120,22 @@ def test_emitters_load_and_emit_without_touching_the_game_random_numbers():
     assert keyframe({'times': [0.0, 1.0], 'values': [[0.0], [1.0]]}, 0.25) == [0.25]
     s = draw(em)
     assert s.get_size() == (320, 568)
+
+
+def test_bars_follow_life_and_shield():
+    from nebula.game.free_mode import FreeModeScene
+    from nebula.game.services import Services
+    from nebula.game.ship import SpaceShip
+    services = Services.silent('en')
+    scene = FreeModeScene(services)
+    bars = scene.player_bars
+    life = bars.nodes[1]
+    full = life.size[0]
+    scene.player.life -= 1
+    for _ in range(30):
+        services.scheduler.update(1 / 60)
+        scene.step(1 / 60)
+    assert abs(life.size[0] - full * scene.player.life / scene.player.max_life) < 1e-6
+    enemy = SpaceShip.enemy(12, scene, entrance=False)
+    assert enemy.life_bar is not None
+    assert getattr(SpaceShip.enemy(37, scene, entrance=False), 'life_bar', None) is None
