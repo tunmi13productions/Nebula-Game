@@ -4,7 +4,7 @@ Holding right reads as a fixed positive acceleration.x and holding left as the s
 or both reads as level. The value is sampled every 0.2 seconds like the original accelerometer, so
 everything downstream behaves as it did with tilt.
 """
-DEFAULT_TILT = 0.3   # provisional, tuned by playtesting. Must stay above 0.05 so the movement state changes.
+DEFAULT_TILT = 0.3   # chosen by playtesting. Must stay above 0.05 so the movement state changes.
 
 
 class KeyboardTilt:
