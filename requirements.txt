@@ -1,0 +1,6 @@
+cyal==0.4.5
+prismatoid==0.18.3
+pygame==2.6.1
+soundfile==0.14.0
+numpy==2.5.3
+pytest==9.2.0

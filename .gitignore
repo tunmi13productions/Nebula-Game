@@ -4,3 +4,4 @@ decompiled/ghidra_project/
 __pycache__/
 *.pyc
 decompiled/analysis/decompiled.c
+.pytest_cache/
