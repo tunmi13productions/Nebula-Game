@@ -78,7 +78,4 @@ How the Windows port is laid out and built. It covers architecture, folders and 
 - Keys, language and the override file are recorded in DEVIATIONS.md.
 - Sound files are committed to the private repository in `sounds/`.
 - Pan law: balance (the side the sound is on stays at full level, the other side fades out), chosen by ear on 2026-11-17 with `tools/demo_aureal.py`. Constant power stays available in the backend but isn't used.
-
-## Still open
-
-1. Speech completion. Several scripts wait for a line to finish before continuing (for example, enemies spawn after I.C.A.R.U.S. finishes speaking). Prism may not report when a screen reader finishes speaking. If it can't, the port needs a stand-in, such as an estimated duration from text length and rate, or using Prism's own speech engine where finish events exist. That would be a deviation to settle once step 4 shows what Prism supports.
+- Speech: game speech is a OneCore voice rendered through Prism and played by the game, and accessibility labels go to the screen reader (see DEVIATIONS.md).
