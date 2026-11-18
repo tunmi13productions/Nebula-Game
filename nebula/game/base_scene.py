@@ -1,10 +1,11 @@
-"""BaseScene, the shared gameplay scene. This step covers the player, steering, the listener, the side walls
-and talking movement. See docs/NOTES.md (input and movement, physics categories, swoosh fields and side walls).
+"""BaseScene, the shared gameplay scene. See docs/NOTES.md (input and movement, physics categories and
+collisions, swoosh fields and side walls, shots, damage model).
 """
 from ..engine import actions as A
 from ..engine.nodes import Node, Scene
-from ..engine.physics import Body, PhysicsWorld, attach, rectangle
-from .ship import CAT_PLAYER, CAT_WALL, SpaceShip
+from ..engine.physics import Body, Circle, PhysicsWorld, attach, rectangle
+from .ship import (CAT_ENEMY, CAT_ENEMY_SHOT, CAT_OBSTACLE, CAT_PLAYER, CAT_PLAYER_SHOT, CAT_SWOOSH_LEFT,
+                   CAT_SWOOSH_RIGHT, CAT_WALL, Shot, SpaceShip, burst_and_remove)
 
 W, H = 320.0, 568.0
 ACCEL_INTERVAL = 0.2      # CMMotionManager accelerometerUpdateInterval
@@ -14,8 +15,22 @@ BASE_LOOP = 1.0           # "BaseActions"
 TALK_INTERVAL = 0.3       # "TalkingMovement"
 POSITION_FACTOR_IPHONE = 0.17
 RATE_STATUS, RATE_MOVE = 0.55, 0.6
+PLAYER_SHOT_FLIGHT = 1.0
+SCORE_DELAY = 0.9
+END_GAME_DELAY = 1.5
+SHOT_BURST_FRAMES = 15    # arrayPower_2, the Fireball frames
+ENEMY_BURST_FRAMES = 9    # arrayPower_3
 
 STOPPED, RIGHT, LEFT = 0, 1, 2
+
+
+def _pair(a, b, cat_a, cat_b):
+    """Returns (body with cat_a, body with cat_b) if the contact is between those two categories, else None."""
+    if a.category == cat_a and b.category == cat_b:
+        return a, b
+    if b.category == cat_a and a.category == cat_b:
+        return b, a
+    return None
 
 
 class BaseScene(Scene):
@@ -24,8 +39,11 @@ class BaseScene(Scene):
         self.services = services
         self.tilt_source = tilt_source or (lambda: 0.0)   # returns acceleration.x; the keyboard stands in for tilt
         self.physics_world = PhysicsWorld()
+        self.is_active = True
         self.allow_move = True
         self.allow_shoot = True
+        self.can_shoot = False
+        self.power_up_shot = False
         self.game_paused = False
         self.talking_move = False
         self._talking_running = False
@@ -33,18 +51,26 @@ class BaseScene(Scene):
         self.movement_state = STOPPED
         self._last_spoken_state = STOPPED
         self.should_lateral_play_hit_sound = True
+        self.last_shot_hit = None          # lastShoot
+        self.score_counter = 0
+        self.death_counter = 0
         self.velocidade = W / services.globals.get_speed()
 
-        self.player = SpaceShip.player(W, H, services.globals)
+        self.player = SpaceShip.player(self, services.globals)
         w, h = self.player.ship_size
         self.player.position = (W * 0.5, h + (H / 3) * POSITION_FACTOR_IPHONE)
         self.player.z = 5
         self.add_child(self.player)
         services.aureal.configure(H * 1.25, self.player.position, self, max_x=W)
+        self._create_swoosh_fields()
         self._create_side_walls()
 
         self._accel_timer = services.scheduler.every(ACCEL_INTERVAL, lambda t: self._sample_accelerometer())
         self.run(A.repeat_forever(A.sequence([A.run_block(self.base_actions), A.wait(BASE_LOOP)])), key='BaseActions')
+
+    def did_move_to_view(self):
+        """BaseScene didMoveToView: starts the auto-fire loop that re-enables shooting."""
+        self.starting_shoot_loop()
 
     # input
 
@@ -58,6 +84,30 @@ class BaseScene(Scene):
         """Swipe down in the original: 'Your life is N'."""
         if not self.game_paused:
             self.services.voice.speak(self.services.strings.format('info_vida', self.player.life), RATE_STATUS)
+
+    # shooting
+
+    def starting_shoot_loop(self):
+        interval = self.services.globals.get_time_shot()
+        self.run(A.repeat_forever(A.sequence([A.run_block(lambda: setattr(self, 'can_shoot', True)), A.wait(interval)])),
+                 key='BlockShoot')
+
+    def player_shoot(self):
+        """playerShoot, on tap: at most one shot per auto-fire interval unless fast shot is active."""
+        if not (self.can_shoot or self.power_up_shot) or self.game_paused or not self.allow_shoot:
+            return None
+        p = self.player
+        w, h = p.ship_size
+        shot = Shot(p, (w * 0.5, h * 0.2))
+        shot.position = (p.position[0], p.position[1] * 1.2)
+        attach(shot, Body(Circle(W / 30.0), category=CAT_PLAYER_SHOT, contact=CAT_ENEMY | CAT_OBSTACLE,
+                          collision=CAT_PLAYER_SHOT | CAT_ENEMY_SHOT))
+        shot.z = 5
+        self.add_child(shot)
+        shot.run(A.sequence([A.move_to_y(H + 20.0, PLAYER_SHOT_FLIGHT), A.remove_from_parent()]))
+        self.can_shoot = False
+        p.shot_sound(None)
+        return shot
 
     # per frame (update:)
 
@@ -84,6 +134,12 @@ class BaseScene(Scene):
         x = min(max(p.position[0] + accel * self.velocidade, half), W - half)
         p.position = (x, p.position[1])
         self.services.aureal.listener = p.position
+
+    def did_evaluate_actions(self):
+        # The swoosh fields are held to the ship by fixed physics joints in the original.
+        px, py = self.player.position
+        for field, (ox, oy) in self._swoosh_offsets:
+            field.position = (px + ox, py + oy)
 
     # BaseActions, every second
 
@@ -112,7 +168,18 @@ class BaseScene(Scene):
         self.services.voice.speak(self.services.strings.get(key), RATE_MOVE)
         self._last_spoken_state = self.movement_state
 
-    # side walls
+    # fields and walls
+
+    def _create_swoosh_fields(self):
+        w, h = self.player.ship_size
+        fw = w * 0.7
+        self._swoosh_offsets = []
+        for cat, sign in ((CAT_SWOOSH_LEFT, -1), (CAT_SWOOSH_RIGHT, 1)):
+            field = Node(name='swoosh', size=(fw, 10.0))
+            attach(field, Body(rectangle(fw, 10.0), category=cat, contact=CAT_ENEMY_SHOT, collision=cat))
+            self.add_child(field)
+            self._swoosh_offsets.append((field, (sign * (w * 0.5 + fw * 0.5), h * 0.5)))
+        self.did_evaluate_actions()
 
     def _create_side_walls(self):
         h = self.player.ship_size[1]
@@ -124,15 +191,69 @@ class BaseScene(Scene):
             self.add_child(wall)
             self.walls.append(wall)
 
+    # hooks for subclasses
+
+    def destroy_enemy(self, code):
+        """Called whenever an enemy is gone. Chapters, free mode and the tutorial override it."""
+
+    def add_score(self, ship):
+        self.score_counter += ship.score
+        self.death_counter += 1
+
+    def end_game(self):
+        """BaseScene endGame: the stage is over. The game-over screen comes with the menus step."""
+        self.is_active = False
+
+    def _schedule_end_game(self):
+        self.services.scheduler.after(END_GAME_DELAY, self.end_game)
+
+    # contacts (didBeginContact:)
+
     def did_begin_contact(self, a, b):
         if self.game_paused:
             return
+        fx = self.services.effects
+        hit = _pair(a, b, CAT_ENEMY, CAT_PLAYER_SHOT)
+        if hit:
+            enemy, shot = hit[0].node, hit[1].node
+            burst_and_remove(shot, ENEMY_BURST_FRAMES)
+            fx.play('enemy_hit.caf')
+            if enemy.inflict_damage(self.services.globals.get_shot()):
+                self.destroy_enemy(enemy.code)
+                self.services.scheduler.after(SCORE_DELAY, lambda: self.add_score(enemy))
+        ram = _pair(a, b, CAT_ENEMY, CAT_PLAYER)
+        if ram:
+            enemy = ram[0].node
+            self.destroy_enemy(enemy.code)
+            fx.play('player_hit.caf')
+            if self.player.inflict_damage(enemy.shoot_damage):
+                self._schedule_end_game()
+            enemy.inflict_damage(enemy.life)
+        struck = _pair(a, b, CAT_ENEMY_SHOT, CAT_PLAYER)
+        if struck:
+            shot = struck[0].node
+            burst_and_remove(shot, SHOT_BURST_FRAMES)
+            if self.last_shot_hit is not shot:
+                self.last_shot_hit = shot
+                fx.play('player_hit.caf')
+                if self.player.inflict_damage(shot.ship.shoot_damage):
+                    self.allow_move = False
+                    self._schedule_end_game()
+        clash = _pair(a, b, CAT_PLAYER_SHOT, CAT_ENEMY_SHOT)
+        if clash:
+            fx.play('colisaoTiro.mp3')
+            burst_and_remove(clash[1].node, SHOT_BURST_FRAMES)
+            burst_and_remove(clash[0].node, SHOT_BURST_FRAMES)
+        if _pair(a, b, CAT_SWOOSH_LEFT, CAT_ENEMY_SHOT):
+            fx.play('Swoosh_Left.caf')
+        elif _pair(a, b, CAT_SWOOSH_RIGHT, CAT_ENEMY_SHOT):
+            fx.play('Swoosh_Right.caf')
         if a.category == CAT_WALL or b.category == CAT_WALL:
             if self.should_lateral_play_hit_sound:
                 if self.talking_move:
                     self.services.voice.speak(self.services.strings.get('talkingMove_F'), RATE_MOVE)
                 right = self.player.position[0] >= W * 0.5
-                self.services.effects.play('bound_right.mp3' if right else 'bound_left.mp3')
+                fx.play('bound_right.mp3' if right else 'bound_left.mp3')
                 self.should_lateral_play_hit_sound = False
 
     def did_end_contact(self, a, b):

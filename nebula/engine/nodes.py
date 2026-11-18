@@ -101,6 +101,9 @@ class Scene(Node):
     def on_update(self, dt):
         """Override for per-frame logic, the equivalent of SKScene update:."""
 
+    def did_evaluate_actions(self):
+        """Override: SKScene didEvaluateActions, after actions and before contacts."""
+
     def did_begin_contact(self, a, b):
         """Override: SKPhysicsContactDelegate didBeginContact:. a and b are physics Body objects."""
 
@@ -116,6 +119,7 @@ class Scene(Node):
             if node is self or node.scene is self:
                 if not _ancestor_paused(node):
                     node.update_actions(dt)
+        self.did_evaluate_actions()
         if self.physics_world is not None:
             self.physics_world.simulate(self)
 

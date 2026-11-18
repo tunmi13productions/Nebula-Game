@@ -398,7 +398,16 @@ class Tracer:
         if sel == 'localizedStringForKey:value:table:': return self.new_handle('L(%s)' % args[0])
         if sel == 'getTextureWithName:' or sel == 'textureWithImageNamed:': return self.new_handle('tex(%s)' % args[0])
         if sel == 'getTexturesWithPrefix:': return self.new_handle('textures(%s*)' % args[0].strip("'"))
-        if sel == 'stringWithFormat:': return self.new_handle('fmt(%s)' % ','.join(args[:2]))
+        if sel == 'stringWithFormat:':
+            fmt = args[0][1:-1] if args and args[0].startswith("'") else None
+            if fmt is not None and '%@' not in fmt:
+                ints = iter(int(a) for a in args[1:] if a.lstrip('-').isdigit())
+                try:
+                    text = re.sub(r'%l?[di]|%li', lambda m: str(next(ints)), fmt)
+                    return self.new_handle(repr(text))
+                except StopIteration:
+                    pass
+            return self.new_handle('fmt(%s)' % ','.join(args[:2]))
         if sel in ('numberWithInt:', 'numberWithInteger:', 'numberWithFloat:', 'numberWithBool:'): return self.new_handle('num(%s)' % args[0])
         if sel == 'objectAtIndexedSubscript:' or sel == 'objectAtIndex:':
             d = self.handles.get(recv, '')
