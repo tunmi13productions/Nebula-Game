@@ -324,7 +324,9 @@ class Tracer:
         if name == '_arc4random':
             v = self.rand_source() if self.rand_source else self.rand_value
             self.log('arc4random -> %d' % v); return self.ret(v & 0xffffffff)
-        if name == '_arc4random_uniform': self.log('arc4random_uniform(%d) -> 0' % r[0]); return self.ret(0)
+        if name == '_arc4random_uniform':
+            v = self.uniform_source(r[0]) if self.uniform_source else 0
+            self.log('arc4random_uniform(%d) -> %d' % (r[0], v)); return self.ret(v)
         if name in ('_NSLog', '_UIAccessibilityIsVoiceOverRunning'):
             if name == '_NSLog': self.log('NSLog %s' % self.desc(r[0]))
             return self.ret(1 if 'VoiceOver' in name else 0)
@@ -417,6 +419,7 @@ class Tracer:
     trace_internal = True
     rand_value = 0
     rand_source = None    # optional callable returning the next arc4random value
+    uniform_source = None  # optional callable(bound) returning the next arc4random_uniform value
 
     def array_value(self, recv, sel, regs, sp):
         """Models NSArray contents and NSNumber values so table-driven code runs for real."""

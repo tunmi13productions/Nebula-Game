@@ -81,12 +81,11 @@ def test_spawning_matches_the_original_in_the_emulator(monkeypatch):
     orig = t.new_object('FreeModeScene')
     t.send(orig, 'initWithSize:', u32f(320.0), u32f(568.0))
     t.skip_impl.update({'createEnemyWithType:', 'initBoss:onParentScene:'})
+    services = Services.silent('en')
+    port = FreeModeScene(services)       # built before the patch, as the original was (its map draws too)
     rng_orig, rng_port = random.Random(11), random.Random(11)
     t.rand_source = lambda: rng_orig.getrandbits(32)
     monkeypatch.setattr(rand, 'arc4random', lambda: rng_port.getrandbits(32))
-
-    services = Services.silent('en')
-    port = FreeModeScene(services)
     port_log = []
     port.create_enemy_with_type = lambda code: port_log.append(('ship', code))
     port.spawn_boss = lambda code: port_log.append(('boss', code))

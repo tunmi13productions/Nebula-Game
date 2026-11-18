@@ -12,6 +12,7 @@ from ..engine import actions as A
 from . import rand
 from .base_scene import BaseScene, H, W
 from .cutscene import CutScene
+from .map_generator import MapGenerator
 from .powerups import FAST_SHOT, LIFE, SHIELD, SPEED
 
 ICARUS_RATE = 0.55
@@ -47,6 +48,8 @@ class ChapterScene(BaseScene):
     def did_move_to_view(self):
         self.allow_move = False
         self.allow_shoot = False
+        self.map = MapGenerator(self, self.services)       # initChapterNStage:onScene:
+        self.map.chapter(self.CHAPTER, self.stage_number)
         if self.stage_number == 1:
             self.play_intro(self.CHAPTER, self._after_intro)
         else:
@@ -224,6 +227,8 @@ class ChapterScene(BaseScene):
         self.on_select()
 
     def stop_audio(self):
+        if getattr(self, 'map', None) is not None:
+            self.map.stop()
         if self.cutscene is not None:
             self.cutscene.stop()
         self.services.aureal.stop_all()

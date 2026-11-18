@@ -388,4 +388,6 @@ Continue the study through the open questions above, in roughly that order. Enem
 - The 18 `.sks` files are SpriteKit particle emitters (keyed archives).
 - Most loose bundle pngs (165 of 169) are Apple CgBI pngs; `tools/extract_images.py` converts them.
 - Particle emitters: `tools/extract_emitters.py` converts the 18 `.sks` files to `data/emitters.json`. Uses traced so far: the laser (one of MyParticle, MyParticle1 to 3, picked with `arc4random() & 3` inside laserShoot's sequence, so that draw is part of the game's random sequence), the score burst on a kill (score.sks), the starfield (starField.sks), ships 37 to 39 (ShipNNFlyParticle) and the asteroids.
+- SKEmitterNode drew particles from rotated atlas textures in their stored (quarter-turned) orientation. The background ship emitters of chapter 6 use such textures with a particle rotation of pi/2, which stands the ships upright; the port reproduces both (`TextureStore.get_particle`). The emitter node's xScale and yScale apply after each particle's rotation.
+- MapGenerator (`nebula/game/map_generator.py`) draws from the game's arc4random and arc4random_uniform when it places items, as the original did. Recipes for free mode and all 36 chapter stages were traced with the emulator; see the module docstring.
 

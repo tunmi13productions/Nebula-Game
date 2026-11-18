@@ -5,6 +5,7 @@ are Localizable.strings keys (tut_1.0 and so on) that resolve to the localized m
 """
 from ..audio.players import Narration
 from ..engine import actions as A
+from .map_generator import MapGenerator
 from .base_scene import BaseScene, H
 
 FIRE_TIMER_LASER = 3.0
@@ -21,6 +22,8 @@ class TutorialScene(BaseScene):
         self.aux = 0
         self.on_select = on_select or (lambda: None)   # backMenuController: back to tutorial selection
         self.on_next = on_next or (lambda: None)       # proximoTutorial: the next section
+        self.map = MapGenerator(self, services)        # initFreemodeMapInScene:
+        self.map.free_mode()
 
     # flow
 
@@ -219,6 +222,7 @@ class TutorialScene(BaseScene):
 
     def stop_audio(self):
         """willMoveFromView: silence everything when leaving the scene."""
+        self.map.stop()
         self.voice_player.stop()
         self.services.aureal.stop_all()
         self.services.voice.stop()

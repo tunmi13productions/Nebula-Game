@@ -325,3 +325,17 @@ class repeat(Action):
 
 def repeat_forever(action):
     return repeat(action, None)
+
+
+class resize_to(_Timed):
+    """SKAction resizeToWidth:height:duration:."""
+
+    def __init__(self, width, height, duration):
+        self.width, self.height, self.duration = width, height, duration
+
+    def begin(self, node, state):
+        state['start'] = node.size
+
+    def apply(self, node, state, p0, p1):
+        w0, h0 = state['start']
+        node.size = (w0 + (self.width - w0) * p1, h0 + (self.height - h0) * p1)

@@ -1,6 +1,7 @@
 """FreeModeScene: endless play with two enemy pools, a boss every tenth special, timed power-ups and a saved
 best score (see docs/MODES.md, Free mode)."""
 from ..engine import actions as A
+from .map_generator import MapGenerator
 from .base_scene import BaseScene, RATE_STATUS
 from .rand import between
 
@@ -27,6 +28,8 @@ class FreeModeScene(BaseScene):
         self.boss_code = 0
         self.on_menu = on_menu or (lambda: None)           # backMenuController
         self.on_new_game = on_new_game or (lambda: None)   # novoJogo
+        self.map = MapGenerator(self, services)            # initFreemodeMapInScene:
+        self.map.free_mode()
 
     # start
 
@@ -138,6 +141,7 @@ class FreeModeScene(BaseScene):
         self.on_menu()
 
     def stop_audio(self):
+        self.map.stop()
         self.services.aureal.stop_all()
         self.services.voice.stop()
         self._accel_timer.invalidate()
