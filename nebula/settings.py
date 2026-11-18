@@ -1,6 +1,8 @@
 r"""The optional settings file, %APPDATA%\Nebula\settings.json. It's also where saved progress will live.
 
-Recognised keys so far: "language", either "en" or "pt", overriding the Windows display language.
+Recognised keys so far:
+- "language": "en" or "pt", overriding the Windows display language.
+- "tilt": the acceleration a held arrow key stands for (default 0.3, provisional until playtested).
 A missing or unreadable file means no overrides.
 """
 import json
