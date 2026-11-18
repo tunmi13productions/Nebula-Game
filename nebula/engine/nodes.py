@@ -101,6 +101,12 @@ class Scene(Node):
     def on_update(self, dt):
         """Override for per-frame logic, the equivalent of SKScene update:."""
 
+    def did_begin_contact(self, a, b):
+        """Override: SKPhysicsContactDelegate didBeginContact:. a and b are physics Body objects."""
+
+    def did_end_contact(self, a, b):
+        """Override: SKPhysicsContactDelegate didEndContact:."""
+
     def step(self, dt):
         if self.paused:
             return
