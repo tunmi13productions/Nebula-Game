@@ -9,6 +9,7 @@ their bullets, lasers and explosion.
 from ..data import BOSSES
 from ..engine import actions as A
 from ..engine.nodes import Node
+from ..engine.particles import Emitter
 from ..engine.physics import Body, Circle, Polygon, attach, rectangle
 from . import looks
 from .rand import arc4random, between
@@ -18,6 +19,9 @@ BOSS_CODE = 100            # what Boss getShipCode reports to destroyEnemy:
 SHOT_FLIGHT = 1.5
 LASER_CHARGE, LASER_WARM, LASER_RETREAT = 1.0, 1.5, 3.0
 EXPLOSION_GAPS = (0.3, 0.2)
+# Boss getSpaceShipColor: the 0 to 255 values the original passed to UIColor, which clamps them
+BOSS_COLORS = {1: (229, 153, 0), 2: (137, 46, 28), 3: (40, 74, 185), 4: (41, 61, 125), 5: (18, 7, 4),
+               6: (45, 45, 146), 7: (225, 128, 0), 8: (9, 9, 182), 9: (65, 65, 250)}
 EXPLOSION_TIME = 1.0       # the explosion animation, visual only, before the boss leaves the scene
 
 # Each step is a list of ('shot' | 'laser' | 'coin', dx, dy). 'coin': an even getRandomNumberBetween(0, 100)
@@ -142,8 +146,25 @@ class Boss(Node):
         def charge():
             keys['sound'] = self._play_linked('Laser_Charge', 'caf', self)
 
+        def glow():
+            """The beam's look: MyParticle as a child of the boss at the gun, red-tinted, slow while charging
+            (it keeps the file's downward acceleration)."""
+            em = keys['emitter'] = Emitter('MyParticle')
+            em.set(birth_rate=10.0, lifetime=1.0, blend_mode=1, color=list(looks.ui_color(*BOSS_COLORS.get(
+                self.boss_code, (28, 28, 188)))), position_range=[0.0, 0.0], speed=0.0, speed_range=0.0,
+                rotation=0.0, alpha=1.0, alpha_range=1.0, alpha_speed=1.0, scale=0.2, scale_range=0.0,
+                scale_speed=0.0)
+            em.position, em.z = (dx, dy - bh / 2.0), 5
+            self.add_child(em)
+
         def fire():
             keys['sound'] = self._play_linked('Laser_Firing', 'mp3', self)
+            keys['emitter'].set(birth_rate=150.0, lifetime=2.0)
+
+        def stop_stream():
+            em = keys['emitter']
+            em.set(birth_rate=0.0)
+            em.run(A.sequence([A.wait(2.0), A.remove_from_parent()]))
 
         def beam_on():
             beam.position = (dx, dy - bh / 2.0)
@@ -157,8 +178,9 @@ class Boss(Node):
                 beam.remove_from_parent()
                 self.laser_active = False
             beam.run(A.move_to_y(bh, LASER_RETREAT), completion=done)
-        beam.run(A.sequence([A.run_block(charge), A.wait(LASER_CHARGE), A.run_block(fire), A.wait(LASER_WARM),
-                             A.run_block(beam_on), A.wait(hold), A.run_block(retreat)]))
+        beam.run(A.sequence([A.run_block(charge), A.run_block(glow), A.wait(LASER_CHARGE), A.run_block(fire),
+                             A.wait(LASER_WARM), A.run_block(beam_on), A.wait(hold), A.run_block(stop_stream),
+                             A.run_block(retreat)]))
 
     # damage and death
 
