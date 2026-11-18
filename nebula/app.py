@@ -6,8 +6,10 @@ shows the campaign selector, free mode or a tutorial). backMenuController popped
 returning to whichever screen opened it. Here self.stack holds the UIKit-style screens; a game scene is
 shown on top of the last one and leaving it shows that screen again.
 """
+from .game.chapters import CHAPTERS
 from .game.free_mode import FreeModeScene
 from .game.tutorial import TutorialScene
+from .menus.campaign import CampaignSelectScene
 from .menus.intro import IntroScreen
 from .menus.main_menu import MainMenuScreen
 from .menus.tutorial_selection import TutorialSelectionScreen
@@ -42,8 +44,39 @@ class App:
 
     # what the main menu opens (filled in as each screen is ported)
 
-    def open_campaign(self):
-        pass
+    def open_campaign(self, chapter=None):
+        """The campaign selector, on the furthest chapter reached unless a chapter is given."""
+        chapter = chapter or self.services.globals.last_chapter
+        self.campaign = CampaignSelectScene(self, chapter)
+        self.window.set_scene(self.campaign)
+
+    def start_chapter(self, chapter, stage):
+        self.window.set_scene(CHAPTERS[chapter](
+            self.services, self.tilt, stage, on_select=self.back_to_campaign,
+            on_next=lambda: self.next_mission(chapter, stage),
+            on_restart=lambda: self.start_chapter(chapter, stage)))
+
+    def next_mission(self, chapter, stage):
+        """proximaMissao: the next level of the same chapter, remembered under "fase"."""
+        save = self.services.save
+        save.set_integer('fase', stage + 1)
+        save.synchronize()
+        self.start_chapter(chapter, stage + 1)
+
+    def back_to_campaign(self):
+        """backMenuCampaign: back to the selector on the chapter just played. When a chapter was newly
+        completed (ControleCapitulo is "yes") it opens on the furthest chapter instead, awards 2 upgrade
+        points (2 more when chapter 5 has just been reached) and opens the Hangar on top."""
+        g, save = self.services.globals, self.services.save
+        if save.get('ControleCapitulo') == 'yes':
+            self.open_campaign(g.last_chapter)
+            g.win_points += 2
+            if g.last_chapter == 5:
+                g.win_points += 2
+            g.save_points(save)
+            self.open_hangar(return_to=self.campaign)
+        else:
+            self.open_campaign(save.integer('capitulo') or g.last_chapter)
 
     def open_free_mode(self):
         self.window.set_scene(FreeModeScene(self.services, self.tilt, on_menu=self.back_to_screen,
@@ -63,7 +96,7 @@ class App:
         save.synchronize()
         self.start_tutorial(n + 1)
 
-    def open_hangar(self):
+    def open_hangar(self, return_to=None):
         pass
 
     def open_about(self):

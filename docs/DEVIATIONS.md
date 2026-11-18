@@ -65,6 +65,8 @@ Each entry is a settled decision. Don't change a deviated behaviour unless the u
   - L speaks your life.
   - In menus, the up and down arrows move between items (with the same change and error sounds), Enter activates (with the accept sound), and Escape goes back.
   - Enter or Space skips a cutscene.
+  - In the campaign selector, the up and down arrows move between items (the one-finger swipes), the right and left arrows go to the next and previous chapter (swipe left and swipe right), Enter activates and Escape is swipe up.
+  - The UIKit screens (main menu, tutorial selection, Hangar, About) are read by the screen reader through Prism. VoiceOver's own navigation sounds have no counterpart.
 - Reason: a PC has no touch screen. Decided by the user on 2026-11-17.
 
 ## Language override file

@@ -28,15 +28,30 @@ Recovered from the view controllers, `CampaignScene`, `CutScene`, `BaseScene` me
 - Back: `acceptButton.mp3`, the doors close over 1 second, then the screen is popped.
 - "Next tutorial" (proximoTutorial) stores the new tutorial number as a string under the `tutorial` key.
 
-## Campaign selector (`CampaignScene`, a SpriteKit menu)
+## Campaign selector (`CampaignScene`, a SpriteKit scene)
 
-- It shows one chapter at a time: "Chapter %ld: %@" (`cap_seletor`), with the chapter title from `capN_title` and Roman numerals from the `Capitulo` class. Below that are four level buttons labelled "Level %ld: %@" (`cap_fase`, with the level names from `capN_lvlM`) and a back button "Back" (`cap_sair`).
-- Swipe left and right change the chapter (`loadNextChapter` and `loadPreviousChapter`), speaking the new chapter label. With VoiceOver, swipes inside the chapter move through the level items, playing `chageButton.mp3` and speaking each one, and a double tap opens the selected level.
-- Locks:
-  - `verifyProgress`: levels and chapters past the saved progress (lastChapter, lastLevel) are greyed out and locked.
-  - `verifypurchasedCampaign`: without the full campaign purchase, chapters after 1 show a "block" overlay. In Portuguese a locked chapter speaks "Bloqueado" (`cap_Block`). That key is missing in English, so English falls back to the raw key "cap_Block". Original quirk.
-  - Choosing a locked chapter without the purchase starts the in-app purchase flow (`iniciaCompra`, then `CompraCampanhaViewController`): "Full campaing not purchased" / "To continue playing after chapter 1 you must purchase the full campaing mode." with the buttons "Buy", "Restore" and "back".
-- `presentChapterWithStage:` starts the chosen ChapterNScene at that stage through a loading screen.
+- It's shown by the game view controller (gameType 1). `initWithSize:onChapter:` with no chapter (from the main menu) opens on lastChapter. The background is a free mode map generator, visual only.
+- With VoiceOver running, everything is spoken by the game voice at rate 0.55. menuSelection 0 is the chapter label "Chapter %ld: %@" (`cap_seletor` with the `capN_title`), 1 is Back (`cap_sair`), 2 to 5 are the levels "Level %ld: %@" (`cap_fase` with `capN_lvlM`). Locked items get "%@, %@" with `cap_Block` ("Locked").
+- Locks (`verifyProgress`): a level is locked when the chapter is lastChapter and the level is past lastLevel. Chapters past lastChapter are locked as a whole but can't be reached (below).
+- didMoveToView speaks the chapter label (speakSentence:withRate:, no completion).
+- Moving between items (one-finger swipes, `swipeRightDetected:` and `swipeLeftDetected:`): ignored while `swiping`. Past either end: `errorButton.mp3`, then swiping clears after 0.2 seconds. Otherwise `chageButton.mp3`, the selection moves, and the item is spoken with a completion that clears swiping, so input waits for each line to finish.
+- Changing chapter (`didSwipeLeft:` for the next chapter, `didSwipeRight:` for the previous): ignored while swiping, then `chageButton.mp3`.
+  - loadNextChapter: if the chapter is below 9 and below lastChapter, the next chapter slides in over 1 second, and its label is spoken when it arrives (selection back to 0). Then, if the chapter (after the move) isn't below lastChapter and isn't 9, "Locked" is spoken at once. When the move happened, the chapter label cuts it off a second later. Swiping is cleared at once.
+  - loadPreviousChapter: on chapter 1 it says "Back" and then posts backMenuController, which leaves to the main menu. Otherwise the previous chapter slides in over 1 second and its label is spoken.
+- `doubleTapDetected:`: ignored while swiping. A locked chapter or level plays `errorButton.mp3`. Otherwise `acceptButton.mp3` plays, and:
+  - Back plays the accept sound again, says "Back" with a 0.5 second pre-delay, then backPressed posts backMenuController.
+  - A level sets swiping, says the level name (`capN_lvlM` alone) with a 0.5 second pre-delay, then presentChapterWithStage.
+  - The chapter label does nothing more.
+- `didSwipeUp:`: says "Back", then backMenuController.
+- `presentChapterWithStage:` saves `capitulo` and `fase`, then presents ChapterNScene at that stage.
+- The purchase checks (`verifypurchasedCampaign`, `iniciaCompra`) never trigger, because `Global init` sets purchasedCampaign to YES.
+
+## Game view controller notifications
+
+- backMenuController: pops the game view controller (back to the screen that pushed it).
+- backMenuCampanha (`backMenuCampaign`): for the campaign, the selector is shown again on the chapter saved in `capitulo`. When ControleCapitulo is "yes" it opens on lastChapter instead, adds 2 winPoints (2 more if lastChapter is now 5), saves the points and pushes the Hangar.
+- proximoMissao (`proximaMissao`): `fase` + 1 is saved and that level of the same chapter starts.
+- reinicia and novoJogo: the same level (or a new free mode game) starts again.
 
 ## In-game menus (BaseScene, SpriteKit menuObjects)
 
