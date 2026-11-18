@@ -58,8 +58,13 @@ class Tracer:
         self.data = open(path, 'rb').read()
         mu = self.mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
         mu.ctl_set_cpu_model(UC_CPU_ARM_CORTEX_A15)
-        mu.reg_write(UC_ARM_REG_C1_C0_2, mu.reg_read(UC_ARM_REG_C1_C0_2) | (0xf << 20))
+        # Enabling VFP raises an SEH exception that Unicorn handles internally. Python's faulthandler would
+        # still print it as a fatal error on Windows, so it's muted for this one call.
+        import faulthandler
+        was_on = faulthandler.is_enabled()
+        faulthandler.disable()
         mu.reg_write(UC_ARM_REG_FPEXC, 0x40000000)
+        if was_on: faulthandler.enable()
         for s in b.segments:
             if s.virtual_size == 0 or s.name == '__PAGEZERO': continue
             base = s.virtual_address & ~0xfff
@@ -110,6 +115,7 @@ class Tracer:
         mu.hook_add(UC_HOOK_CODE, self.on_sent, begin=self.SENT, end=self.SENT + 0x10)
         mu.hook_add(UC_HOOK_MEM_UNMAPPED, self.on_bad)
         self.globals = {}
+        self.regs_r0, self.regs_r1 = UC_ARM_REG_R0, UC_ARM_REG_R1
         # the Global singleton is cached in a __DATA variable reached through this pointer
         g = self.send(self.classbyname['Global'], 'sharedManager', label='setup Global')
         self.global_obj = g
@@ -454,6 +460,11 @@ class Tracer:
         selp = self.selref(sel)
         return self.call(imp[0], obj, selp, *args, label=label or '%s %s' % (self.desc(obj), sel))
     def selref(self, sel):
+        cache = self.__dict__.setdefault('_selcache', {})
+        if sel not in cache: cache[sel] = self._selref(sel)
+        return cache[sel]
+
+    def _selref(self, sel):
         s = self.sec['__objc_selrefs']
         for i in range(s.size // 4):
             p = self.r32(s.virtual_address + 4 * i)
