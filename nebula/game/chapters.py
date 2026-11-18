@@ -281,6 +281,76 @@ class Chapter1Scene(ChapterScene):
         self.run(A.wait(10.0), completion=dock)
 
 
+class Chapter2Scene(ChapterScene):
+    """Direction."""
+    CHAPTER = 2
+    SPAWNS = {'small1': ('small', 10), 'small2': ('small', 41), 'medium1': ('medium', 40), 'medium2': ('medium', 43),
+              'laser1': ('laser', 42)}
+
+    def opening(self, stage):
+        if stage == 1:
+            self.say('chap2_icarus1', 1.0, 0.0, lambda: self.create('small1'))
+        elif stage == 2:
+            self.say('chap2_icarus2', 1.0, 0.0, lambda: (self.create('small1'), self.create('small2')))
+        elif stage == 3:
+            self.create('small2')
+            self.create('laser1')
+        else:
+            self.stage4_loop([('chap2_icarus3', 1.0, 0.0)], lambda: self.boss_now(2))
+
+    def destroy_enemy(self, code):
+        st = self.stage_number
+        if st == 3:
+            if code == 43:
+                if self._dec('medium_in') <= 1 and self.medium < 2:
+                    self.release_power_up(LIFE)
+                    self.create('medium2')
+            elif code == 42:
+                if self._dec('laser_in') <= 1 and self.laser < 5:
+                    self.create('medium2' if self.laser > 3 else 'laser1')
+            elif code == 41:
+                if self._dec('small_in') <= 1 and (self.medium < 2 or self.medium_in > 0):
+                    self.create('small2')
+            if self.medium == 2 and self.small_in == 0:
+                self.default_victorious_animation()
+        elif st == 2:
+            if code == 42:
+                if self._dec('laser_in') <= 1 and self.laser < 4:
+                    if self.laser == 2:
+                        self.release_power_up(LIFE)
+                    self.create('laser1')
+            elif code in (41, 10):
+                if self._dec('small_in') <= 1:
+                    spawn_small = True
+                    if self.small > 3:
+                        if self.laser < 4:
+                            if self.laser == 0:
+                                self.release_power_up(LIFE)
+                                self.create('laser1')
+                        elif self.laser_in < 1:
+                            spawn_small = False
+                    if spawn_small:
+                        self.create('small2')
+            if self.laser == 4 and self.small_in == 0:
+                self.default_victorious_animation()
+        elif st == 1:
+            if code == 40:
+                if self._dec('medium_in') <= 1 and self.medium < 5:
+                    self.create('medium1')
+            elif code == 10:
+                if self._dec('small_in') <= 1 and (self.medium < 5 or self.medium_in != 0):
+                    self.create('small1')
+                    if self.small == 2:
+                        self.create('medium1')
+            if self.medium == 5 and self.small_in == 0:
+                self.default_victorious_animation()
+        else:
+            self.end_lvl()
+
+    def end_lvl(self):
+        self.end_lvl_speech('chap2_icarus4', 1.0, 0.0, self.default_victorious_animation)
+
+
 CHAPTERS = {c.CHAPTER: c for c in (
-    Chapter1Scene,
+    Chapter1Scene, Chapter2Scene,
 )}

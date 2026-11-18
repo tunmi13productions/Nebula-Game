@@ -233,3 +233,16 @@ def test_killing_the_boss_runs_end_lvl_once_and_docks():
     assert calls == []
     run(scene, services, 1.0)
     assert calls == ['victory']
+
+
+# chapter 2
+
+
+def test_chapter2_end_lvl_speaks_then_flies_off_once():
+    scene, services = make(2, 4)
+    calls = []
+    scene.default_victorious_animation = lambda: calls.append('victory')
+    scene.destroy_enemy(100)
+    scene.destroy_enemy(100)
+    run(scene, services, 12.0)
+    assert calls == ['victory']
