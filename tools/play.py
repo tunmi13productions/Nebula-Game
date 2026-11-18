@@ -3,7 +3,7 @@ r"""Play the parts of the game that are built so far. This plays real sound: run
 usage:
   python tools/play.py tutorial [section]   sections: 1 Movement, 2 Enemies, 3 Attack, 4 Battle, 5 Basic, 6 Special
   python tools/play.py free                 free mode
-  python tools/play.py chapter C [S]        campaign chapter C (1 to 9), stage S (1 to 4). Intro cutscenes come later.
+  python tools/play.py chapter C [S]        campaign chapter C (1 to 9), stage S (1 to 4).
 
 Keys: arrows steer, Space fires, L speaks your life, Escape is swipe up (it ends a tutorial section).
 In menus: down and up arrows move, Enter activates. Menu items that lead to screens not built yet quit.

@@ -96,7 +96,7 @@ All of these use the menu navigation described in NOTES (with VoiceOver: swipe t
 
 Traced with `tools/re/trace_cutscene.py`. Each chapter's intro does this:
 
-1. Title card: `Deep_Impact_3.mp3` plays while "Chapter N" (in Roman numerals) and the chapter title fade in over 1.5 to 2 seconds. They stay about 5 seconds, then fade out over 2. The title card isn't spoken in the original, even with VoiceOver.
+1. Title card (`capIntroWithName`): `Deep_Impact_3.mp3` plays (an SKAction sound). "Chapter %@" (`chapterNNumber`, Roman numerals) fades in over 1.5 seconds, and when it's in, the chapter title (`capN_title`) fades in over 2. A sequence started at the same moment waits 5 seconds and fades both out over 2, and its completion starts the narration, 7 seconds in. The title card isn't spoken in the original, even with VoiceOver.
 2. Narration, each part starting when the previous one ends (non-positional AVAudioPlayer, localized mp3), over panning and fading images:
    - Chapter 1: chapter1_part1 to part7.
    - Chapter 2: chapter2_part1 and part2.
@@ -107,7 +107,8 @@ Traced with `tools/re/trace_cutscene.py`. Each chapter's intro does this:
    - Chapter 7: speak `chapter7_part1`, then chapter7_part2 and part3.
    - Chapter 8: speak "Sending message." (`chapter8_part1`), then chapter8_part2, then speak "Message sent." (`chapter8_part3`).
    - Chapter 9: chapter9_part1 and part2.
-3. Then the completion block starts the chapter (see CHAPTERS.md). A tap at any point skips the cutscene (`skipCutScene`).
+   - Each part starts in the previous one's completion, with no wait. The mp3 parts play through one AVAudioPlayer (`playAudioFileNamed:completion:`, completion on audioPlayerDidFinishPlaying). The spoken parts use speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition: at rate 0.55, with pre-delays of 1.5 (chapter 5 part 1), 0 (chapters 6, 7 and 8 part 1) and 0.25 (chapter 8 part 3).
+3. After the last part the scene fades out over 3 seconds, then the completion block starts the chapter (see CHAPTERS.md). A tap at any point skips the cutscene (`skipCutScene`): all speech stops, the narration player stops, the actions and nodes are removed, and the completion runs. `Deep_Impact_3.mp3` keeps playing, since an SKAction sound can't be stopped.
 
 - Unused text: the mission report strings (`cap1_lvl1_intro`, `cap1_lvl3_intro`, `cap1_lvl4_ending`), `capN_main_intro` (most are placeholders like "Descricao5") and `intro_tut` aren't referenced by any code path found. The narration is in the mp3 files instead.
 

@@ -11,6 +11,7 @@ The message window that shows each line is visual only. The lines are spoken, as
 from ..engine import actions as A
 from . import rand
 from .base_scene import BaseScene, H, W
+from .cutscene import CutScene
 from .powerups import FAST_SHOT, LIFE, SHIELD, SPEED
 
 ICARUS_RATE = 0.55
@@ -37,8 +38,9 @@ class ChapterScene(BaseScene):
         self.on_select = on_select or (lambda: None)     # backMenuCampanha: the level selection
         self.on_next = on_next or (lambda: None)         # proximoMissao: the next level
         self.on_restart = on_restart or (lambda: None)   # reinicia
-        # playIntroCutSceneChapter: calls on_done when the cutscene ends. Cutscenes come with the menus step.
-        self.play_intro = play_intro or (lambda chapter, on_done: on_done())
+        # playIntroCutSceneChapter:completition: before stage 1; on_done starts the chapter.
+        self.play_intro = play_intro or self._play_cutscene
+        self.cutscene = None
 
     # start
 
@@ -49,6 +51,26 @@ class ChapterScene(BaseScene):
             self.play_intro(self.CHAPTER, self._after_intro)
         else:
             self._after_intro()
+
+    def _play_cutscene(self, chapter, on_done):
+        self.cutscene = CutScene(self.services, chapter, on_done)
+        self.cutscene.start()
+
+    def cutscene_running(self):
+        return self.cutscene is not None and self.cutscene.running
+
+    def player_shoot(self):
+        """A tap skips the cutscene (Space or Enter here); otherwise Space fires."""
+        if self.cutscene_running():
+            self.cutscene.skip()
+        else:
+            super().player_shoot()
+
+    def menu_activate(self):
+        if self.cutscene_running() and not self.in_menu:
+            self.cutscene.skip()
+        else:
+            super().menu_activate()
 
     def _after_intro(self):
         BaseScene.did_move_to_view(self)
@@ -202,6 +224,8 @@ class ChapterScene(BaseScene):
         self.on_select()
 
     def stop_audio(self):
+        if self.cutscene is not None:
+            self.cutscene.stop()
         self.services.aureal.stop_all()
         self.services.voice.stop()
         self._accel_timer.invalidate()
