@@ -1,4 +1,4 @@
-"""The optional settings file, %APPDATA%\Nebula\settings.json. It's also where saved progress will live.
+r"""The optional settings file, %APPDATA%\Nebula\settings.json. It's also where saved progress will live.
 
 Recognised keys so far: "language", either "en" or "pt", overriding the Windows display language.
 A missing or unreadable file means no overrides.
