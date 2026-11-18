@@ -258,3 +258,19 @@ def test_chapter4_rocks_are_always_the_big_one():
     for _ in range(20):
         scene.create_small()
     assert set(spawned) == {50}
+
+
+# chapter 6
+
+
+def test_chapter6_loses_on_the_fifth_ally():
+    scene, services = make(6, 2)
+    ended = []
+    scene.end_game = lambda: ended.append(True)
+    scene.medium = 3
+    scene.medium_in = 3
+    for _ in range(4):
+        scene.destroy_enemy(38)
+    assert not ended
+    scene.destroy_enemy(38)
+    assert ended

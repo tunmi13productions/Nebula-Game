@@ -598,6 +598,126 @@ class Chapter5Scene(ChapterScene):
             A.move_by(0.0, -H, 2.0), completion=self.end_game_victorious)))
 
 
+class Chapter6Scene(ChapterScene):
+    """Exodus. Allied ships (37, 38, 39) must not be shot: a fifth one destroyed loses the stage. Allies that
+    fly off the bottom (code 90) don't count."""
+    CHAPTER = 6
+    SPAWNS = {'small1': ('small', 4), 'small2': ('small', 22), 'small3': ('small', 21), 'laser1': ('laser', 5),
+              'medium1': ('medium', 37), 'medium2': ('medium', 38), 'medium3': ('medium', 39)}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.inocent = 0   # inocentCounter
+
+    def opening(self, stage):
+        if stage == 1:
+            self.create('small1')
+            self.create('laser1')
+        elif stage == 2:
+            self.say_chain([('chap6_icarus1', 0.0, 0.0), ('chap6_icarus2', 0.5, 0.0)], lambda: self.create('medium1'))
+        elif stage == 3:
+            self.create('medium1')
+            self.create('medium2')
+        else:
+            def go():
+                self.create('small1')
+                self.create('laser1')
+                self.release_power_up(FAST_SHOT)
+                self.release_power_up(SPEED)
+            self.say('chap6_icarus3', 0.5, 0.5, go)
+
+    def _random_ally(self):
+        r = rand.arc4random() % 3
+        return 'medium2' if r == 1 else 'medium1' if r == 0 else 'medium3'
+
+    def destroy_enemy(self, code):
+        st = self.stage_number
+        if st == 3:
+            if code == 37:
+                self.inocent += 1
+                if self._dec('medium_in') < 3 and self.medium < 20:
+                    self.create('medium1')
+            elif code in (38, 39):
+                self.medium_in -= 1
+                self.inocent += 1
+                if self.medium_in < 2 and self.medium < 20:
+                    self.create('medium2' if code == 38 else 'medium3')
+            elif code == 90:
+                old = self._dec('medium_in')
+                if self.medium < 20 and old <= 1:
+                    r = rand.arc4random() & 3
+                    if r == 1:
+                        self.create('medium2')
+                        self.create('medium1')
+                    elif r == 0:
+                        self.create('medium1')
+                        self.create('medium3')
+                    else:
+                        self.create('medium3')
+                        self.create('medium2')
+            self._check_allies()
+            if self.medium >= 20 and self.medium_in == 0:
+                self.default_victorious_animation()
+        elif st == 2:
+            if code == 37:
+                self.inocent += 1
+                if self._dec('medium_in') <= 1 and self.medium < 20:
+                    self.create('medium2')
+            elif code in (38, 39):
+                self.medium_in -= 1
+                self.inocent += 1
+                if self.medium_in < 1 and self.medium < 20:
+                    self.create('medium3' if code == 38 else 'medium1')
+            elif code == 90:
+                self.medium_in -= 1
+                if self.medium < 20:
+                    self.create(self._random_ally())
+            self._check_allies()
+            if self.medium >= 20 and self.medium_in == 0:
+                self.default_victorious_animation()
+        elif st == 1:
+            if code == 5:
+                if self._dec('laser_in') <= 1 and self.laser < 8:
+                    if self.laser in (4, 1):
+                        self.release_power_up(FAST_SHOT)
+                    self.create('laser1')
+            elif code == 4:
+                if self._dec('small_in') <= 1 and (self.laser < 8 or self.laser_in > 0):
+                    self.create('small1')
+            if self.laser == 8 and self.small_in <= 0:
+                self.default_victorious_animation()
+        else:
+            if code == 4:
+                if self._dec('small_in') <= 1 and (self.laser < 3 or self.laser_in > 0):
+                    self.create(self._random_ally())
+            elif code == 5:
+                if self._dec('laser_in') <= 1 and self.laser < 3:
+                    if self.laser == 1:
+                        self.release_power_up(SHIELD)
+                    self.create('laser1')
+            elif code in (37, 90):
+                if code == 37:
+                    self.inocent += 1
+                if self._dec('medium_in') < 3 and self.medium < 20:
+                    self.create('small1')
+            elif code in (38, 39):
+                self.medium_in -= 1
+                self.inocent += 1
+                if self.medium_in < 2 and self.medium < 20:
+                    self.create('small1')
+            self._check_allies()
+            if self.laser >= 3 and self.small_in <= 0 and self.medium_in <= 0:
+                self.end_lvl()
+
+    def _check_allies(self):
+        if self.inocent > 4:
+            self.end_game()
+
+    def end_lvl(self):
+        self.end_lvl_speech('chap6_icarus4', 0.5, 0.5, self.default_victorious_animation)
+
+
 CHAPTERS = {c.CHAPTER: c for c in (
     Chapter1Scene, Chapter2Scene, Chapter3Scene, Chapter4Scene, Chapter5Scene,
+    Chapter6Scene,
 )}
