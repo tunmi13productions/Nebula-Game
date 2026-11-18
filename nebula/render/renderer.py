@@ -99,7 +99,7 @@ class Renderer:
         """An SKEmitterNode's particles: the texture at its own size times each particle's scale, tinted by the
         particle colour and blend factor, with additive blending for blend mode 1."""
         p = emitter.params
-        tex = self.textures.get_particle(p['texture']) if p.get('texture') else None
+        tex = self.textures.get(p['texture']) if p.get('texture') else None
         if tex is None:
             return
         k = self.scale
@@ -120,7 +120,7 @@ class Renderer:
             if a <= 0.01 or size <= 0:
                 continue
             w, h = max(1, int(tw * size * k)), max(1, int(th * size * k))
-            img = self._particle_image('particle:' + p['texture'], tex, w, h, color, q.blend, q.rotation + rot, a, add,
+            img = self._particle_image(p['texture'], tex, w, h, color, q.blend, q.rotation + rot, a, add,
                                        (xs, ys))
             rect = img.get_rect(center=(round(x * k), round((height - y) * k)))
             surface.blit(img, rect, special_flags=pygame.BLEND_RGB_ADD if add else 0)
