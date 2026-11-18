@@ -110,10 +110,12 @@ def test_emitters_load_and_emit_without_touching_the_game_random_numbers():
     rand.seed(9)
     before = rand.arc4random()
     rand.seed(9)
+    Emitter.simulate = True
     em = Emitter('starField')
     for _ in range(60):
         em.update_actions(1 / 60)
     assert 20 <= len(em.particles) <= 40          # 30 a second
+    Emitter.simulate = False
     assert rand.arc4random() == before
     assert keyframe({'times': [0.0, 1.0], 'values': [[0.0], [1.0]]}, 0.25) == [0.25]
     s = draw(em)

@@ -99,7 +99,7 @@ class Renderer:
         """An SKEmitterNode's particles: the texture at its own size times each particle's scale, tinted by the
         particle colour and blend factor, with additive blending for blend mode 1."""
         p = emitter.params
-        tex = self.textures.get(p['texture']) if p.get('texture') else None
+        tex = self.textures.get_particle(p['texture']) if p.get('texture') else None
         if tex is None:
             return
         k = self.scale
@@ -107,9 +107,11 @@ class Renderer:
         add = p.get('blend_mode') == 1
         c, s = math.cos(rot), math.sin(rot)
         for q in emitter.particles:
+            xs, ys = getattr(emitter, 'xscale', 1.0), getattr(emitter, 'yscale', 1.0)
             if emitter.target is None:
-                x = pos[0] + scale * (q.x * c - q.y * s)
-                y = pos[1] + scale * (q.x * s + q.y * c)
+                px, py = q.x * xs, q.y * ys
+                x = pos[0] + scale * (px * c - py * s)
+                y = pos[1] + scale * (px * s + py * c)
                 size = q.scale * scale
             else:
                 x, y, size = q.x, q.y, q.scale
@@ -118,18 +120,19 @@ class Renderer:
             if a <= 0.01 or size <= 0:
                 continue
             w, h = max(1, int(tw * size * k)), max(1, int(th * size * k))
-            img = self._particle_image(p['texture'], tex, w, h, color, q.blend, q.rotation + rot, a, add)
+            img = self._particle_image('particle:' + p['texture'], tex, w, h, color, q.blend, q.rotation + rot, a, add,
+                                       (xs, ys))
             rect = img.get_rect(center=(round(x * k), round((height - y) * k)))
             surface.blit(img, rect, special_flags=pygame.BLEND_RGB_ADD if add else 0)
 
-    def _particle_image(self, name, tex, w, h, color, blend, rotation, alpha, add):
+    def _particle_image(self, name, tex, w, h, color, blend, rotation, alpha, add, stretch=(1.0, 1.0)):
         """A particle's picture, cached at coarse steps of colour, blend, rotation and alpha, with the alpha
         already applied (premultiplied for additive blending)."""
         cq = tuple(int(v * 15 + 0.5) for v in color[:3])
         bq = int(blend * 8 + 0.5)
         rq = int(math.degrees(rotation) / 10) % 36 if rotation else 0
         aq = int(alpha * 16 + 0.5)
-        key = ('p', name, w, h, cq, bq, rq, aq, add)
+        key = ('p', name, w, h, cq, bq, rq, aq, add, stretch)
         img = self._scaled.get(key)
         if img is None:
             img = self._sized(name, tex, w, h)
@@ -137,6 +140,10 @@ class Renderer:
                 img = self._tinted(img, [v / 15 for v in cq], bq / 8)
             if rq:
                 img = pygame.transform.rotate(img, rq * 10)
+            if stretch != (1.0, 1.0):
+                # the emitter node's xScale and yScale apply after each particle's own rotation
+                sw, sh = img.get_size()
+                img = pygame.transform.smoothscale(img, (max(1, int(sw * stretch[0])), max(1, int(sh * stretch[1]))))
             if add:
                 img = img.premul_alpha()
                 img.fill([min(255, aq * 16)] * 3 + [255], special_flags=pygame.BLEND_RGBA_MULT)

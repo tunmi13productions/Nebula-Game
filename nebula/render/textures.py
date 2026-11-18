@@ -53,6 +53,20 @@ class TextureStore:
         self._cache[name] = surface
         return surface
 
+    def get_particle(self, name):
+        """A particle's texture. SKEmitterNode drew atlas textures as stored in the sheet, so a texture the
+        atlas keeps turned a quarter clockwise shows turned; the original's emitters (the background ships)
+        add a quarter turn of particle rotation that stands them up again."""
+        key = ('particle', name)
+        if key in self._cache:
+            return self._cache[key]
+        surface = self.get(name)
+        entry = self._atlas_entry(name)
+        if surface is not None and entry is not None and entry[1].get('textureRotated', False):
+            surface = pygame.transform.rotate(surface, -90)
+        self._cache[key] = surface
+        return surface
+
     def _atlas_entry(self, name):
         return self.atlas.get(name) or self.atlas.get(os.path.splitext(name)[0])
 

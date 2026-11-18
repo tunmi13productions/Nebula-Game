@@ -39,12 +39,15 @@ class Particle:
 
 
 class Emitter(Node):
+    simulate = True     # visual only; headless test runs turn it off to save time (tests/conftest.py)
+
     def __init__(self, name, **overrides):
         super().__init__(name=name)
         self.params = emitter_data(name)
         self.params.update(overrides)
         self.particles = []
         self.target = None        # targetNode: None (particles move with the emitter) or the scene
+        self.xscale = self.yscale = 1.0   # the emitter node's xScale and yScale, which stretch its particles
         self._owed = 0.0
         self.emitted = 0
 
@@ -59,7 +62,7 @@ class Emitter(Node):
 
     def update_actions(self, dt):
         super().update_actions(dt)
-        if self.paused:
+        if self.paused or not Emitter.simulate:
             return
         self._simulate(dt)
 
