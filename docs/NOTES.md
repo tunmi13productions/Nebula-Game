@@ -44,7 +44,7 @@ Findings from studying the original iOS build. Raw dumps live in `decompiled/ana
 
 ## Localization
 
-- Two languages: English (`Base.lproj`) and Portuguese (`pt.lproj`). The Localizable.strings files are in a legacy encoding, not UTF-8.
+- Two languages: English (`Base.lproj`) and Portuguese (`pt.lproj`). The Localizable.strings files are compiled binary plists with correct Unicode text. They are converted to `data/strings/en.json` and `pt.json` by `tools/extract_strings.py`.
 - Every narrated mp3 has a Portuguese version (`name.mp3`) and an English version (`name_en.mp3`). The strings table maps each key to the file for that language.
 - Some UI images are localized the same way, for example `sair.png` and `sair_en.png`.
 - The Portuguese table has keys the English one lacks: `lbl_*_points_button`, `cap_Block`, `pause`. That may cause English fallbacks in the original. Check how the code handles it.

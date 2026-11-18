@@ -1,0 +1,9 @@
+{
+ "cap_Block": "Locked",
+ "lbl_atkSpeed_points_button": "Attack speed, %ld points. %d available points. Add points.",
+ "lbl_life_points_button": "Life, %ld points. %d available points. Add points.",
+ "lbl_power_points_button": "Power shot, %ld points. %d available points. Add points.",
+ "lbl_shield_points_button": "Shield, %ld points. %d available points. Add points.",
+ "lbl_speed_points_button": "Ship Speed, %ld points. %d available points. Add points.",
+ "pause": "Game paused"
+}
