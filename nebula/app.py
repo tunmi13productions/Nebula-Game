@@ -10,6 +10,7 @@ from .game.chapters import CHAPTERS
 from .game.free_mode import FreeModeScene
 from .game.tutorial import TutorialScene
 from .menus.campaign import CampaignSelectScene
+from .menus.hangar import HangarScreen
 from .menus.intro import IntroScreen
 from .menus.main_menu import MainMenuScreen
 from .menus.tutorial_selection import TutorialSelectionScreen
@@ -97,7 +98,9 @@ class App:
         self.start_tutorial(n + 1)
 
     def open_hangar(self, return_to=None):
-        pass
+        """The Hangar, from the main menu, or on top of the campaign selector (return_to) after a newly
+        completed chapter."""
+        self.push(HangarScreen(self, return_to))
 
     def open_about(self):
         pass

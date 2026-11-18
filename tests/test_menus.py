@@ -263,3 +263,69 @@ def test_a_newly_completed_chapter_awards_points():
     services.globals.last_chapter = 5
     app.back_to_campaign()
     assert services.globals.win_points == 4 and services.save.integer('Win_Points') == 4
+
+
+# Hangar
+
+
+def open_hangar(points=3):
+    from nebula.menus.hangar import HangarScreen
+    app, window, services = at_main_menu()
+    services.globals.win_points = points
+    for _ in range(3):
+        window.scene.menu_next()
+    window.scene.menu_activate()
+    assert isinstance(window.scene, HangarScreen)
+    return app, window, services
+
+
+def test_hangar_reads_back_the_points_and_each_stat():
+    app, window, services = open_hangar()
+    for _ in range(4):
+        window.scene.menu_next()
+    assert said(services)[-5:] == ['BACK, button', '3 AVAILABLE POINTS', 'Life, 0 points',
+                                   'Life, 0 points. 3 available points. Add points., button', 'Shield, 0 points']
+
+
+def test_adding_a_point_spends_it_and_saves():
+    app, window, services = open_hangar(1)
+    screen = window.scene
+    for _ in range(3):
+        screen.menu_next()
+    screen.menu_activate()
+    g = services.globals
+    assert (g.life_points, g.win_points) == (1, 0)
+    assert services.save.integer('Life_Points') == 1 and services.save.integer('Win_Points') == 0
+    assert services.effects.played[-1] == 'acceptButton.mp3'
+    # with no points left the plus buttons leave the reading order
+    screen.menu_next()
+    assert said(services)[-1] == 'Shield, 0 points'
+    screen.menu_previous()
+    assert said(services)[-1] == 'Life, 1 points'
+
+
+def test_a_full_stat_hides_its_plus_button():
+    app, window, services = open_hangar(2)
+    services.globals.life_points = 5
+    screen = window.scene
+    for _ in range(3):
+        screen.menu_next()
+    assert said(services)[-1] == 'Shield, 0 points'
+
+
+def test_hangar_after_a_new_chapter_returns_to_the_campaign():
+    from nebula.menus.campaign import CampaignSelectScene
+    from nebula.menus.hangar import HangarScreen
+    app, window, services = at_main_menu()
+    services.globals.last_chapter = 2
+    services.save.set('ControleCapitulo', 'yes')
+    app.back_to_campaign()
+    assert isinstance(window.scene, HangarScreen)
+    assert said(services)[-1] == 'BACK, button'
+    window.scene.menu_activate()
+    window.run(1.1)
+    assert isinstance(window.scene, CampaignSelectScene)
+    assert services.save.get('ControleCapitulo') == 'no'
+    window.scene.did_swipe_up()
+    window.run(4.0)
+    assert isinstance(window.scene, MainMenuScreen)

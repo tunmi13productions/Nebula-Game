@@ -66,10 +66,12 @@ All of these use the menu navigation described in NOTES (with VoiceOver: swipe t
 
 ## Hangar (`SettingsViewController`)
 
-- It shows five stats, each with 0 to 5 filled points and a plus button: Life (`lbl_life`), Shield (`lbl_shield`), Moving (`lbl_speed`), Shooting (`lbl_atkSpeed`), Power (`lbl_power`). It also shows "%ld AVAILABLE POINTS" (`pontosDisponiveis`, showing winPoints).
-- Accessibility labels: the stat labels read "Life, N points" and so on (`lbl_*_points`). The plus buttons use `lbl_*_points_button` ("Life, N points. M available points. Add points."). Those button keys exist only in Portuguese, so English VoiceOver reads raw keys there. Original quirk. A screen-changed accessibility notification is posted after changes.
-- `actionUpPower:` spends 1 winPoint to add 1 point to the chosen stat (life, shield, speed, attack speed, which is timeShotPoints, or power, which is shotPoints), then saves. `checkForButtonLock` disables a plus button when the stat is at 5 or no points are left.
-- Back: "BACK" (`info_voltar`). It resets ControleCapitulo to "no".
+- It shows five stats, each with 0 to 5 filled points and a plus button: Life (`lbl_life`), Shield (`lbl_shield`), Moving (`lbl_speed`), Shooting (`lbl_atkSpeed`), Power (`lbl_power`), plus "%ld AVAILABLE POINTS" (`pontosDisponiveis`, showing winPoints), a ship image and BACK (`info_voltar`).
+- BACK is a button across the top of the screen (frame 0, 0, width, height / 7), so VoiceOver reads it first. The available points label is centred at height / 7, below it, followed by the stat rows.
+- Accessibility labels: each stat has a separate accessible label, "Life, N points" and so on (`lbl_*_points`, the `lbl_*Acces` labels). The plus buttons use `lbl_*_points_button` ("Life, N points. M available points. Add points."). Those button keys exist only in Portuguese, so English VoiceOver read raw keys there. Original quirk, fixed by a deviation.
+- `checkForButtonLock` disables a plus button and takes it out of the accessibility order when the stat is at 5 or no points are left.
+- `actionUpPower:` with no points left only refreshes the labels. Otherwise it plays the accept sound, spends 1 winPoint to add 1 point to the chosen stat (life, shield, speed, attack speed, which is timeShotPoints, or power, which is shotPoints), saves the points and rechecks the locks. Nothing is announced. `buildPoints` posts a layout-changed notification with an empty string, which doesn't move the VoiceOver focus.
+- Back: the accept sound. If ControleCapitulo is "yes" it's set to "no". The doors close over 1 second, then the screen is popped.
 
 ## Upgrade points and progress
 
