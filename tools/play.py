@@ -18,6 +18,7 @@ sys.path.insert(0, ROOT)
 from nebula.audio.openal_backend import OpenALBackend
 from nebula.game.chapters import CHAPTERS
 from nebula.game.free_mode import FreeModeScene
+from nebula.game.globals import GlobalState
 from nebula.game.services import Services
 from nebula.game.tutorial import TutorialScene
 from nebula.input import KeyboardTilt
@@ -35,7 +36,8 @@ def main():
     settings = load_settings()
     lang = choose_language(settings)
     reader = ScreenReader()
-    services = Services(OpenALBackend(), PrismRenderer(lang), reader, Strings(lang), save=SaveData.default())
+    save = SaveData.default()
+    services = Services(OpenALBackend(), PrismRenderer(lang), reader, Strings(lang), GlobalState.load(save), save=save)
     tilt = KeyboardTilt(float(settings.get('tilt', 0.3)))
     window = GameWindow(services, tilt, 'Nebula')
 
