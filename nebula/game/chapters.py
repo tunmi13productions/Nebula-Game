@@ -717,7 +717,112 @@ class Chapter6Scene(ChapterScene):
         self.end_lvl_speech('chap6_icarus4', 0.5, 0.5, self.default_victorious_animation)
 
 
+class Chapter7Scene(ChapterScene):
+    """Hope."""
+    CHAPTER = 7
+    SPAWNS = {'small1': ('small', 36), 'small2': ('small', 33), 'small3': ('small', 32), 'medium1': ('medium', 34),
+              'medium2': ('medium', 44), 'medium3': ('medium', 35), 'laser1': ('laser', 3)}
+
+    def opening(self, stage):
+        if stage == 1:
+            self.say_chain([('chap7_icarus1', 0.5, 0.0), ('chap7_icarus2', 0.5, 0.5)], lambda: self.create('small1'))
+        elif stage == 2:
+            self.say('chap7_icarus3', 0.5, 0.0, lambda: self.create('small2'))
+        elif stage == 3:
+            self.say('chap7_icarus4', 0.5, 0.0, lambda: self.create('laser1'))
+        else:
+            self.stage4_loop([('chap7_icarus5', 0.5, 0.0), ('chap7_icarus6', 0.5, 0.5)], lambda: self.boss_now(7))
+
+    def destroy_enemy(self, code):
+        st = self.stage_number
+        if st == 3:
+            if code == 3:
+                if self._dec('laser_in') <= 1 and self.laser < 4:
+                    if self.laser != 2:
+                        self.create('laser1')
+                    else:
+                        self.create('small3')
+                        self.create('medium3')
+                        self.release_power_up(FAST_SHOT)
+                        self.laser += 1
+            elif code == 32:
+                old = self._dec('small_in')
+                if 0 <= self.small < 5:
+                    if old < 2:
+                        self.create('small3')
+                elif self.small == 5:
+                    if old < 2:
+                        self.create('small3')
+                        self.create('medium2')
+                        self.release_power_up(FAST_SHOT)
+                elif self.small > 5 and old < 2:
+                    self.create('laser1')
+            elif code == 35:
+                if self._dec('medium_in') < 3 and self.medium < 2:
+                    self.create('medium2')
+            elif code == 44:
+                if self._dec('medium_in') <= 1 and self.medium < 2:
+                    self.create('medium3')
+            if self.medium_in <= 0 and self.laser_in <= 0 and self.small_in <= 0 and self.laser >= 4:
+                self.default_victorious_animation()
+        elif st == 2:
+            if code == 44:
+                if self._dec('medium_in') <= 1 and self.medium == 2:
+                    self.create('medium2')
+                    self.create('small2')
+                    self.release_power_up(SPEED)
+            elif code == 35:
+                if self._dec('medium_in') <= 1 and self.medium < 4:
+                    if self.medium == 1:
+                        self.create('small2')
+                    elif self.small > 3:
+                        self.create('medium3')
+            elif code == 33:
+                if self._dec('small_in') <= 1 and self.small < 6:
+                    if self.small == 1:
+                        self.create('medium3')
+                    elif self.small in (3, 4):
+                        self.create('medium2')
+                    elif self.small == 5:
+                        self.create('medium2')
+                        self.create('medium3')
+                        self.release_power_up(LIFE)
+                    else:
+                        self.create('small2')
+            if self.medium_in <= 0 and self.small_in <= 0 and self.medium >= 4:
+                self.default_victorious_animation()
+        elif st == 1:
+            if code == 34:
+                if self._dec('medium_in') <= 1 and self.medium < 5:
+                    # The original's condition reads "life < 5 and medium > 4", which can't hold here, so a
+                    # medium only respawns while the player's life is above 4.
+                    if self.player.life > 4:
+                        if self.medium == 4:
+                            self.release_power_up(LIFE)
+                        self.create('medium1')
+                    else:
+                        self.release_power_up(LIFE)
+            elif code == 36:
+                if self._dec('small_in') <= 1 and self.small < 8:
+                    if self.small == 1:
+                        self.create('medium1')
+                        self.create('small1')
+                        self.release_power_up(SHIELD)
+                        self.release_power_up(FAST_SHOT)
+                    else:
+                        if self.small == 5:
+                            self.release_power_up(FAST_SHOT)
+                        self.create('small1')
+            if self.small >= 8 and self.medium >= 4 and self.small_in <= 0 and self.medium_in <= 0:
+                self.default_victorious_animation()
+        else:
+            self.end_lvl()
+
+    def end_lvl(self):
+        self.end_lvl_speech('chap7_icarus7', 0.5, 0.0, self.default_victorious_animation)
+
+
 CHAPTERS = {c.CHAPTER: c for c in (
     Chapter1Scene, Chapter2Scene, Chapter3Scene, Chapter4Scene, Chapter5Scene,
-    Chapter6Scene,
+    Chapter6Scene, Chapter7Scene,
 )}
