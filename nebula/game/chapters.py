@@ -351,6 +351,99 @@ class Chapter2Scene(ChapterScene):
         self.end_lvl_speech('chap2_icarus4', 1.0, 0.0, self.default_victorious_animation)
 
 
+class Chapter3Scene(ChapterScene):
+    """Hyperdrive."""
+    CHAPTER = 3
+    SPAWNS = {'small1': ('small', 43), 'small2': ('small', 22), 'small3': ('small', 21), 'medium1': ('medium', 6),
+              'medium2': ('medium', 20), 'laser1': ('laser', 23)}
+
+    def opening(self, stage):
+        if stage == 1:
+            self.say('chap3_icarus1', 1.0, 0.0, lambda: (self.create('small1'), self.create('medium1')))
+        elif stage == 2:
+            self.create('small2')
+        elif stage == 3:
+            self.say_chain([('chap3_icarus3', 1.0, 0.0), ('chap3_icarus4', 0.0, 0.0)],
+                           lambda: (self.create('small2'), self.create('medium2')))
+        else:
+            self.stage4_loop([('chap3_icarus5', 1.0, 0.0)], lambda: self.boss_after_approach(3))
+
+    def destroy_enemy(self, code):
+        st = self.stage_number
+        if st == 3:
+            if code == 20:
+                if self._dec('medium_in') <= 1:
+                    if self.medium < 4:
+                        self.create('medium2')
+                    else:
+                        self.release_power_up(LIFE)
+                        self.release_power_up(LIFE)
+                        self.create('laser1')
+            elif code == 21:
+                if self._dec('small_in') <= 1 and (self.laser < 2 or self.laser_in > 0):
+                    self.create('small3')
+            elif code == 22:
+                if self._dec('small_in') <= 1:
+                    if self.small < 2:
+                        self.create('small2')
+                    else:
+                        self.release_power_up(SPEED)
+                        self.release_power_up(FAST_SHOT)
+                        self.create('small3')
+            elif code == 23:
+                if self._dec('laser_in') <= 1 and self.laser < 2:
+                    self.create('laser1')
+            if self.laser == 2 and self.small_in == 0:
+                self.default_victorious_animation()
+        elif st == 2:
+            if code == 20:
+                if self._dec('medium_in') <= 1:
+                    if self.medium < 5:
+                        self.create('medium2')
+                    else:
+                        self.release_power_up(LIFE)
+                        self.create('laser1')
+            elif code == 23:
+                if self._dec('laser_in') <= 1 and self.laser < 4:
+                    if self.laser == 2:
+                        self.release_power_up(LIFE)
+                    self.create('laser1')
+            elif code == 22:
+                if self._dec('small_in') <= 1:
+                    if self.small > 5 and self.laser > 3 and self.laser_in < 1:
+                        pass
+                    else:
+                        if self.small > 5 and self.medium == 0:
+                            self.release_power_up(FAST_SHOT)
+                            self.create('medium2')
+                        self.create('small2')
+            if self.laser == 4 and self.small_in == 0:
+                self.default_victorious_animation()
+        elif st == 1:
+            if code == 6:
+                if self._dec('medium_in') <= 1 and self.medium < 2:
+                    self.create('medium1')
+            elif code == 43:
+                if self._dec('small_in') <= 1 and self.small < 2:
+                    self.create('small1')
+            if self.medium == 2 and self.small == 2 and self.small_in <= 0 and self.medium_in <= 0:
+                self.end_stage1()
+        else:
+            self.default_victorious_animation()
+
+    def end_stage1(self):
+        """The warp jump: the line, then the warp sound, and the stage is won."""
+        self.allow_move = False
+        self.allow_shoot = False
+
+        def jump():
+            p = self.player
+            p.run(A.move_to_y(H, 3.0))
+            self.services.effects.play('science_fiction_warp_dimensional.mp3')
+            self.end_game_victorious()
+        self.say('chap3_icarus2', 0.5, 0.0, jump)
+
+
 CHAPTERS = {c.CHAPTER: c for c in (
-    Chapter1Scene, Chapter2Scene,
+    Chapter1Scene, Chapter2Scene, Chapter3Scene,
 )}
