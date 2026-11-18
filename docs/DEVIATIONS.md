@@ -8,6 +8,7 @@ Each entry is a settled decision. Don't change a deviated behaviour unless the u
 - Changed: holding the right arrow key feeds a fixed positive accelX and holding the left arrow key feeds the same value negated. With neither held, accelX is 0. Everything downstream of accelX (movement state, the move and stabilise calls, talking movement, clamping, the listener update) stays as in the original.
 - Reason: a Windows PC has no accelerometer. Decided by the user on 2026-11-17.
 - Tilt value: a held arrow key reads as acceleration.x = 0.3 (or -0.3). That's a moderate tilt, roughly 115 points per second with no speed upgrades. Chosen by the user after playtesting on 2026-11-17. It can still be overridden with "tilt" in the settings file.
+- Faster steering: holding Shift with an arrow key reads as acceleration.x = 0.6 (or -0.6), twice the normal tilt, like tilting the device further. It can be changed with "fast_tilt" in the settings file. Added at the user's request on 2026-11-18.
 
 ## VoiceOver-gated behaviour always counts as VoiceOver running
 

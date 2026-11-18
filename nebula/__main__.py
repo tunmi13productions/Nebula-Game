@@ -20,7 +20,7 @@ def main():
     save = SaveData.default()
     services = Services(OpenALBackend(), PrismRenderer(lang), ScreenReader(), Strings(lang),
                         GlobalState.load(save), save=save)
-    tilt = KeyboardTilt(float(settings.get('tilt', 0.3)))
+    tilt = KeyboardTilt(float(settings.get('tilt', 0.3)), float(settings.get('fast_tilt', 0.6)))
     window = GameWindow(services, tilt, 'Nebula', float(settings.get('scale', 1.5)))
     App(window, services, tilt).start()
     window.run()

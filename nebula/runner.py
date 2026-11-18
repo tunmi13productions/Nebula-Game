@@ -1,6 +1,6 @@
 """The game window, fixed-step loop and key handling shared by the game and the developer tools.
 
-Keys follow docs/DEVIATIONS.md: arrows steer, Space fires, Escape is swipe up, L speaks life, and in menus
+Keys follow docs/DEVIATIONS.md: arrows steer (faster with Shift held), Space fires, Escape is swipe up, L speaks life, and in menus
 the down and up arrows move (swipe right and left) and Enter activates (double tap). A scene with a
 handle_key method gets Escape, Left and Right first (menu screens and the campaign selector use them).
 """
@@ -33,6 +33,7 @@ class GameWindow:
             old.stop_audio()
         self.scene = scene
         self.tilt.left = self.tilt.right = False
+        self.tilt.fast = bool(pygame.key.get_mods() & pygame.KMOD_SHIFT)
         scene.did_move_to_view()
 
     def quit(self):
@@ -43,6 +44,9 @@ class GameWindow:
         down = ev.type == pygame.KEYDOWN
         named = {pygame.K_ESCAPE: 'escape', pygame.K_LEFT: 'left', pygame.K_RIGHT: 'right'}.get(ev.key)
         if down and named and hasattr(s, 'handle_key') and s.handle_key(named):
+            return
+        if ev.key in (pygame.K_LSHIFT, pygame.K_RSHIFT):
+            self.tilt.fast = down
             return
         if ev.key == pygame.K_LEFT:
             self.tilt.left = down

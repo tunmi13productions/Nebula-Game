@@ -101,3 +101,14 @@ def test_speak_life():
     scene.speak_life()
     run(scene, services, 0.1)
     assert services.voice.spoken[0][:2] == ('Your life is 5', 0.55)
+
+
+def test_shift_steers_twice_as_fast():
+    from nebula.input import KeyboardTilt
+    keys = KeyboardTilt()
+    keys.right = True
+    assert keys() == 0.3
+    keys.fast = True
+    assert keys() == 0.6
+    keys.right, keys.left = False, True
+    assert keys() == -0.6
