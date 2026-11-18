@@ -102,7 +102,7 @@ class BaseScene(Scene):
 
     def player_shoot(self):
         """playerShoot, on tap: at most one shot per auto-fire interval unless fast shot is active."""
-        if not (self.can_shoot or self.power_up_shot) or self.game_paused or not self.allow_shoot:
+        if self.in_menu or not (self.can_shoot or self.power_up_shot) or self.game_paused or not self.allow_shoot:
             return None
         p = self.player
         w, h = p.ship_size
@@ -288,8 +288,63 @@ class BaseScene(Scene):
         self.death_counter += 1
 
     def end_game(self):
-        """BaseScene endGame: the stage is over. The game-over screen comes with the menus step."""
+        """BaseScene endGame: the scene becomes inactive (the fade-in overlay is visual only). Subclasses add
+        their ending screen."""
         self.is_active = False
+
+    def swipe_up(self):
+        """Swipe up (Escape): the pause menu in gameplay scenes, which comes with the menus step."""
+
+    # in-game menus (menuObjects)
+
+    def open_menu(self, title, items):
+        """Shows an in-game menu. items is a list of (label, action). Selection starts on the first item and
+        the title and that item are spoken together, as "%@, %@"."""
+        self.menu_title = title
+        self.menu_items = list(items)
+        self.menu_selection = 1
+        self.in_menu = True
+        self.services.voice.speak('%s, %s' % (title, self.menu_items[0][0]), RATE_STATUS)
+
+    in_menu = False
+
+    def _menu_count(self):
+        return len(self.menu_items) + 1   # index 0 is the title
+
+    def menu_next(self):
+        """Swipe right with VoiceOver (the down arrow here)."""
+        if not self.in_menu:
+            return
+        fx = self.services.effects
+        if self.menu_selection + 1 < self._menu_count():
+            fx.play('chageButton.mp3')
+            self.menu_selection += 1
+            self.services.voice.speak(self.menu_items[self.menu_selection - 1][0], RATE_STATUS)
+        elif self.menu_selection == 1 and self._menu_count() == 2:
+            fx.play('chageButton.mp3')
+            self.services.voice.speak(self.menu_items[0][0], RATE_STATUS)
+        else:
+            fx.play('errorButton.mp3')
+
+    def menu_previous(self):
+        """Swipe left with VoiceOver (the up arrow here)."""
+        if not self.in_menu:
+            return
+        fx = self.services.effects
+        if self.menu_selection < 2:
+            fx.play('errorButton.mp3')
+            return
+        fx.play('chageButton.mp3')
+        self.menu_selection -= 1
+        self.services.voice.speak(self.menu_items[self.menu_selection - 1][0], RATE_STATUS)
+
+    def menu_activate(self):
+        """Double tap with VoiceOver (Enter here): the accept sound, then the item's action."""
+        if not self.in_menu:
+            return
+        self.services.effects.play('acceptButton.mp3')
+        self.in_menu = False
+        self.menu_items[self.menu_selection - 1][1]()
 
     def _schedule_end_game(self):
         self.services.scheduler.after(END_GAME_DELAY, self.end_game)

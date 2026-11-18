@@ -61,16 +61,21 @@ The tutorial selection screen chooses a section (tutorialType 1 to 6). Narration
    - The enemy fires again and moves to x = 160 over 1 second. Then wait 0.5 seconds and play tut_2.7.
    - The enemy fires once more. Then movement is enabled and the enemy's normal AI starts (movement every 1 second, shooting every 1.0 second).
 3. Attack (`tutorial3`): it plays tut_3.0 to 3.4, then enables movement and shooting and spawns ship 0 with normal movement. Each kill respawns another ship 0 (destroyEnemy calls createEnemy). There's no scripted end.
-4. Battle (`tutorial4`): it plays tut_4.0 to 4.5, then enables movement and shooting. It sets timed power-ups of types 3 to 4 (speed and fast shot) with timeBetweenPowerUps = 20 and the first one after 5 seconds. It spawns ship 0 and calls `setRececiveDemage:` on it. The traced argument was 0, which would make it invulnerable. Confirm, since that looks odd for a battle lesson. A timer runs `checkIfEnded:`, which ends the tutorial once deathCounter > 0 (one kill).
-5. Basic (`tutorial5`): it plays tut_5.0 and 5.1. A laser ship (7) spawns with its AI off and moves to (248, 454.4) over 1.5 seconds. It plays tut_5.2 and the laser ship fires once. It plays tut_5.3, then enables movement and shooting, and the laser ship fires every 3 seconds. On each kill, createEnemy runs with a counter (aux):
-   - aux 0: shooting is disabled and tut_5.4 plays (then the completion block at 0x2f931, not traced).
-   - aux 1 and 2: a fuel tank (46) spawns.
+4. Battle (`tutorial4`): it plays tut_4.0 to 4.5, then enables movement and shooting. It sets timed power-ups of types 3 to 4 (speed and fast shot), with timeBetweenPowerUps = 20 and the first one after 5 seconds. It spawns ship 0 with its normal entrance and AI, then turns off its damage (`setRececiveDemage: NO`). The disassembly loads 0 into the argument register explicitly, so this enemy is invulnerable on purpose. `checkIfEnded:` exists but nothing ever schedules it, so this section has no scripted end. You leave it with swipe up (Escape).
+5. Basic (`tutorial5`): it plays tut_5.0 and 5.1. A laser ship (7) spawns with its AI off and moves to (248, 0.8H) over 1.5 seconds. It plays tut_5.2 and the laser ship fires one laser. It plays tut_5.3, then enables movement and shooting, and the laser ship's shoot timer runs every 3 seconds. On each destroyEnemy, createEnemy runs with a counter (aux):
+   - aux 0: shooting is disabled (and never re-enabled), and tut_5.4 plays. When it ends, a fuel tank (46) spawns.
+   - aux 1 and 2: another fuel tank.
    - After that: endTutorial.
+   - So after the laser ship you dodge three fuel tanks with no gun.
 6. Special (`tutorial6`): movement and shooting are enabled from the start. It plays tut_6.0 to tut_6.10. Note that the `tut_6.2` key maps to the tut_6.0 audio file in both languages, an original data bug to keep. Then it spawns ship 0 and the generator is used (probably the nebula). On each kill, createEnemy uses aux:
    - aux 0: ship 0.
    - aux 1: laser ship 3.
    - aux 2 and 3: fuel tank 46.
    - After that: endTutorial.
-- endTutorial: it stops the voice player, removes all actions, tears down the scene (`destroiCena`), then `endGame`. The tutorial's endGame shows the "Tutorial Completed" screen. Not traced yet.
+- Swipe up (Escape) in the tutorial doesn't pause. It calls endTutorial.
+- endTutorial: it stops the voice player, removes all of the scene's actions (including the base loop and auto-fire), removes the tutorial's enemies (`destroiCena`), then endGame. TutorialScene endGame runs BaseScene endGame (the scene becomes inactive and the map generator stops), removes the life bar and shows the Tutorial Completed menu (`tutorialCompleto`).
+- Dying in the tutorial reaches the same endGame through BaseScene's 1.5 second delay.
+- Tutorial Completed menu: the title "Tutorial Completed", then items 1 "Select tutorial button" and 2 "Next tutorial button". Selection starts on 1 and it speaks "Tutorial Completed, Select tutorial button". Activating plays acceptButton. "Select tutorial" posts backMenuController and playMenuMusic. "Next tutorial" posts proximoTutorial, except after section 6, where it goes back like "Select tutorial".
+- Narration (`playAudioFileNamed:completion:`): a new AVAudioPlayer replaces the previous one (which stops), and the completion block runs when the file finishes, dispatched to the main queue. Inside tutorial 2's chains, some clips are played with SKAction playSoundFileNamed waitForCompletion YES instead.
 - The menu section names are Movement, Enemies, Attack, Battle, Basic and Special (`tut_movimento`, `tut_inimigo`, `tut_ataque`, `tut_batalha`, `tut_basico`, `tut_especial`). The order in the selection menu, and which number each maps to, still need checking in `TutorialSelectionViewController`. The mapping above follows the tutorialN method numbers.
 - The `intro_tut` key points to `intro_tut_en.mp3` and `tut_intro.mp3`, which aren't in the bundle. Find out who plays it and what happens when the file is missing.

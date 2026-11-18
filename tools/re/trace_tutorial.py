@@ -17,7 +17,7 @@ i = 0
 while i < len(t.blocks) and i < 120:
     if 'BaseActions' not in t.blocks[i][2]: t.run_block(i)
     i += 1
-keep = ('!!', 'moveTo', 'moveBy', 'moveTo', 'moveBy', 'playAudioFileNamed', 'speakSentence', 'performSelector', 'createEnemyWithType', 'waitForDuration', '-> <TutorialScene',
+keep = ('!!', 'moveTo', 'moveBy', 'setRececiveDemage', 'initializeMovement', 'initializeShoot', 'manualShot', 'setTalkingMove', 'setPowerUp', 'setTimeBetween', 'setTimeToNext', 'scheduledTimer', 'moveTo', 'moveBy', 'playAudioFileNamed', 'speakSentence', 'performSelector', 'createEnemyWithType', 'waitForDuration', '-> <TutorialScene',
         'initBoss', 'releasePowerUp', 'playSoundFileNamed', 'BLOCK#', 'checkIfEnded', 'setAllow', 'scheduledTimer', 'wait:toExecute',
         'initEnemyOfType', 'manualShot', 'inflictDamage', 'endTutorial', 'tutorialCompleto', 'dispatch')
 skip = ('isActive', ' stageNumber', 'synthesizer', 'gamePaused', 'talkingMove', 'playerShip', 'timeBetween', 'audioManager',

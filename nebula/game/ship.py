@@ -302,9 +302,30 @@ class SpaceShip(Node):
             else:
                 self.fire_bullet()
 
-    def fire_bullet(self, flight=ENEMY_SHOT_FLIGHT):
-        """The non-laser branch of shoot:. Lasers are added with the enemy step."""
-        size = self.parent_width // 6
+    # scripted control, used by the tutorial
+
+    def invalidate_movement_and_shoot(self):
+        """Stops every action (entrance, movement, shooting) and switches the physics body on."""
+        self.remove_all_actions()
+        self.set_physics_body_specs()
+
+    def initialize_movement(self):
+        self.start_moving(1.0)
+
+    def initialize_shoot_with_time(self, interval):
+        self.start_shooting(interval)
+
+    def manual_shot(self):
+        """manualShot: a laser for laser ships (if none is active), otherwise a Fireball bullet of size W/12."""
+        if self.code in LASER_CODES:
+            if not self.laser_active:
+                self.laser_shoot()
+            return None
+        return self.fire_bullet(size=self.parent_width // 12)
+
+    def fire_bullet(self, flight=ENEMY_SHOT_FLIGHT, size=None):
+        """The non-laser branch of shoot: (size W/6), also used by manualShot (size W/12)."""
+        size = self.parent_width // 6 if size is None else size
         bullet = Shot(self, (float(size), float(size)))
         attach(bullet, Body(Circle(5.0), category=CAT_ENEMY_SHOT, contact=CAT_PLAYER | CAT_PLAYER_SHOT, collision=CAT_ENEMY_SHOT))
         bullet.position = (self.position[0], self.position[1] - self.ship_size[1] * 0.5)
