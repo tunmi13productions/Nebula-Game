@@ -57,6 +57,7 @@ class Strings:
             raise ValueError(language)
         self.language = language
         self.table = _load(language + '.json')
+        self.table.update(_load('storyboard_%s.json' % language))   # main menu button titles
         if language == 'en':
             self.table.update(_load('en_fixes.json'))
 

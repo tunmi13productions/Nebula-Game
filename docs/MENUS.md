@@ -4,17 +4,21 @@ Recovered from the view controllers, `CampaignScene`, `CutScene`, `BaseScene` me
 
 ## Startup (`IntroViewController`)
 
-1. Headphones notice (`avisoDosFones`): it shows "PUT YOUR HEADPHONES" and "FOR A BETTER EXPERIENCE" with a headphones image. With VoiceOver running, it speaks "%@ %@, %@" built from `sound_1`, `sound_2` and `sound_3`, which reads "PUT YOUR HEADPHONES FOR A BETTER EXPERIENCE., Thunder at the right side.". `thunder.mp3` plays (the file is silent on the left channel, so it's heard on the right only). The notice stays about 5 seconds.
-2. Logo (`showLogo`, `animateLogo`): `bg_logo.jpg` and `logo.png`. `Cilada Games.caf` plays (the studio sound). The logo animates for about 2 seconds, then the segue "goToMenu" opens the main menu.
+1. Headphones notice (`avisoDosFones`): it shows "PUT YOUR HEADPHONES" and "FOR A BETTER EXPERIENCE" with a headphones image. None of it is an accessibility element. With VoiceOver running, the game voice speaks "%@ %@, %@" built from `sound_1`, `sound_2` and `sound_3` ("PUT YOUR HEADPHONES FOR A BETTER EXPERIENCE., Thunder at the right side.") at rate 0.55 with a 2 second pre-delay, and the logo starts when the line ends. Without VoiceOver, a 5 second timer starts the logo instead.
+2. Logo (`showLogo`, `animateLogo`): `thunder.mp3` plays at volume 0.8 (the file is silent on the left channel, so it's heard on the right only). `bg_logo.jpg` and `logo.png` fade in over 2 seconds and out over 2, then the main menu is pushed.
+- `IntroViewController playSound` would play `Cilada Games.caf` at volume 0.5, but nothing calls it (the selector has no reference), so the studio sound never plays.
 
 ## Main menu (`MainMenuViewController`)
 
-- Music: `menuSound.mp3`, looping. It's kept in `Global.mainMenuMusic` and stopped by gameplay scenes (free mode stops it on entry). Notifications "playMenuMusic" and "stopMenuMusic" control it.
-- Visual: the nebula background and sliding doors ("leftDoor", "rightDoor"). `closing_doors.caf` belongs to the door animation. Confirm when it plays.
-- Buttons (Portuguese titles from Main_iPhone.strings, English from the Base storyboard, which still needs reading): Campaign (Campanha), Free Mode (Modo Livre), Multiplayer (Multpleier), Hangar, Tutorial, About (Sobre).
-- Pressing a button plays `acceptButton.mp3` (`Global playAcceptSoundButton`). Campaign, Free Mode and Multiplayer go through a loading screen showing "Loading..." (`tela_load`). Hangar, Info and Tutorial open their own screens ("Settings", "Info", "tutorial").
-- First launch (`primeiraVez`): an alert titled "Welcome, beginner!" says "For a better game experience, consider playing the basic tutorial." with the buttons "Go to tutorial" and "Cancel".
+- Buttons, in screen order (VoiceOver order): Campaign (tag 1), Free Mode (tag 2), Tutorial (tag 3), Multiplayer (tag 4), Hangar (tag 5), About (tag 6). Titles come from the storyboard: English from the compiled Base storyboard, Portuguese from `pt.lproj/Main_iPhone.strings` (Campanha, Modo Livre, Tutorial, Multpleier, Hangar, Sobre). Centres on the 320 by 568 layout: Campaign (75, 105), Free Mode (242, 105), Tutorial (75, 283), Multiplayer (248, 291), Hangar (75, 468), About (255, 468).
+- Every button plays `acceptButton.mp3` first (`Global playAcceptSoundButton`).
+- Campaign and Free Mode (`buttonPressed:`): a loading view (`backTelaLoad`, an animated ship and a "Loading" label that isn't an accessibility element) fades in over 2 seconds. Then, with VoiceOver, the game voice says "Loading" (`tela_load`, rate 0.55), and the game view controller is pushed with gameType set to the button tag.
+- Tutorial, Hangar and About (`openSecondaryMenu:`): push the "tutorial", "Settings" and "Info" view controllers.
 - Multiplayer needs Game Center: "Attention" / "You must be logged into Game Center to enter multiplayer!".
+- On first load a white flash fades over 1 second, then the doors open over 0.4 seconds while `closing_doors.caf` plays (doorAudio).
+- Every viewDidAppear sets ControleCapitulo to "no".
+- Music: `Global.mainMenuMusic` is played on viewDidAppear and stopped by gameplay scenes, but nothing ever creates that player (setMainMenuMusic: has no caller and the `menuSound` string has no reference). So the menu is silent apart from the doors, and `menuSound.mp3` is unused.
+- First launch: `alertViewTutorial` ("Welcome, beginner!", "For a better game experience, consider playing the basic tutorial.", "Go to tutorial", "Cancel") is never called. Instead the tutorial selection screen starts the movement tutorial on its first visit (see below).
 
 ## Campaign selector (`CampaignScene`, a SpriteKit menu)
 

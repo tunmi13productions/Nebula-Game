@@ -52,9 +52,12 @@ class Effects:
         self._live = []
         self.played = []   # file names, in order, for tests and debugging
 
-    def play(self, filename):
+    def play(self, filename, volume=1.0):
+        """volume is for the few AVAudioPlayer sounds the original set a volume on (thunder, for one)."""
         self._sweep()
         handle = self.backend.load(os.path.join(self.sounds_dir, filename))
+        if volume != 1.0:
+            self.backend.set_volume(handle, volume)
         self.backend.play(handle)
         self._live.append(handle)
         self.played.append(filename)

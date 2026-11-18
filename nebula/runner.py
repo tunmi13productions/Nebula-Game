@@ -1,7 +1,8 @@
 """The game window, fixed-step loop and key handling shared by the game and the developer tools.
 
 Keys follow docs/DEVIATIONS.md: arrows steer, Space fires, Escape is swipe up, L speaks life, and in menus
-the down and up arrows move (swipe right and left) and Enter activates (double tap).
+the down and up arrows move (swipe right and left) and Enter activates (double tap). A scene with a
+handle_key method gets Escape, Left and Right first (menu screens and the campaign selector use them).
 """
 import time
 
@@ -34,6 +35,9 @@ class GameWindow:
     def handle(self, ev):
         s = self.scene
         down = ev.type == pygame.KEYDOWN
+        named = {pygame.K_ESCAPE: 'escape', pygame.K_LEFT: 'left', pygame.K_RIGHT: 'right'}.get(ev.key)
+        if down and named and hasattr(s, 'handle_key') and s.handle_key(named):
+            return
         if ev.key == pygame.K_LEFT:
             self.tilt.left = down
         elif ev.key == pygame.K_RIGHT:
