@@ -7,8 +7,8 @@ Conventions used below:
 - "Speak X" means: show the line in the message window under the speaker name "I.C.A.R.U.S." and speak it through the synthesizer at rate 0.55. Delays are given as (pre, post) in seconds when they aren't zero.
 - "Victory" means `defaultVictoriousAnimation`.
 - "old" is an in-scene counter's value before the kill decremented it. "none left" means the in-scene count reached 0.
-- Openings and endings were verified by tracing (`decompiled/analysis/traces/chapterN_stageM.txt`, made with `tools/re/trace_stage.py`). Kill rules for chapters 1 to 5 are transcribed by hand from the pseudocode. For chapters 6 to 9 the kill logic is summarised only.
-- Rule for assembly: every chapter's `destroyEnemy:` gets translated directly from `decompiled/analysis/decompiled.c`, then checked against the original running in the emulator (differential testing on random counter states) before it's trusted. That catches any transcription slip, including in this file.
+- Openings and endings were verified by tracing (`decompiled/analysis/traces/chapterN_stageM.txt`, made with `tools/re/trace_stage.py`).
+- The authoritative kill rules are the translation in `nebula/game/chapters.py`. `tests/test_chapters.py` checks every chapter's `destroyEnemy:` against the original running in the emulator (`tools/re/chapter_oracle.py`), from random counter states and along whole simulated stages, comparing spawns, power-ups, the method the stage ends in, and all counters. The prose below is a summary. Where it and the code disagree, the code is right.
 
 ## Shared structure
 
@@ -44,7 +44,7 @@ Spawn methods: createSmallEnemy is ship 0. createTank is ship 46 (the fuel tank)
 - Opening (`intro2`): createSmallEnemy and createMediumEnemy at once, with no message.
 - Kill rules:
   - Ship 7: laserInScene -= 1. If none are left and laser < 3: createLaserEnemy1.
-  - Ship 2: mediumInScene -= 1. If none are left: if medium <= 3, createMediumEnemy. Otherwise, if medium == 4, release a life power-up and createLaserEnemy1.
+  - Ship 2: mediumInScene -= 1. If none are left and medium <= 3: createMediumEnemy. Otherwise, if medium == 4 (whether or not mediums are left), release a life power-up and createLaserEnemy1.
   - Ship 0: smallInScene -= 1. If none are left and (laser < 3 or laserInScene != 0): createSmallEnemy.
   - After any kill: if laser == 3 and smallInScene == 0, Victory.
 

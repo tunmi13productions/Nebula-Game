@@ -13,6 +13,12 @@ class GlobalState:
         self.last_level = 1
         self.free_mode = False
 
+    def save_progress(self, save):
+        """saveProgress: the furthest chapter and level reached."""
+        save.set_integer('last_Chapter', self.last_chapter)
+        save.set_integer('last_Level', self.last_level)
+        save.synchronize()
+
     def get_time_shot(self):
         """Seconds between auto shots."""
         p = self.time_shot_points

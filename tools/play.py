@@ -3,6 +3,7 @@ r"""Play the parts of the game that are built so far. This plays real sound: run
 usage:
   python tools/play.py tutorial [section]   sections: 1 Movement, 2 Enemies, 3 Attack, 4 Battle, 5 Basic, 6 Special
   python tools/play.py free                 free mode
+  python tools/play.py chapter C [S]        campaign chapter C (1 to 9), stage S (1 to 4). Intro cutscenes come later.
 
 Keys: arrows steer, Space fires, L speaks your life, Escape is swipe up (it ends a tutorial section).
 In menus: down and up arrows move, Enter activates. Menu items that lead to screens not built yet quit.
@@ -15,6 +16,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
 from nebula.audio.openal_backend import OpenALBackend
+from nebula.game.chapters import CHAPTERS
 from nebula.game.free_mode import FreeModeScene
 from nebula.game.services import Services
 from nebula.game.tutorial import TutorialScene
@@ -45,8 +47,17 @@ def main():
         reader.say('Free mode')
         window.set_scene(FreeModeScene(services, tilt, on_menu=window.quit, on_new_game=free))
 
+    def chapter(c, st):
+        reader.say('Chapter %d, level %d' % (c, st))
+        nxt = (c, st + 1) if st < 4 else (c + 1, 1)
+        window.set_scene(CHAPTERS[c](services, tilt, st, on_select=window.quit,
+                                     on_next=(lambda: chapter(*nxt)) if nxt[0] <= 9 else window.quit,
+                                     on_restart=lambda: chapter(c, st)))
+
     if mode == 'free':
         free()
+    elif mode == 'chapter':
+        chapter(int(sys.argv[2]) if len(sys.argv) > 2 else 1, int(sys.argv[3]) if len(sys.argv) > 3 else 1)
     else:
         tutorial(int(sys.argv[2]) if len(sys.argv) > 2 else 1)
     window.run()

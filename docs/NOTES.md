@@ -365,7 +365,7 @@ Full call traces for every boss are in `decompiled/analysis/traces/boss_NN.txt`,
 - What 0x10 is. Find where that category bit is assigned.
 - `setPhysicsBodySpecs` (hitbox sizes) and the texture sizes from the atlas plist, since sizes affect collisions.
 - Boss parts 100 to 105: only used by the possibly dead chapter 6 stage4Loop (see CHAPTERS.md). Confirm nothing else creates them.
-- Chapter scripts are in `docs/CHAPTERS.md`. Still open there: the exact kill rules for chapters 6 to 9 (to be translated and emulator-tested during assembly), chapter 6 stage4Loop reachability, and when chapter 9 enterGround runs. Also `didBeginStage:onChapter:onMode:`, `didWinStage`, `missionComplete`, `defaultVictoriousAnimation`, the campaign game-over screen and save progress.
+- Chapter scripts are in `docs/CHAPTERS.md`, and the chapters are ported in `nebula/game/chapters.py` with emulator-checked kill rules. didBeginStage, didWinStage and didFailStage only send analytics. defaultVictoriousAnimation: the ship waits 1 second, flies to (W/2, H + 100) over 3, waits 1 and shrinks over 2, then endGameVictorious, which waits 2 seconds and opens missionComplete. The map generator is visual only: its fuel tanks, debris and background ships have no physics and no sound.
 - Free mode and tutorial are in `docs/MODES.md`, with a few items to confirm listed there.
 - Menus, cutscenes, startup, Hangar and saving are in `docs/MENUS.md`. Versus mode is still unstudied.
 - Versus mode over Game Center: decide later how or whether to port it.
