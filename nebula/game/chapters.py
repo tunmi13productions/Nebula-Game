@@ -444,6 +444,56 @@ class Chapter3Scene(ChapterScene):
         self.say('chap3_icarus2', 0.5, 0.0, jump)
 
 
+class Chapter4Scene(ChapterScene):
+    """Home. Rocks only: createSmallEnemy rolls 0 to 3 and compares it with 49, 48 and 47, which never match,
+    so it always spawns ship 50. Original bug, kept."""
+    CHAPTER = 4
+
+    def create_small(self):
+        roll = rand.between(0, 3)
+        code = {49: 49, 48: 48, 47: 47}.get(roll, 50)   # roll is 0 to 3, so this is always 50
+        self.small += 1
+        self.small_in += 1
+        return self.create_enemy_with_type(code)
+
+    def opening(self, stage):
+        if stage == 1:
+            self.say('chap4_icarus1', 0.5, 0.0, lambda: self._boss(4))
+        elif stage == 2:
+            self.say('chap4_icarus2', 0.5, 0.0, self.create_small)
+        elif stage == 3:
+            self.say('chap4_icarus3', 0.5, 0.0, lambda: self._boss(6))
+        else:
+            self.say('chap4_icarus4', 0.5, 0.5, lambda: self._boss(10))
+
+    def _boss(self, code):
+        self.allow_move = False
+        self.allow_shoot = False
+        self.boss_now(code)
+
+    def destroy_enemy(self, code):
+        st = self.stage_number
+        if st == 2:
+            old = self._dec('small_in')
+            if self.small < 5:
+                self.create_small()
+            elif self.small < 20:
+                if old < 2:
+                    self.create_small()
+                    self.create_small()
+                elif old <= 2:
+                    self.create_small()
+            if self.small >= 20 and self.small_in <= 0:
+                self.default_victorious_animation()
+        elif st in (1, 3):
+            self.default_victorious_animation()
+        else:
+            self.end_lvl()
+
+    def end_lvl(self):
+        self.end_lvl_speech('chap4_icarus5', 0.5, 0.5, self.default_victorious_animation, stop_controls=True)
+
+
 CHAPTERS = {c.CHAPTER: c for c in (
-    Chapter1Scene, Chapter2Scene, Chapter3Scene,
+    Chapter1Scene, Chapter2Scene, Chapter3Scene, Chapter4Scene,
 )}

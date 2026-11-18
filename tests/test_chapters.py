@@ -246,3 +246,15 @@ def test_chapter2_end_lvl_speaks_then_flies_off_once():
     scene.destroy_enemy(100)
     run(scene, services, 12.0)
     assert calls == ['victory']
+
+
+# chapter 4
+
+
+def test_chapter4_rocks_are_always_the_big_one():
+    scene, services = make(4, 2)
+    spawned = []
+    scene.create_enemy_with_type = spawned.append
+    for _ in range(20):
+        scene.create_small()
+    assert set(spawned) == {50}
