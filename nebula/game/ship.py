@@ -2,6 +2,7 @@
 from ..data import SHIPS, TEXTURES
 from ..engine import actions as A
 from ..engine.nodes import Node
+from ..engine.particles import Emitter
 from ..engine.physics import Body, Circle, Polygon, attach, rectangle
 from . import looks
 from .rand import arc4random, between
@@ -381,8 +382,29 @@ class SpaceShip(Node):
         def charge():
             keys['sound'] = self.play_linked('Laser_Charge', 'caf', self)
 
+        def glow():
+            """The charging glow: one of the four MyParticle emitters, picked with arc4random() % 4 (this
+            draw is part of the original's random sequence), at the ship's nose, slow and red."""
+            variant = ('MyParticle', 'MyParticle1', 'MyParticle2', 'MyParticle3')[arc4random() & 3]
+            em = keys['emitter'] = Emitter(variant)
+            em.set(birth_rate=10.0, lifetime=1.0, position_range=[0.0, 0.0], speed=0.0, speed_range=0.0,
+                   rotation=0.0, alpha=1.0, alpha_range=1.0, alpha_speed=1.0, scale=0.2, scale_range=0.0,
+                   scale_speed=0.0, acceleration=[0.0, 0.0], blend_mode=1, color=[1.0, 0.0, 0.0, 1.0])
+            em.position = (self.position[0], self.position[1] - self.ship_size[1] * 0.45)
+            em.z = 5
+            self.game.add_child(em)
+
         def fire():
             keys['sound'] = self.play_linked('Laser_Firing', 'mp3', self)
+
+        def stream():
+            """The beam's look: the particles pour down."""
+            keys['emitter'].set(acceleration=[0.0, -500.0], birth_rate=150.0, lifetime=2.0)
+
+        def stop_stream():
+            em = keys['emitter']
+            em.set(acceleration=[0.0, 0.0], birth_rate=0.0)
+            em.run(A.sequence([A.wait(2.0), A.remove_from_parent()]))
 
         def beam_on():
             beam.position = (self.position[0], float(self.parent_height // 2))
@@ -396,8 +418,9 @@ class SpaceShip(Node):
                 beam.remove_from_parent()
                 self.laser_active = False
             beam.run(A.move_to_y(float(self.parent_height), LASER_RETREAT), completion=done)
-        beam.run(A.sequence([A.run_block(charge), A.wait(LASER_CHARGE), A.run_block(fire), A.wait(LASER_WARM),
-                             A.run_block(beam_on), A.wait(hold), A.run_block(retreat)]))
+        beam.run(A.sequence([A.run_block(charge), A.run_block(glow), A.wait(LASER_CHARGE), A.run_block(fire),
+                             A.run_block(stream), A.wait(LASER_WARM), A.run_block(beam_on), A.wait(hold),
+                             A.run_block(stop_stream), A.run_block(retreat)]))
 
     # visual-only in the original: sprite frame animations for banking and levelling out
     # banking: the player's 21 Player_ frames, 10 being level, at 0.03 seconds a frame (visual only)
