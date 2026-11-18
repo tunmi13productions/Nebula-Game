@@ -39,7 +39,7 @@ def main():
     save = SaveData.default()
     services = Services(OpenALBackend(), PrismRenderer(lang), reader, Strings(lang), GlobalState.load(save), save=save)
     tilt = KeyboardTilt(float(settings.get('tilt', 0.3)))
-    window = GameWindow(services, tilt, 'Nebula')
+    window = GameWindow(services, tilt, 'Nebula', float(settings.get('scale', 1.5)))
 
     def tutorial(n):
         reader.say('Tutorial %d, %s' % (n, services.strings.get(NAMES[n]).capitalize()))

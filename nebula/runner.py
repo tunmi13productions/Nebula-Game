@@ -8,18 +8,24 @@ import time
 
 import pygame
 
+from .render.renderer import Renderer
+from .render.textures import TextureStore
+
 FRAME = 1 / 60
+POINTS = (320, 568)    # the original's screen in points (iPhone 5)
 
 
 class GameWindow:
-    def __init__(self, services, tilt, title='Nebula'):
+    def __init__(self, services, tilt, title='Nebula', scale=1.5):
+        """scale is pixels per point: the window is the original 320 by 568 point screen times scale."""
         self.services, self.tilt = services, tilt
         self.scene = None
         self.running = False
         self.extra_keys = {}       # key -> callable, for developer tools
         pygame.init()
-        pygame.display.set_mode((320, 240))
+        self.screen = pygame.display.set_mode((round(POINTS[0] * scale), round(POINTS[1] * scale)))
         pygame.display.set_caption(title)
+        self.renderer = Renderer(TextureStore(), scale)
 
     def set_scene(self, scene):
         old = self.scene
@@ -61,6 +67,19 @@ class GameWindow:
         elif ev.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
             s.menu_activate()
 
+    def draw(self):
+        """SpriteKit scenes are drawn from their nodes; other screens draw themselves if they can."""
+        s = self.scene
+        if s is None:
+            return
+        if hasattr(s, 'walk'):
+            self.renderer.draw_scene(s, self.screen)
+        elif hasattr(s, 'draw'):
+            s.draw(self.screen, self.renderer)
+        else:
+            self.screen.fill((0, 0, 0))
+        pygame.display.flip()
+
     def run(self):
         self.running = True
         last = time.perf_counter()
@@ -78,6 +97,7 @@ class GameWindow:
                 self.services.scheduler.update(FRAME)
                 self.scene.step(FRAME)
                 acc -= FRAME
+            self.draw()
             time.sleep(0.002)
         if self.scene is not None and hasattr(self.scene, 'stop_audio'):
             self.scene.stop_audio()
