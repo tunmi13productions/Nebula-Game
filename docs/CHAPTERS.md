@@ -250,10 +250,10 @@ Ships: small1 is 12, small2 is 14, medium1 is 13, medium2 is 16, laser1 is 15 (a
 
 - Stage 1 (Ice and Metal): opening is speak `chap9_icarus1` (0.5, 0.5) (route to the nearest planet rift). When done: createSmallEnemy1.
 - Stage 2 (Root of the Problem): opening is createSmallEnemy2.
-- Stage 3 (Descent): opening is createMediumEnemy2. The `enterGround` sequence (black fade, metal ground and crack textures) belongs to this part of the descent. It ends in Victory. Confirm when it's triggered.
+- Stage 3 (Descent): opening is createMediumEnemy2. Lasers respawn up to 7 and mediums keep coming. When laser >= 7 and no medium remains, `enterGround` runs: a black fade (visual) and the usual victory flight.
 - Stage 4 (For Earth!):
   - Opening (`finalBossIntro`): speak `chap9_icarus2` (0.5, 1.5) (a 99.9 percent chance of not surviving, carry on?). Then speak `chap9_icarus3` (silence taken as confirmation, core guardian sighted). When done: makeBossEntrance, which spawns Boss 9 and enables movement and shooting.
   - Boss killed, so endLvl: movement and shooting are disabled. Speak `chap9_icarus4` ("Sir, it has been an honor."). Then `endItAll`:
     - A white overlay fades in over 4 seconds while `chap9_icarus5` is spoken (your logs were sent to New Earth).
     - Speak `chap9_icarus6` ("Brace for impact in 3..."), then speak "2..." and "1...". Those two are hard-coded strings, not localized, so they're the same in both languages. Original quirk, keep it.
-    - Play `endingSound.mp3`. Wait 5 seconds, `runFastCredits`, wait 8 seconds, then fade out.
+    - Play `endingSound.mp3`. Wait 5 seconds, then `runFastCredits`: the credits fade in over 7 seconds and scroll for 25, the `credits_voice` line is spoken after a 7 second delay (VoiceOver only in the original, always here), and 2 seconds after the scroll the mission complete menu opens.

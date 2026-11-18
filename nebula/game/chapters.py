@@ -907,7 +907,107 @@ class Chapter8Scene(ChapterScene):
         self.end_lvl_speech('chap8_icarus3', 0.5, 0.5, self.default_victorious_animation)
 
 
+class Chapter9Scene(ChapterScene):
+    """Pegasus."""
+    CHAPTER = 9
+    SPAWNS = {'small1': ('small', 12), 'small2': ('small', 14), 'medium1': ('medium', 13), 'medium2': ('medium', 16),
+              'laser1': ('laser', 15)}
+
+    def opening(self, stage):
+        if stage == 1:
+            self.say('chap9_icarus1', 0.5, 0.5, lambda: self.create('small1'))
+        elif stage == 2:
+            self.create('small2')
+        elif stage == 3:
+            self.create('medium2')
+        else:
+            self.say_chain([('chap9_icarus2', 0.5, 1.5), ('chap9_icarus3', 0.5, 0.0)], lambda: self.boss_now(9))
+
+    def destroy_enemy(self, code):
+        st = self.stage_number
+        if st == 3:
+            if code == 15:
+                if self._dec('laser_in') <= 1 and self.laser < 7:
+                    if self.laser in (1, 2):
+                        self.release_power_up(SHIELD)
+                        if self.laser == 2:
+                            self.release_power_up(FAST_SHOT)
+                    self.create('laser1')
+            elif code == 16:
+                if self._dec('medium_in') <= 1 and (self.laser < 7 or self.laser_in > 0):
+                    if self.medium == 3:
+                        self.create('laser1')
+                    self.create('medium2')
+            if self.laser >= 7 and self.medium_in <= 0:
+                self.enter_ground()
+        elif st == 2:
+            if code == 15:
+                if self._dec('laser_in') <= 1 and self.laser < 8:
+                    if self.laser in (4, 1):
+                        self.release_power_up(SHIELD)
+                        if self.laser == 4:
+                            self.release_power_up(SPEED)
+                    self.create('laser1')
+            elif code == 14:
+                if self._dec('small_in') <= 1 and (self.laser < 8 or self.laser_in > 0):
+                    if self.small == 1:
+                        self.create('laser1')
+                        self.release_power_up(SPEED)
+                    self.create('small2')
+            if self.laser >= 8 and self.small_in <= 0:
+                self.default_victorious_animation()
+        elif st == 1:
+            if code == 13:
+                if self._dec('medium_in') <= 1 and self.medium < 10:
+                    if self.medium in (2, 6):
+                        self.release_power_up(FAST_SHOT)
+                    self.create('medium1')
+            elif code == 12:
+                if self._dec('small_in') <= 1 and (self.medium < 10 or self.medium_in > 0):
+                    if self.small == 1:
+                        self.create('medium1')
+                        self.release_power_up(SHIELD)
+                        self.release_power_up(SPEED)
+                    self.create('small1')
+            if self.medium >= 10 and self.small_in <= 0:
+                self.default_victorious_animation()
+        else:
+            self.end_lvl()
+
+    def enter_ground(self):
+        """The descent into the planet: a black fade (visual) while the ship flies off as in a victory."""
+        self.default_victorious_animation()
+
+    def end_lvl(self):
+        self.end_lvl_speech('chap9_icarus4', 0.5, 0.0, self.end_it_all, stop_controls=True)
+
+    def end_it_all(self):
+        """The last lines and the countdown, endingSound.mp3, then the credits and the mission complete menu."""
+        p = self.player
+
+        def two():
+            self.services.voice.speak_then('2...', ICARUS_RATE, 0.0, 0.2, one)
+
+        def one():
+            self.services.voice.speak_then('1...', ICARUS_RATE, 0.0, 0.2, impact)
+
+        def impact():
+            self.services.effects.play('endingSound.mp3')
+            self.run(A.sequence([A.wait(5.0), A.run_block(self.run_fast_credits)]))
+
+        def brace():
+            p.run(A.move_to(0.0, H + 20.0, 4.0))
+            self.say('chap9_icarus6', 0.0, 0.2, two)
+        self.say('chap9_icarus5', 0.0, 0.25, brace)
+
+    def run_fast_credits(self):
+        """The credits fade in over 7 seconds and scroll for 25, then after 2 more seconds the mission
+        complete menu. The credits voice line starts after a 7 second delay."""
+        self.services.voice.speak_queued(self.services.strings.get('credits_voice'), ICARUS_RATE, 7.0, 0.0)
+        self.run(A.sequence([A.wait(7.0), A.wait(25.0), A.wait(2.0)]), completion=self.mission_complete)
+
+
 CHAPTERS = {c.CHAPTER: c for c in (
     Chapter1Scene, Chapter2Scene, Chapter3Scene, Chapter4Scene, Chapter5Scene,
-    Chapter6Scene, Chapter7Scene, Chapter8Scene,
+    Chapter6Scene, Chapter7Scene, Chapter8Scene, Chapter9Scene,
 )}

@@ -274,3 +274,16 @@ def test_chapter6_loses_on_the_fifth_ally():
     assert not ended
     scene.destroy_enemy(38)
     assert ended
+
+
+# chapter 9
+
+
+def test_chapter9_finale_reaches_mission_complete():
+    scene, services = make(9, 4)
+    services.globals.last_chapter, services.globals.last_level = 9, 4
+    scene.did_move_to_view()
+    scene.end_lvl()
+    run(scene, services, 90.0)
+    assert 'endingSound.mp3' in services.effects.played
+    assert scene.in_menu
