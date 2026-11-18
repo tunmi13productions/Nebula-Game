@@ -8,18 +8,20 @@ order VoiceOver read them): Campaign (tag 1), Free Mode (tag 2), Tutorial (tag 3
 - Campaign and Free Mode show the loading screen: it fades in over 2 seconds, then the game voice says
   "Loading" (tela_load) and the game screen opens.
 - Tutorial, Hangar and About push their screens.
-- The first time the menu loads, a white flash runs for 1 second and then the doors open with
-  closing_doors.caf.
-- Every time the menu appears, ControleCapitulo is reset to "no".
-- The original declares a menu music player (Global.mainMenuMusic, menuSound.mp3), but nothing ever creates
-  it, so the menu is silent apart from the doors. The first-launch alert (alertViewTutorial) is never called
-  either.
+- The first time the menu loads, an animation chain runs: a white flash fades over 1 second, the doors fade
+  in over 1 second, then open over 0.4 seconds while closing_doors.caf plays (at 2 seconds), then two
+  0.5 second steps. When the chain ends (3.4 seconds) the block "Toca Som" creates the menu music
+  (menuSound.mp3, looping forever, full volume, kept in Global.mainMenuMusic), plays it if the menu is on
+  screen, and shows the first-launch alert when primeiraVez isn't 1.
+- Every time the menu appears, ControleCapitulo is reset to "no" and the menu music plays if it exists.
+- Gameplay stops the music: free mode on entry and the campaign when a level starts. Tutorials don't.
 """
 from .screen import Element, Screen
 
 RATE = 0.55
 LOADING_FADE = 2.0
-DOORS_DELAY = 1.0
+DOORS_DELAY = 2.0      # the 1 second flash, then the 1 second door fade-in
+MUSIC_DELAY = 3.4      # then the 0.4 second door opening and two 0.5 second steps
 
 
 class MainMenuScreen(Screen):
@@ -38,9 +40,19 @@ class MainMenuScreen(Screen):
         save = self.services.save
         save.set('ControleCapitulo', 'no')
         save.synchronize()
+        self.app.play_menu_music()
         if not self.loaded:
             self.loaded = True
             self.services.scheduler.after(DOORS_DELAY, lambda: self.services.effects.play('closing_doors.caf'))
+            self.services.scheduler.after(MUSIC_DELAY, self.toca_som)
+
+    def toca_som(self):
+        """The last completion of the opening animation."""
+        self.app.create_menu_music()
+        if self.app.window.scene is self:
+            self.app.play_menu_music()
+        if self.services.save.get('primeiraVez') != 1:
+            self.app.window.set_scene(TutorialAlert(self))
 
     def open(self, fn):
         self.services.effects.play('acceptButton.mp3')
@@ -58,3 +70,44 @@ class MainMenuScreen(Screen):
 
     def handle_key(self, key):
         return key in ('escape', 'left', 'right')
+
+
+class TutorialAlert(Screen):
+    """alertViewTutorial: a UIAlertView over the menu. VoiceOver read the title and message and focused the
+    first button. "Go to tutorial" (the cancel button, index 0) opens the tutorial selection, which then
+    starts the movement tutorial because primeiraVez is still unset. "Cancel" (index 1) sets primeiraVez to
+    1. Escape is the alert's escape action, which picks the cancel button, "Go to tutorial"."""
+
+    def __init__(self, menu):
+        self.menu = menu
+        super().__init__(menu.app)
+
+    def build(self):
+        s = self.services.strings
+        self.elements = [Element(s.get('alert_titulo'), button=False), Element(s.get('alert_mesagem'), button=False),
+                         Element(s.get('alert_irTutorial'), self.go), Element(s.get('alert_cancelar'), self.cancel)]
+
+    def did_move_to_view(self):
+        self.busy = False
+        self.focus = 2
+        s = self.services.strings
+        self.say('%s, %s, %s' % (s.get('alert_titulo'), s.get('alert_mesagem'), self.elements[2].spoken()))
+
+    def _dismiss(self):
+        self.app.window.scene = self.menu   # the menu stays as it was under the alert
+
+    def go(self):
+        self._dismiss()
+        self.menu.open(self.app.open_tutorial_selection)
+
+    def cancel(self):
+        save = self.services.save
+        save.set_integer('primeiraVez', 1)
+        save.synchronize()
+        self._dismiss()
+        self.menu.announce_first()
+
+    def handle_key(self, key):
+        if key == 'escape':
+            self.go()
+        return True

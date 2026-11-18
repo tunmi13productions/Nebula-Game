@@ -82,3 +82,29 @@ class Effects:
             else:
                 self.backend.release(h)
         self._live = keep
+
+
+class LoopingMusic:
+    """An AVAudioPlayer with numberOfLoops -1, like Global.mainMenuMusic. stop keeps the position, so the
+    next play carries on from there, as AVAudioPlayer does."""
+
+    def __init__(self, backend, path):
+        self.backend = backend
+        self.handle = backend.load(path)
+        self.started = False
+        self.playing = False
+
+    def play(self):
+        if self.playing:
+            return
+        if self.started:
+            self.backend.resume(self.handle)
+        else:
+            self.backend.play(self.handle, loops=-1)
+            self.started = True
+        self.playing = True
+
+    def stop(self):
+        if self.playing:
+            self.backend.pause(self.handle)
+            self.playing = False

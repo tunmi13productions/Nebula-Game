@@ -34,8 +34,10 @@ def make_app():
     return app, window, services
 
 
-def at_main_menu():
+def at_main_menu(first_launch=False):
     app, window, services = make_app()
+    if not first_launch:
+        services.save.set_integer('primeiraVez', 1)
     app.open_main_menu()
     return app, window, services
 
@@ -46,6 +48,7 @@ def said(services):
 
 def test_startup_speaks_the_headphones_notice_then_thunder_then_opens_the_menu():
     app, window, services = make_app()
+    services.save.set_integer('primeiraVez', 1)
     app.start()
     assert services.effects.played == []
     window.run(2.0)
@@ -74,11 +77,44 @@ def test_main_menu_plays_the_doors_once_and_resets_chapter_control():
     services.save.set('ControleCapitulo', 'yes')
     window.scene.did_move_to_view()
     assert services.save.get('ControleCapitulo') == 'no'
-    window.run(1.1)
+    window.run(1.9)
+    assert 'closing_doors.caf' not in services.effects.played
+    window.run(0.2)
     assert services.effects.played.count('closing_doors.caf') == 1
     window.scene.did_move_to_view()
-    window.run(1.1)
+    window.run(2.1)
     assert services.effects.played.count('closing_doors.caf') == 1
+
+
+def test_menu_music_starts_after_the_opening_and_stops_for_gameplay():
+    app, window, services = at_main_menu()
+    window.run(3.3)
+    assert app.menu_music is None
+    window.run(0.2)
+    music = app.menu_music
+    assert music.playing and services.audio.state[music.handle]['loops'] == -1
+    app.open_free_mode()
+    assert not music.playing
+    app.back_to_screen()
+    assert music.playing
+
+
+def test_first_launch_alert_and_its_buttons():
+    from nebula.menus.main_menu import TutorialAlert
+    from nebula.menus.tutorial_selection import TutorialSelectionScreen
+    app, window, services = at_main_menu(first_launch=True)
+    window.run(3.5)
+    assert isinstance(window.scene, TutorialAlert)
+    assert said(services)[-1] == ('Welcome, beginner!, For a better game experience, consider playing the basic '
+                                  'tutorial., Go to tutorial, button')
+    window.scene.menu_next()
+    window.scene.menu_activate()
+    assert isinstance(window.scene, MainMenuScreen) and services.save.get('primeiraVez') == 1
+    assert said(services)[-1] == 'Campaign, button'
+    app2, window2, services2 = at_main_menu(first_launch=True)
+    window2.run(3.5)
+    window2.scene.menu_activate()
+    assert isinstance(window2.scene, TutorialSelectionScreen)
 
 
 def test_free_mode_loads_after_two_seconds_and_returns_to_the_menu():
@@ -101,9 +137,7 @@ def test_free_mode_loads_after_two_seconds_and_returns_to_the_menu():
 
 
 def open_tutorials(first_visit=False):
-    app, window, services = at_main_menu()
-    if not first_visit:
-        services.save.set_integer('primeiraVez', 1)
+    app, window, services = at_main_menu(first_launch=first_visit)
     menu = window.scene
     menu.menu_next()
     menu.menu_next()

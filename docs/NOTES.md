@@ -55,7 +55,7 @@ Findings from studying the original iOS build. Raw dumps live in `decompiled/ana
 - 207 audio files: 191 mp3 and 16 caf (PCM 16-bit). Full inventory with format, channels and duration: `decompiled/analysis/audio_inventory.txt`. All of them decode with soundfile (libsndfile).
 - Ship engine loops: `Ship_1` to `Ship_50` plus extras. `ShipSounds.plist` maps `SpaceShipSound_N` (N from 0 to 50) to a sound file. Several map to `sonarpedra` (a rock sonar) and some are reused.
 - Effects: shots, lasers, explosions, hits, power-up, swooshes left and right, screen boundaries left and right (`bound_left`, `bound_right`), radar beep, alarm, closing doors, warp.
-- Music: `menuSound.mp3` (never played, see MENUS.md), `Lino Rise - Channel Intro Pompeii.mp3`, `endingSound.mp3`, `Deep_Impact_3.mp3`.
+- Music: `menuSound.mp3` (main menu, see MENUS.md), `Lino Rise - Channel Intro Pompeii.mp3`, `endingSound.mp3`, `Deep_Impact_3.mp3`.
 - Missing: `intro_tut_en.mp3` and `tut_intro.mp3` are referenced by the `intro_tut` string but aren't in the bundle. `Impact.ttf` is listed as an app font but is also missing.
 
 ## Visual assets

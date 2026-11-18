@@ -10,6 +10,7 @@ import webbrowser
 
 from .game.chapters import CHAPTERS
 from .game.free_mode import FreeModeScene
+from .audio.players import LoopingMusic
 from .game.tutorial import TutorialScene
 from .menus.about import AboutScreen
 from .menus.campaign import CampaignSelectScene
@@ -25,9 +26,26 @@ class App:
         self.window, self.services, self.tilt = window, services, tilt
         self.open_url = open_url
         self.stack = []
+        self.menu_music = None   # Global.mainMenuMusic, created by the main menu's opening animation
 
     def start(self):
         self.window.set_scene(IntroScreen(self))
+
+    # the menu music
+
+    def create_menu_music(self):
+        if self.menu_music is None:
+            path = self.services.sound_path('menuSound', 'mp3')
+            if path is not None:
+                self.menu_music = LoopingMusic(self.services.audio, path)
+
+    def play_menu_music(self):
+        if self.menu_music is not None:
+            self.menu_music.play()
+
+    def stop_menu_music(self):
+        if self.menu_music is not None:
+            self.menu_music.stop()
 
     # UIKit screens
 
@@ -57,6 +75,7 @@ class App:
         self.window.set_scene(self.campaign)
 
     def start_chapter(self, chapter, stage):
+        self.stop_menu_music()
         self.window.set_scene(CHAPTERS[chapter](
             self.services, self.tilt, stage, on_select=self.back_to_campaign,
             on_next=lambda: self.next_mission(chapter, stage),
@@ -85,6 +104,7 @@ class App:
             self.open_campaign(save.integer('capitulo') or g.last_chapter)
 
     def open_free_mode(self):
+        self.stop_menu_music()
         self.window.set_scene(FreeModeScene(self.services, self.tilt, on_menu=self.back_to_screen,
                                             on_new_game=self.open_free_mode))
 
@@ -92,8 +112,13 @@ class App:
         self.push(TutorialSelectionScreen(self))
 
     def start_tutorial(self, n):
-        self.window.set_scene(TutorialScene(self.services, self.tilt, n, on_select=self.back_to_screen,
+        self.window.set_scene(TutorialScene(self.services, self.tilt, n, on_select=self.tutorial_selected_back,
                                             on_next=lambda: self.next_tutorial(n)))
+
+    def tutorial_selected_back(self):
+        """Select tutorial posts playMenuMusic, then backMenuController."""
+        self.play_menu_music()
+        self.back_to_screen()
 
     def next_tutorial(self, n):
         """proximoTutorial: the next section, remembered under the "tutorial" key."""
