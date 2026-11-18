@@ -163,7 +163,35 @@ class Tracer:
         if sup in self.handles: supname = self.handles[sup].split(' ', 1)[1]
         self.classes[c] = dict(name=self.cstr(self.r32(ro + 16)), super=sup, supname=supname,
                                imeth=self.methods(self.r32(ro + 20)), cmeth=self.methods(self.r32(mro + 20)),
-                               size=self.r32(ro + 8))
+                               size=self.r32(ro + 8), ivars=self.ivar_list(self.r32(ro + 28)))
+    def ivar_list(self, il):
+        out = {}
+        if not il: return out
+        ent, cnt = self.r32(il), self.r32(il + 4)
+        for i in range(cnt):
+            p = il + 8 + i * ent
+            out[self.cstr(self.r32(p + 4))] = (self.r32(self.r32(p)), self.cstr(self.r32(p + 8)), self.r32(p + 16))
+        return out
+    def ivar_offset(self, obj, name):
+        cls = self.objclass.get(obj, obj)
+        while cls in self.classes:
+            if name in self.classes[cls]['ivars']: return self.classes[cls]['ivars'][name]
+            cls = self.classes[cls]['super']
+        raise KeyError(name)
+    def get_ivar(self, obj, name):
+        off, typ, size = self.ivar_offset(obj, name)
+        raw = bytes(self.mu.mem_read(obj + off, size))
+        if typ == 'f': return struct.unpack('<f', raw)[0]
+        if typ == 'd': return struct.unpack('<d', raw)[0]
+        if size == 1: return struct.unpack('<b' if typ == 'c' else '<B', raw)[0]
+        if size == 4 and typ in 'ilq': return struct.unpack('<i', raw)[0]
+        return int.from_bytes(raw, 'little')
+    def set_ivar(self, obj, name, value):
+        off, typ, size = self.ivar_offset(obj, name)
+        if typ == 'f': raw = struct.pack('<f', value)
+        elif typ == 'd': raw = struct.pack('<d', value)
+        else: raw = (int(value) & ((1 << (8 * size)) - 1)).to_bytes(size, 'little')
+        self.mu.mem_write(obj + off, raw)
     def find_method(self, cls, sel, meta=False):
         while cls in self.classes:
             m = self.classes[cls]['cmeth' if meta else 'imeth']
