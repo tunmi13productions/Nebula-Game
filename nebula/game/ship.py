@@ -255,23 +255,41 @@ class SpaceShip(Node):
         name, ext = (('explosion_1', 'caf'), ('Explosion_', 'mp3'), ('explosion', 'mp3'))[arc4random() % 3]
         self.play_unlinked(name, ext, self.position)
         attach(self, None)
+        # which explosion to show: arc4random() & 1, a draw in the original's random sequence
+        frames = looks.EXPLOSION_1 if arc4random() & 1 == 0 else looks.EXPLOSION_2
         if self.is_player:
             self.game.can_shoot = False
             self.game.remove_action('BlockShoot')
-        self.show_explosion()
+        self.show_explosion(frames)
+        if not self.is_player:
+            self.score_sparkle()
         self.run(A.sequence([A.wait(1.0), A.remove_from_parent()]))
 
-    def show_explosion(self):
+    def show_explosion(self, frames=looks.EXPLOSION_1):
         """destroyShip's picture: the ship's children go, and the ship, three times its size, plays the
-        Explosion02 frames (Global Explosion_1) at 0.032 seconds each. Visual only; the ship's size for the
-        game is untouched, so the explosion is a child of that size."""
+        Explosion02 or Explosion03 frames (Global Explosion_1 or _2) at 0.032 seconds each. Visual only; the
+        ship's size for the game is untouched, so the explosion is a child of that size."""
         for child in list(self.children):
             child.remove_from_parent()
         w, h = self.ship_size
         boom = Node(name='explosion', size=(w * 3, h * 3))
-        boom.texture = looks.EXPLOSION_1[0]
-        boom.run(A.animate_with_textures(looks.EXPLOSION_1, looks.EXPLOSION_FRAME))
+        boom.texture = frames[0]
+        boom.run(A.animate_with_textures(frames, looks.EXPLOSION_FRAME))
         self.add_child(boom)
+
+    def score_sparkle(self):
+        """An enemy's score.sks burst: 30 additive sparks that double in size over 0.45 seconds, fly to the
+        top centre (W/2, 0.95 H) after 0.3 seconds, shrink away over 0.3 and go (visual only)."""
+        em = Emitter('score')
+        em.set(to_emit=30, birth_rate=450.0, lifetime=2.0, speed=100.0, speed_range=60.0, alpha=0.8,
+               alpha_range=0.2, alpha_speed=-0.5, scale=0.75, scale_range=0.2, scale_speed=-0.5, rotation=0.0,
+               rotation_range=0.0, rotation_speed=0.0, color_blend=1.0, color_blend_range=0.0,
+               color_blend_speed=0.0, blend_mode=1)
+        em.position, em.z = self.position, 100
+        self.game.add_child(em)
+        em.run(A.scale_to(2.0, 0.45))
+        em.run(A.sequence([A.wait(0.3), A.move_to(self.parent_width / 2, self.parent_height * 0.95, 0.3),
+                           A.scale_to(0.0, 0.3), A.remove_from_parent()]))
 
     def remove_spaceship(self, autodestruction):
         """removeSpaceshipOnAutodestruction: stops the alarm and all actions and removes a laser beam.
