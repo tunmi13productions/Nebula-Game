@@ -364,3 +364,7 @@ Full call traces for every boss are in `decompiled/analysis/traces/boss_NN.txt`,
 ## Next step
 
 Continue the study through the open questions above, in roughly that order. Enemies and the damage model come first, since every level depends on them.
+
+## Implementation notes
+
+- SpriteKit timing modes (easeIn, easeOut, easeInEaseOut, used for enemy and boss moves) aren't documented by Apple. `nebula/engine/actions.py` uses the usual sine curves: 1 - cos(t*pi/2), sin(t*pi/2) and (1 - cos(t*pi))/2. They only affect positions in the middle of a move, so their effect on audio is a slightly different pan and volume path during movement.
