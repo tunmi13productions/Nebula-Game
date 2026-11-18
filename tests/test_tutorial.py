@@ -81,7 +81,6 @@ def test_battle_section_enemy_is_invulnerable_and_power_ups_drop():
 
 def test_basic_section_after_the_laser_ship_is_three_fuel_tanks_without_a_gun():
     scene, services, calls = make(5, life_points=5)
-    scene.player.receive_damage = False
     run(scene, services, 60)
     laser = scene.first_enemy
     assert laser.code == 7 and scene.allow_shoot
@@ -105,10 +104,20 @@ def test_special_section_keeps_the_tut_6_2_mixup():
     assert len(played) == 11
 
 
-def test_dying_in_the_tutorial_shows_the_completion_menu_after_the_delay():
-    scene, services, calls = make(3, life_points=0)
-    scene.player.life = 1
-    scene.player.inflict_damage(5)
-    scene._schedule_end_game()
-    run(scene, services, 1.6)
-    assert scene.in_menu
+def test_player_cannot_lose_life_in_sections_2_to_6():
+    for section in (2, 3, 4, 5, 6):
+        scene, services, calls = make(section)
+        assert scene.player.receive_damage is False
+        life = scene.player.life
+        assert not scene.player.inflict_damage(100)
+        assert scene.player.life == life
+    scene, services, calls = make(1)
+    assert scene.player.receive_damage is True     # section 1 has no enemies and doesn't change it
+
+
+def test_hits_in_the_tutorial_still_sound_but_cost_nothing():
+    scene, services, calls = make(2)
+    run(scene, services, 70)
+    assert 'player_hit.caf' in services.effects.played
+    assert scene.player.life == scene.player.max_life
+    assert not any(l.startswith('Your life is') for l in lines(services))

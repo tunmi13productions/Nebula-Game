@@ -23,3 +23,5 @@ Run Python scripts that read the binary with `python -I` (isolated mode). The tr
 - `trace_stage.py <chapter> <stage> [method]`: runs a campaign stage opening (or another scene method) in the tracing emulator, runs every captured block in order, and prints the narration, delays, spawns and boss creation. Its output is `decompiled/analysis/traces/chapterN_stageM.txt`.
 - `trace_tutorial.py <section>`: traces a tutorial section (narration order, enemy moves, waits) with audio playback mocked.
 - `trace_cutscene.py <chapter>`: traces a chapter intro cutscene (title card, narration order, images) with audio playback mocked.
+
+Caveat: a message sent to nil (for example to the player ship when a traced scene never created one) returns 0 and isn't logged, just like on iOS. A trace can therefore miss calls such as `[playerShip setRececiveDemage:NO]`. Cross-check anything that affects the player against `decompiled.c`.

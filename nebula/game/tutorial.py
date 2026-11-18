@@ -56,6 +56,7 @@ class TutorialScene(BaseScene):
         """Enemies: a demo ship shows where things come from, then hunts you. Shooting stays off."""
         self.allow_move = False
         self.allow_shoot = False
+        self.player.receive_damage = False   # sections 2 to 6 make the player invulnerable
 
         def arrive():
             e = self.first_enemy = self.create_enemy_with_type(1)
@@ -95,6 +96,7 @@ class TutorialScene(BaseScene):
         """Attack: five clips, then shoot ships that keep coming (they move but don't shoot)."""
         self.allow_move = False
         self.allow_shoot = False
+        self.player.receive_damage = False   # sections 2 to 6 make the player invulnerable
 
         def go():
             self.allow_move = True
@@ -106,6 +108,7 @@ class TutorialScene(BaseScene):
         """Battle: six clips, then an invulnerable fighter and timed speed and fast-shot drops."""
         self.allow_move = False
         self.allow_shoot = False
+        self.player.receive_damage = False   # sections 2 to 6 make the player invulnerable
 
         def go():
             self.allow_move = True
@@ -120,6 +123,7 @@ class TutorialScene(BaseScene):
         """Basic: a laser ship demonstrates its laser, then fights. After it, three fuel tanks to dodge."""
         self.allow_move = False
         self.allow_shoot = False
+        self.player.receive_damage = False   # sections 2 to 6 make the player invulnerable
 
         def laser():
             e = self.first_enemy = self.create_enemy_with_type(7)
@@ -141,6 +145,7 @@ class TutorialScene(BaseScene):
         """Special: eleven clips (tut_6.2 plays the 6.0 file, as in the original), then a short gauntlet."""
         self.allow_move = True
         self.allow_shoot = True
+        self.player.receive_damage = False   # sections 2 to 6 make the player invulnerable
         keys = ['tut_6.%d' % i for i in range(11)]
         self.chain(keys, self.create_enemy)
 

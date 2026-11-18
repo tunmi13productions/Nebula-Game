@@ -49,7 +49,7 @@ It runs every 1.0 second (action key "BaseActions") unless paused.
 
 ## Tutorial (`TutorialScene`)
 
-The tutorial selection screen chooses a section (tutorialType 1 to 6). Narration plays through the scene's own AVAudioPlayer (`playAudioFileNamed:completion:`), non-positional, each clip starting when the previous one finishes. Coordinates assume a 320 by 568 scene.
+The tutorial selection screen chooses a section (tutorialType 1 to 6). Sections 2 to 6 begin with `[playerShip setRececiveDemage:NO]`, so the player can't lose shield or life there. Hits still play the hit sound. Section 1 has no enemies and leaves damage on. Narration plays through the scene's own AVAudioPlayer (`playAudioFileNamed:completion:`), non-positional, each clip starting when the previous one finishes. Coordinates assume a 320 by 568 scene.
 
 1. Movement (`tutorial1`): shooting and movement are disabled and talking movement is turned on. It plays tut_1.0, 1.1, 1.2, 1.3, then enables movement. There's no enemy and no scripted end. The player practises moving (with "Left", "Right", "Stopped" and the edge sounds) and leaves through the pause menu. Confirm there's no hidden end condition.
 2. Enemies (`tutorial2`): movement and shooting are disabled.
@@ -74,7 +74,6 @@ The tutorial selection screen chooses a section (tutorialType 1 to 6). Narration
    - After that: endTutorial.
 - Swipe up (Escape) in the tutorial doesn't pause. It calls endTutorial.
 - endTutorial: it stops the voice player, removes all of the scene's actions (including the base loop and auto-fire), removes the tutorial's enemies (`destroiCena`), then endGame. TutorialScene endGame runs BaseScene endGame (the scene becomes inactive and the map generator stops), removes the life bar and shows the Tutorial Completed menu (`tutorialCompleto`).
-- Dying in the tutorial reaches the same endGame through BaseScene's 1.5 second delay.
 - Tutorial Completed menu: the title "Tutorial Completed", then items 1 "Select tutorial button" and 2 "Next tutorial button". Selection starts on 1 and it speaks "Tutorial Completed, Select tutorial button". Activating plays acceptButton. "Select tutorial" posts backMenuController and playMenuMusic. "Next tutorial" posts proximoTutorial, except after section 6, where it goes back like "Select tutorial".
 - Narration (`playAudioFileNamed:completion:`): a new AVAudioPlayer replaces the previous one (which stops), and the completion block runs when the file finishes, dispatched to the main queue. Inside tutorial 2's chains, some clips are played with SKAction playSoundFileNamed waitForCompletion YES instead.
 - The menu section names are Movement, Enemies, Attack, Battle, Basic and Special (`tut_movimento`, `tut_inimigo`, `tut_ataque`, `tut_batalha`, `tut_basico`, `tut_especial`). The order in the selection menu, and which number each maps to, still need checking in `TutorialSelectionViewController`. The mapping above follows the tutorialN method numbers.
