@@ -3,6 +3,7 @@ tree order, with position, scale, rotation and alpha inherited from parents and 
 
 A node is drawn when it has a texture name (node.texture) or a fill colour (node.color, RGBA from 0 to 1). A
 texture is tinted by node.tint (RGB from 0 to 1) when node.color_blend is above 0, like colorBlendFactor.
+node.blend_mode 'add' draws additively, like SKBlendModeAdd.
 Points are converted to pixels with the window scale.
 """
 import math
@@ -78,6 +79,13 @@ class Renderer:
             rect = img.get_rect(center=(round(cx), round(cy)))
         else:
             rect = pygame.Rect(round(px - ax * iw), round(py - (1 - ay) * ih), iw, ih)
+        if getattr(node, 'blend_mode', None) == 'add':
+            # SKBlendModeAdd: the colours, weighted by alpha, add onto what's below
+            img = img.premul_alpha()
+            if alpha < 1.0:
+                img.fill([int(alpha * 255)] * 3 + [255], special_flags=pygame.BLEND_RGBA_MULT)
+            surface.blit(img, rect, special_flags=pygame.BLEND_RGB_ADD)
+            return
         if alpha < 1.0:
             img = img.copy()
             img.set_alpha(int(alpha * 255))

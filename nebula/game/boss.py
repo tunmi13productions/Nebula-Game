@@ -58,6 +58,10 @@ class Boss(Node):
         self.laser_active = False
         self.step = 0               # atualShootPoint
         self.data = data
+        # its picture: Boss_NN as a child sprite at the texture's own size (visual only)
+        self.sprite = Node(name='bossSprite', size=self.size)
+        self.sprite.texture = 'Boss_%02d' % boss_code
+        self.add_child(self.sprite)
         x, y, duration = data['entrance']
         self.run(A.move_to(x, y, duration), completion=self._arrived)
 
@@ -101,6 +105,7 @@ class Boss(Node):
         w = self.game.size[0]
         bullet = Shot(self, (w / 12.0, w / 12.0))
         bullet.texture = looks.FIREBALL[2]   # a colour is set, but with no blend factor it doesn't show
+        bullet.blend_mode, bullet.z = 'add', -1.0
         bullet.run(A.repeat_forever(A.animate_with_textures(looks.FIREBALL, looks.BOSS_BULLET_FRAME)))
         attach(bullet, Body(Circle(5.0), category=CAT_ENEMY_SHOT, contact=CAT_PLAYER | CAT_PLAYER_SHOT, collision=CAT_ENEMY_SHOT))
         bullet.position = (x, y)
@@ -174,6 +179,11 @@ class Boss(Node):
         self.remove_all_actions()
         self.remove_all_children()
         attach(self, None)
+        # its picture: three times its size, the Explosion02 frames at 0.032 seconds each
+        boom = Node(name='explosion', size=(self.size[0] * 3, self.size[1] * 3))
+        boom.texture = looks.EXPLOSION_1[0]
+        boom.run(A.animate_with_textures(looks.EXPLOSION_1, looks.EXPLOSION_FRAME))
+        self.add_child(boom)
         self.run(A.sequence([A.play_sound(lambda: fx.play('explosion_1.caf')), A.wait(EXPLOSION_GAPS[0]),
                              A.play_sound(lambda: fx.play('Explosion_.mp3')), A.wait(EXPLOSION_GAPS[1]),
                              A.play_sound(lambda: fx.play('explosion.mp3')),
