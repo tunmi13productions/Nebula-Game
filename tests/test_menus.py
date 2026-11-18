@@ -117,14 +117,15 @@ def test_tutorial_selection_lists_the_six_tutorials_and_back():
     assert isinstance(screen, TutorialSelectionScreen)
     for _ in range(7):
         screen.menu_next()
-    assert said(services)[-7:] == ['MOVEMENT, button', 'ENEMIES, button', 'ATTACK, button', 'BATTLE, button',
-                                   'BASIC, button', 'SPECIAL, button', 'BACK, button']
+    assert said(services)[-7:] == ['BACK, button', 'MOVEMENT, button', 'ENEMIES, button', 'ATTACK, button',
+                                   'BATTLE, button', 'BASIC, button', 'SPECIAL, button']
 
 
 def test_choosing_a_tutorial_loads_it_and_select_tutorial_comes_back():
     from nebula.game.tutorial import TutorialScene
     app, window, services = open_tutorials()
     screen = window.scene
+    screen.menu_next()
     screen.menu_next()
     screen.menu_activate()
     window.run(2.1)

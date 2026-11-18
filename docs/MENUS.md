@@ -22,7 +22,7 @@ Recovered from the view controllers, `CampaignScene`, `CutScene`, `BaseScene` me
 
 ## Tutorial selection (`TutorialSelectionViewController`)
 
-- Six buttons with the tutorial names as accessibility labels (`tut_movimento`, `tut_inimigo`, `tut_ataque`, `tut_batalha`, `tut_basico`, `tut_especial`: MOVEMENT, ENEMIES, ATTACK, BATTLE, BASIC, SPECIAL), tags 1 to 6, then BACK (`info_voltar`).
+- BACK (`info_voltar`), a button across the top (frame 0, 0, width, height / 7), so VoiceOver reads it first. Then six buttons with the tutorial names as accessibility labels (`tut_movimento`, `tut_inimigo`, `tut_ataque`, `tut_batalha`, `tut_basico`, `tut_especial`: MOVEMENT, ENEMIES, ATTACK, BATTLE, BASIC, SPECIAL), tags 1 to 6.
 - `tutorialSelected:` plays no accept sound. The loading view fades in over 2 seconds, then the game voice says "Loading" and the game view controller starts that tutorial.
 - On viewDidLoad, if `primeiraVez` isn't 1, the screen selects a tutorial by itself and sets `primeiraVez` to 1: the movement tutorial with VoiceOver running, the basic one without.
 - Back: `acceptButton.mp3`, the doors close over 1 second, then the screen is popped.
