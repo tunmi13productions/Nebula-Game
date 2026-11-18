@@ -169,7 +169,7 @@ def test_laser_sound_is_centred_inside_the_danger_zone_and_pans_from_its_edge():
     services = Services.silent('en')
     scene = FreeModeScene(services)
     px = scene.player.position[0]
-    reach = scene.player.ship_size[0] * 0.5 * scene.player.scale + scene.size[0] / 100.0
+    reach = (scene.player.ship_size[0] * 0.5 * scene.player.scale + scene.size[0] / 100.0) * 1.5
     ship = SpaceShip.enemy(3, scene, entrance=False)
     scene.add_child(ship)
     source = LaserSoundSource(ship)

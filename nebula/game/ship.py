@@ -62,7 +62,9 @@ class LaserSoundSource:
     The original linked them to the laser ship, a single point, while the beam hits anywhere within the
     player's hitbox half-width plus the beam's half-width of the beam's column. Here the sound sits at the
     player's own x while the player is inside that zone, so it's heard straight ahead, and otherwise at the
-    distance past the zone's edge, so it starts to pan only once the player is clear. Aureal reads
+    distance past the zone's edge, so it starts to pan only once the player is clear. The zone is the real
+    hit range times services.laser_zone (1.5 by default, the "laser_zone" setting), since even a little past
+    the edge the cube-root pan already sounds clearly to one side. Aureal reads
     `position` and `parent` from it as from a node.
     """
 
@@ -79,7 +81,7 @@ class LaserSoundSource:
         column = x + self.column_offset
         game = self.source.game
         player = game.player
-        reach = player.ship_size[0] * 0.5 * player.scale + game.size[0] / 100.0
+        reach = (player.ship_size[0] * 0.5 * player.scale + game.size[0] / 100.0) * game.services.laser_zone
         px = player.position[0]
         d = column - px
         if abs(d) <= reach:
