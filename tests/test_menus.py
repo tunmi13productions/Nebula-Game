@@ -94,3 +94,59 @@ def test_free_mode_loads_after_two_seconds_and_returns_to_the_menu():
     window.scene.on_menu()
     assert window.scene is menu
     assert said(services)[-1] == 'Campaign, button'
+
+
+# tutorial selection
+
+
+def open_tutorials(first_visit=False):
+    app, window, services = at_main_menu()
+    if not first_visit:
+        services.save.set_integer('primeiraVez', 1)
+    menu = window.scene
+    menu.menu_next()
+    menu.menu_next()
+    menu.menu_activate()
+    return app, window, services
+
+
+def test_tutorial_selection_lists_the_six_tutorials_and_back():
+    from nebula.menus.tutorial_selection import TutorialSelectionScreen
+    app, window, services = open_tutorials()
+    screen = window.scene
+    assert isinstance(screen, TutorialSelectionScreen)
+    for _ in range(7):
+        screen.menu_next()
+    assert said(services)[-7:] == ['MOVEMENT, button', 'ENEMIES, button', 'ATTACK, button', 'BATTLE, button',
+                                   'BASIC, button', 'SPECIAL, button', 'BACK, button']
+
+
+def test_choosing_a_tutorial_loads_it_and_select_tutorial_comes_back():
+    from nebula.game.tutorial import TutorialScene
+    app, window, services = open_tutorials()
+    screen = window.scene
+    screen.menu_next()
+    screen.menu_activate()
+    window.run(2.1)
+    assert isinstance(window.scene, TutorialScene) and window.scene.tutorial_type == 2
+    window.scene.on_next()
+    assert window.scene.tutorial_type == 3 and services.save.get('tutorial') == '3'
+    window.scene.on_select()
+    assert window.scene is screen
+
+
+def test_the_first_visit_starts_the_movement_tutorial():
+    from nebula.game.tutorial import TutorialScene
+    app, window, services = open_tutorials(first_visit=True)
+    assert services.save.get('primeiraVez') == 1
+    window.run(2.1)
+    assert isinstance(window.scene, TutorialScene) and window.scene.tutorial_type == 1
+
+
+def test_back_closes_the_doors_then_returns_to_the_main_menu():
+    app, window, services = open_tutorials()
+    window.scene.handle_key('escape')
+    window.run(0.9)
+    assert not isinstance(window.scene, MainMenuScreen)
+    window.run(0.2)
+    assert isinstance(window.scene, MainMenuScreen)

@@ -20,6 +20,14 @@ Recovered from the view controllers, `CampaignScene`, `CutScene`, `BaseScene` me
 - Music: `Global.mainMenuMusic` is played on viewDidAppear and stopped by gameplay scenes, but nothing ever creates that player (setMainMenuMusic: has no caller and the `menuSound` string has no reference). So the menu is silent apart from the doors, and `menuSound.mp3` is unused.
 - First launch: `alertViewTutorial` ("Welcome, beginner!", "For a better game experience, consider playing the basic tutorial.", "Go to tutorial", "Cancel") is never called. Instead the tutorial selection screen starts the movement tutorial on its first visit (see below).
 
+## Tutorial selection (`TutorialSelectionViewController`)
+
+- Six buttons with the tutorial names as accessibility labels (`tut_movimento`, `tut_inimigo`, `tut_ataque`, `tut_batalha`, `tut_basico`, `tut_especial`: MOVEMENT, ENEMIES, ATTACK, BATTLE, BASIC, SPECIAL), tags 1 to 6, then BACK (`info_voltar`).
+- `tutorialSelected:` plays no accept sound. The loading view fades in over 2 seconds, then the game voice says "Loading" and the game view controller starts that tutorial.
+- On viewDidLoad, if `primeiraVez` isn't 1, the screen selects a tutorial by itself and sets `primeiraVez` to 1: the movement tutorial with VoiceOver running, the basic one without.
+- Back: `acceptButton.mp3`, the doors close over 1 second, then the screen is popped.
+- "Next tutorial" (proximoTutorial) stores the new tutorial number as a string under the `tutorial` key.
+
 ## Campaign selector (`CampaignScene`, a SpriteKit menu)
 
 - It shows one chapter at a time: "Chapter %ld: %@" (`cap_seletor`), with the chapter title from `capN_title` and Roman numerals from the `Capitulo` class. Below that are four level buttons labelled "Level %ld: %@" (`cap_fase`, with the level names from `capN_lvlM`) and a back button "Back" (`cap_sair`).

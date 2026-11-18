@@ -7,8 +7,10 @@ returning to whichever screen opened it. Here self.stack holds the UIKit-style s
 shown on top of the last one and leaving it shows that screen again.
 """
 from .game.free_mode import FreeModeScene
+from .game.tutorial import TutorialScene
 from .menus.intro import IntroScreen
 from .menus.main_menu import MainMenuScreen
+from .menus.tutorial_selection import TutorialSelectionScreen
 
 
 class App:
@@ -48,7 +50,18 @@ class App:
                                             on_new_game=self.open_free_mode))
 
     def open_tutorial_selection(self):
-        pass
+        self.push(TutorialSelectionScreen(self))
+
+    def start_tutorial(self, n):
+        self.window.set_scene(TutorialScene(self.services, self.tilt, n, on_select=self.back_to_screen,
+                                            on_next=lambda: self.next_tutorial(n)))
+
+    def next_tutorial(self, n):
+        """proximoTutorial: the next section, remembered under the "tutorial" key."""
+        save = self.services.save
+        save.set('tutorial', '%d' % (n + 1))
+        save.synchronize()
+        self.start_tutorial(n + 1)
 
     def open_hangar(self):
         pass
