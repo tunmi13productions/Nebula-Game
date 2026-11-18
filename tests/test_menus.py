@@ -29,7 +29,8 @@ class Window:
 def make_app():
     services = Services.silent('en')
     window = Window(services)
-    app = App(window, services, None)
+    app = App(window, services, None, open_url=lambda url: opened.append(url))
+    app.opened = opened = []
     return app, window, services
 
 
@@ -330,3 +331,54 @@ def test_hangar_after_a_new_chapter_returns_to_the_campaign():
     window.scene.did_swipe_up()
     window.run(4.0)
     assert isinstance(window.scene, MainMenuScreen)
+
+
+# About
+
+
+def open_about():
+    from nebula.menus.about import AboutScreen
+    app, window, services = at_main_menu()
+    for _ in range(4):
+        window.scene.menu_next()
+    window.scene.menu_activate()
+    assert isinstance(window.scene, AboutScreen)
+    return app, window, services
+
+
+def test_about_reads_its_elements_in_screen_order():
+    app, window, services = open_about()
+    for _ in range(6):
+        window.scene.menu_next()
+    assert said(services)[-6:] == ['BACK, button', 'About', 'CREDITS, button', 'OUR PAGE, button',
+                                   'SEND EMAIL, button', 'GRAY COMPANY © All Rights Reserved']
+
+
+def test_credits_swap_in_and_their_sources_open():
+    app, window, services = open_about()
+    screen = window.scene
+    screen.menu_next()
+    screen.menu_next()
+    screen.menu_activate()
+    for _ in range(9):
+        screen.menu_next()
+    assert said(services)[-9:] == [' DEVELOPERS', 'Bruno Moreira', 'Diego Pereira', 'Felipe Delazeri',
+                                   'Leonardo Gubert', 'Lucas Carletti', ' SOUND DESIGN', 'FreeSFX, button',
+                                   'OpenGameArt, button']
+    screen.menu_activate()
+    assert app.opened == ['http://opengameart.org']
+    for _ in range(20):
+        screen.menu_next()
+    assert said(services)[-2:] == ['Ricardo Rauber', 'GRAY COMPANY © All Rights Reserved']
+
+
+def test_page_and_mail_open_with_the_system():
+    app, window, services = open_about()
+    screen = window.scene
+    for _ in range(3):
+        screen.menu_next()
+    screen.menu_activate()
+    screen.menu_next()
+    screen.menu_activate()
+    assert app.opened == ['http://www.graycompany.com.br',
+                          'mailto:contato@graycompany.com.br?subject=Gray%20Co.%20-%20Nebula']

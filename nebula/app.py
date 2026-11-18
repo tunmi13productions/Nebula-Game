@@ -6,9 +6,12 @@ shows the campaign selector, free mode or a tutorial). backMenuController popped
 returning to whichever screen opened it. Here self.stack holds the UIKit-style screens; a game scene is
 shown on top of the last one and leaving it shows that screen again.
 """
+import webbrowser
+
 from .game.chapters import CHAPTERS
 from .game.free_mode import FreeModeScene
 from .game.tutorial import TutorialScene
+from .menus.about import AboutScreen
 from .menus.campaign import CampaignSelectScene
 from .menus.hangar import HangarScreen
 from .menus.intro import IntroScreen
@@ -17,8 +20,10 @@ from .menus.tutorial_selection import TutorialSelectionScreen
 
 
 class App:
-    def __init__(self, window, services, tilt):
+    def __init__(self, window, services, tilt, open_url=webbrowser.open):
+        """open_url opens a web page or a mailto: link with the system's default program."""
         self.window, self.services, self.tilt = window, services, tilt
+        self.open_url = open_url
         self.stack = []
 
     def start(self):
@@ -103,4 +108,4 @@ class App:
         self.push(HangarScreen(self, return_to))
 
     def open_about(self):
-        pass
+        self.push(AboutScreen(self))

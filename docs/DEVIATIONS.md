@@ -87,3 +87,16 @@ Each entry is a settled decision. Don't change a deviated behaviour unless the u
 - Original: in chapter 7 stage 1 (Search), when the last medium ship (code 34) in the scene died with fewer than 5 mediums spawned, a new medium spawned only if the player's life was above 4, plus a life power-up when 4 mediums had spawned. With life 4 or less, only a life power-up dropped and no medium spawned. Small ships spawn a medium only once, so the medium count could stay below 4 forever and the stage could never be won. With no life upgrades the maximum life is 5, so a single hit before that kill was enough. The check reads "life < 5 and medium > 4", which can never be true inside a branch that already requires fewer than 5 mediums, so it was most likely a mistake.
 - Changed: the medium always respawns. When the player's life is 4 or less, the life power-up still drops as before, and at full life the 4th medium still drops one. Everything else in the stage is unchanged.
 - Reason: the original could leave the player stuck in an unwinnable stage with no way out except leaving. Decided by the user on 2026-11-17.
+
+## The About screen's mail and links open with the default Windows programs
+
+- Original: SEND EMAIL opened the in-app mail composer (MFMailComposeViewController) to contato@graycompany.com.br with the subject "Gray Co. - Nebula", and was disabled when the device couldn't send mail. OUR PAGE and the credit links opened their pages in Safari.
+- Changed: SEND EMAIL opens a mailto: link with the same address and subject in the default mail program, and is always enabled. The pages open in the default browser.
+- Reason: Windows has no in-app mail composer, and there is no reliable way to know whether a mail program is set up.
+
+## Garbled characters in the English About screen are restored
+
+- Original: the English build shows U+FFFD (the replacement character) in "Márcia Campos", "Raí Carvalho" and the copyright sign of "GRAY COMPANY © All Rights Reserved", because the source files were saved in a legacy encoding.
+- Changed: the characters are restored as the Portuguese strings have them: Márcia, Raí and ©.
+- Reason: a screen reader would read the replacement character aloud or skip it, garbling the names.
+

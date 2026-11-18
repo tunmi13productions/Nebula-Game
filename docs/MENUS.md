@@ -84,7 +84,13 @@ All of these use the menu navigation described in NOTES (with VoiceOver: swipe t
 
 ## Info screen (`InfoViewController`)
 
-- Sections: "About", "CREDITS" (developers, sound design: FreeSFX, SoundJay, MillionthVector; graphic design; revision), "CONTACT US" with "SEND EMAIL" (contato@graycompany.com.br, subject "Gray Co. - Nebula") and "OUR PAGE". Copyright "GRAY COMPANY (C) All Rights Reserved", and "Version 1.0" (`info_versao`, even though the bundle is 1.3).
+- Accessibility elements, top to bottom: BACK (`info_voltar`, across the top), an invisible label "About" (`info_sobre`) laid over the about image (the about text is drawn as an image, `sobre`), CREDITS (`info_credito`), OUR PAGE (`contato_pagina`), SEND EMAIL (`contato_email`), and the copyright label "GRAY COMPANY (C) All Rights Reserved" (`info_gray`). "Version 1.0" (`info_versao`) isn't used.
+- SEND EMAIL (`sendMailAction:`) opens the mail composer to contato@graycompany.com.br with the subject "Gray Co. - Nebula". It's disabled when `canSendMail` is NO. OUR PAGE (`paginaAction:`) opens http://www.graycompany.com.br.
+- CREDITS (`creditosPressed`) swaps the about part for a credits table and back. While the table shows, the about images are hidden, the "About" label leaves the accessibility order, and OUR PAGE and SEND EMAIL are disabled and taken out of the order. The CREDITS button stays and closes the table again.
+- The table has 18 rows, from an array in viewDidLoad: " DEVELOPERS" (`cred_devs`), Bruno Moreira, Diego Pereira, Felipe Delazeri, Leonardo Gubert, Lucas Carletti, " SOUND DESIGN" (`cred_sounds`), FreeSFX, OpenGameArt, SoundJay, " GRAPHIC DESIGN" (`cred_design`), OpenGameArt, MillionthVector, " REVISION" (`cred_teste`), Marcia Campos, Lucas Santurio, Rai Carvalho, Ricardo Rauber. Rows starting with a space are headers. Rows 7, 8, 9, 11 and 12 are buttons labelled with the name that open the source's site (`buttonListAction:`): FreeSFX http://www.freesfx.co.uk/, OpenGameArt http://opengameart.org, SoundJay http://www.soundjay.com/, MillionthVector http://millionthvector.blogspot.de. The other rows are plain accessible text.
+- In the English build, "Marcia", "Rai" and the copyright sign hold U+FFFD (the source files were saved in a legacy encoding). The Portuguese strings have them right: Márcia, Raí and ©.
+- The credits name "Felipe Delazeri" differs from the chapter 9 credits text, which says "Felipe Riffel". Both are kept as they are.
+- Back: the accept sound, the doors close over 1 second, then the screen is popped.
 - The chapter 9 ending runs fast credits and speaks `credits_voice`.
 
 ## Chapter intro cutscenes (`CutScene`)
