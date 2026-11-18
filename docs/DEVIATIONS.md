@@ -92,11 +92,11 @@ Each entry is a settled decision. Don't change a deviated behaviour unless the u
 
 - Original: SEND EMAIL opened the in-app mail composer (MFMailComposeViewController) to contato@graycompany.com.br with the subject "Gray Co. - Nebula", and was disabled when the device couldn't send mail. OUR PAGE and the credit links opened their pages in Safari.
 - Changed: SEND EMAIL opens a mailto: link with the same address and subject in the default mail program, and is always enabled. The pages open in the default browser.
-- Reason: Windows has no in-app mail composer, and there is no reliable way to know whether a mail program is set up.
+- Reason: Windows has no in-app mail composer, and there is no reliable way to know whether a mail program is set up. Decided by the user on 2026-11-18.
 
 ## Garbled characters in the English About screen are restored
 
 - Original: the English build shows U+FFFD (the replacement character) in "Márcia Campos", "Raí Carvalho" and the copyright sign of "GRAY COMPANY © All Rights Reserved", because the source files were saved in a legacy encoding.
 - Changed: the characters are restored as the Portuguese strings have them: Márcia, Raí and ©.
-- Reason: a screen reader would read the replacement character aloud or skip it, garbling the names.
+- Reason: a screen reader would read the replacement character aloud or skip it, garbling the names. Decided by the user on 2026-11-18.
 
