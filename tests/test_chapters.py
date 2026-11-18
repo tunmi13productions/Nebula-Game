@@ -8,6 +8,7 @@ import pytest
 
 from nebula.game import rand
 from nebula.game.chapters import CHAPTERS
+from nebula.game.powerups import LIFE
 from nebula.game.services import Services
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -51,12 +52,22 @@ def oracles():
     return {c: Oracle(BINARY, c) for c in CHAPTERS}
 
 
+def apply_deviations(chapter, stage, code, life, want, after):
+    """Adjusts the original's outcome for the documented deviations in docs/DEVIATIONS.md."""
+    if (chapter, stage, code) == (7, 1, 34) and life <= 4 and want == [('powerup', LIFE)]:
+        # "Chapter 7 stage 1 softlock is fixed": the medium respawns even when the player is hurt.
+        want.append(('spawn', 34))
+        after['mediumEnemy'] += 1
+        after['mediumEnemyInScene'] += 1
+
+
 def kill_both(oracle, scene, log, code, seed):
     state = state_of(scene)
     ro, rp = random.Random(seed), random.Random(seed)
     oracle.t.rand_source = lambda: ro.getrandbits(32)
     want, after = oracle.kill(scene.stage_number, code, state, life=scene.player.life)
     want = [e for e in want if e[0] in ('spawn', 'powerup', 'call')]
+    apply_deviations(scene.CHAPTER, scene.stage_number, code, scene.player.life, want, after)
     del log[:]
     saved = rand.arc4random
     rand.arc4random = lambda: rp.getrandbits(32)
@@ -274,6 +285,27 @@ def test_chapter6_loses_on_the_fifth_ally():
     assert not ended
     scene.destroy_enemy(38)
     assert ended
+
+
+# chapter 7
+
+
+def test_chapter7_stage1_can_be_won_when_hurt():
+    """The original softlocked here (see docs/DEVIATIONS.md): with life 4 or less, no medium ever respawned."""
+    scene, services = make(7, 1)
+    log = recorder(scene)
+    scene.say = lambda key, pre=0.0, post=0.0, then=None: then and then()
+    scene.player.life = 3
+    scene.next_stage()
+    alive = [code for kind, code in log if kind == 'spawn']
+    for _ in range(200):
+        if any(kind == 'call' for kind, _ in log) or not alive:
+            break
+        code = alive.pop(0)
+        del log[:]
+        scene.destroy_enemy(code)
+        alive += [c for kind, c in log if kind == 'spawn']
+    assert ('call', 'defaultVictoriousAnimation') in log
 
 
 # chapter 9

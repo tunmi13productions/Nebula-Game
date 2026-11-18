@@ -794,14 +794,14 @@ class Chapter7Scene(ChapterScene):
         elif st == 1:
             if code == 34:
                 if self._dec('medium_in') <= 1 and self.medium < 5:
-                    # The original's condition reads "life < 5 and medium > 4", which can't hold here, so a
-                    # medium only respawns while the player's life is above 4.
+                    # Deviation (docs/DEVIATIONS.md, "Chapter 7 stage 1 softlock is fixed"): the original only
+                    # respawned the medium while life was above 4, which could leave the stage unwinnable.
                     if self.player.life > 4:
                         if self.medium == 4:
                             self.release_power_up(LIFE)
-                        self.create('medium1')
                     else:
                         self.release_power_up(LIFE)
+                    self.create('medium1')
             elif code == 36:
                 if self._dec('small_in') <= 1 and self.small < 8:
                     if self.small == 1:
