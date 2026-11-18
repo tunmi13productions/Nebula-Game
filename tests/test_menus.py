@@ -416,3 +416,24 @@ def test_credits_swap_in_and_their_sources_open():
     for _ in range(20):
         screen.menu_next()
     assert said(services)[-2:] == ['Ricardo Rauber', 'GRAY COMPANY © All Rights Reserved']
+
+
+def test_campaign_keys_during_a_chapter_slide_finish_it_and_act():
+    app, window, services, spoken = campaign(3, 1)
+    scene = window.scene
+    scene.handle_key('left')
+    window.run(0.3)
+    scene.menu_next()                       # finishes the slide, then moves to Back
+    assert scene.chapter == 2 and scene.selection == 1
+    scene.menu_activate()
+    window.run(4.0)
+    assert isinstance(window.scene, MainMenuScreen)
+
+
+def test_campaign_escape_during_a_slide_leaves():
+    app, window, services, spoken = campaign(3, 1)
+    window.scene.handle_key('left')
+    window.run(0.3)
+    window.scene.handle_key('escape')
+    window.run(4.0)
+    assert isinstance(window.scene, MainMenuScreen)

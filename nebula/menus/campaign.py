@@ -41,6 +41,8 @@ class CampaignSelectScene:
         self.selection = 0
         self.swiping = False
         self.reading = False      # an item is being spoken and input waits for it (interruptible here)
+        self.pending = None       # the timer of a chapter slide or an error hold still locking input
+        self.swiping_from_slide = False
         self.started = False
 
     # what the window calls
@@ -96,11 +98,20 @@ class CampaignSelectScene:
         self.double_tap_detected()
 
     def _interrupt(self):
-        """Cuts off an item still being read, so the next key acts at once (a deviation)."""
+        """Cuts off what's still locking input, so the next key acts at once (a deviation): an item being read
+        is silenced, a chapter slide finishes now (quietly, since the key that interrupts it speaks), and the
+        short hold after the end-of-list sound ends."""
         if self.reading:
             self.services.voice.stop()
             self.reading = False
             self.swiping = False
+        timer, self.pending = self.pending, None
+        if timer is not None and timer.valid:
+            timer.invalidate()
+            timer.fn()
+            if self.swiping_from_slide:
+                self.services.voice.stop()
+        self.swiping_from_slide = False
 
     # text
 
@@ -145,7 +156,7 @@ class CampaignSelectScene:
 
     def _error(self):
         self.services.effects.play('errorButton.mp3')
-        self.services.scheduler.after(ERROR_HOLD, self._done)
+        self.pending = self.services.scheduler.after(ERROR_HOLD, self._done)
 
     def _speak_item(self):
         self.reading = True
@@ -198,7 +209,8 @@ class CampaignSelectScene:
         last = self.services.globals.last_chapter
         if self.chapter < CHAPTERS and self.chapter < last:
             self.chapter += 1
-            self.services.scheduler.after(SLIDE, self._slid_in)
+            self.pending = self.services.scheduler.after(SLIDE, self._slid_in)
+            self.swiping_from_slide = True
         if self.chapter >= last and self.chapter + 1 <= CHAPTERS:
             self.services.voice.speak(self.strings().get('cap_Block'), RATE)
         self.swiping = False
@@ -209,7 +221,8 @@ class CampaignSelectScene:
             self.swiping = False
             return
         self.chapter -= 1
-        self.services.scheduler.after(SLIDE, self._slid_in)
+        self.pending = self.services.scheduler.after(SLIDE, self._slid_in)
+        self.swiping_from_slide = True
 
     # activating
 
