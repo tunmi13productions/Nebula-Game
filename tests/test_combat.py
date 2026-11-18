@@ -160,3 +160,21 @@ def test_death_stops_movement_and_ends_the_stage_after_a_delay():
     assert not scene.allow_move and scene.ended == []
     run(scene, services, 1.6)
     assert len(scene.ended) == 1 and not scene.is_active
+
+
+def test_laser_sound_is_centred_inside_the_danger_zone_and_pans_from_its_edge():
+    from nebula.game.free_mode import FreeModeScene
+    from nebula.game.services import Services
+    from nebula.game.ship import LaserSoundSource, SpaceShip
+    services = Services.silent('en')
+    scene = FreeModeScene(services)
+    px = scene.player.position[0]
+    reach = scene.player.ship_size[0] * 0.5 * scene.player.scale + scene.size[0] / 100.0
+    ship = SpaceShip.enemy(3, scene, entrance=False)
+    scene.add_child(ship)
+    source = LaserSoundSource(ship)
+    ship.position = (px + reach - 1, 480.0)
+    assert source.position == (px, 480.0)
+    ship.position = (px - reach - 10, 480.0)
+    assert abs(source.position[0] - (px - 10)) < 1e-9
+    assert source.parent is scene

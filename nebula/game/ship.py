@@ -56,6 +56,37 @@ def burst_and_remove(node, frames, textures=None):
         node.run(A.animate_with_textures(textures, BURST_FRAME))
 
 
+class LaserSoundSource:
+    """Where a laser's charge and firing sounds are heard from (a deviation, see DEVIATIONS.md).
+
+    The original linked them to the laser ship, a single point, while the beam hits anywhere within the
+    player's hitbox half-width plus the beam's half-width of the beam's column. Here the sound sits at the
+    player's own x while the player is inside that zone, so it's heard straight ahead, and otherwise at the
+    distance past the zone's edge, so it starts to pan only once the player is clear. Aureal reads
+    `position` and `parent` from it as from a node.
+    """
+
+    def __init__(self, source, column_offset=0.0):
+        self.source, self.column_offset = source, column_offset
+
+    @property
+    def parent(self):
+        return self.source.parent
+
+    @property
+    def position(self):
+        x, y = self.source.position
+        column = x + self.column_offset
+        game = self.source.game
+        player = game.player
+        reach = player.ship_size[0] * 0.5 * player.scale + game.size[0] / 100.0
+        px = player.position[0]
+        d = column - px
+        if abs(d) <= reach:
+            return (px, y)
+        return (px + d - reach if d > 0 else px + d + reach, y)
+
+
 class Shot(Node):
     """Shoot: a bullet that remembers which ship fired it."""
 
@@ -403,7 +434,7 @@ class SpaceShip(Node):
         keys = {}
 
         def charge():
-            keys['sound'] = self.play_linked('Laser_Charge', 'caf', self)
+            keys['sound'] = self.play_linked('Laser_Charge', 'caf', LaserSoundSource(self))
 
         def glow():
             """The charging glow: one of the four MyParticle emitters, picked with arc4random() % 4 (this
@@ -418,7 +449,7 @@ class SpaceShip(Node):
             self.game.add_child(em)
 
         def fire():
-            keys['sound'] = self.play_linked('Laser_Firing', 'mp3', self)
+            keys['sound'] = self.play_linked('Laser_Firing', 'mp3', LaserSoundSource(self))
 
         def stream():
             """The beam's look: the particles pour down."""

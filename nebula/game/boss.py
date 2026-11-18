@@ -13,7 +13,8 @@ from ..engine.particles import Emitter
 from ..engine.physics import Body, Circle, Polygon, attach, rectangle
 from . import looks
 from .rand import arc4random, between
-from .ship import CAT_ENEMY, CAT_ENEMY_SHOT, CAT_LASER, CAT_OBSTACLE, CAT_PLAYER, CAT_PLAYER_SHOT, Shot
+from .ship import (CAT_ENEMY, CAT_ENEMY_SHOT, CAT_LASER, CAT_OBSTACLE, CAT_PLAYER, CAT_PLAYER_SHOT, LaserSoundSource,
+                   Shot)
 
 BOSS_CODE = 100            # what Boss getShipCode reports to destroyEnemy:
 SHOT_FLIGHT = 1.5
@@ -144,7 +145,7 @@ class Boss(Node):
         bh = self.size[1]
 
         def charge():
-            keys['sound'] = self._play_linked('Laser_Charge', 'caf', self)
+            keys['sound'] = self._play_linked('Laser_Charge', 'caf', LaserSoundSource(self, dx))
 
         def glow():
             """The beam's look: MyParticle as a child of the boss at the gun, red-tinted, slow while charging
@@ -158,7 +159,7 @@ class Boss(Node):
             self.add_child(em)
 
         def fire():
-            keys['sound'] = self._play_linked('Laser_Firing', 'mp3', self)
+            keys['sound'] = self._play_linked('Laser_Firing', 'mp3', LaserSoundSource(self, dx))
             keys['emitter'].set(birth_rate=150.0, lifetime=2.0)
 
         def stop_stream():
