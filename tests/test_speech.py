@@ -104,7 +104,7 @@ def test_plain_speak_does_not_cancel_a_pending_completion():
 
 
 def test_prism_renders_to_memory_without_playing():
-    prism = pytest.importorskip('prism')
+    pytest.importorskip('prism')
     from nebula.speech.speech import PrismRenderer
     try:
         r = PrismRenderer('en')

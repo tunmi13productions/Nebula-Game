@@ -1,5 +1,3 @@
-import math
-
 import pytest
 
 from nebula.engine import actions as A

@@ -112,7 +112,7 @@ def test_rock_falls_and_reports_code_90_when_it_leaves():
 def test_fuel_tank_explodes_at_the_bottom_and_reports_itself():
     scene, services = make()
     scene.player.physics = None
-    tank = scene.create_enemy_with_type(46)
+    scene.create_enemy_with_type(46)
     run(scene, services, 11.0)
     assert scene.destroyed == [46]
     assert any(st['path'].endswith(('explosion_1.caf', 'Explosion_.mp3', 'explosion.mp3')) for st in services.audio.state.values())

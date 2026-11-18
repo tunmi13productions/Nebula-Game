@@ -2,9 +2,9 @@ import random
 
 import pytest
 
-from nebula.game.base_scene import BaseScene, H, W
+from nebula.game.base_scene import BaseScene, H
 from nebula.game.services import Services
-from nebula.game.ship import Shot, SpaceShip
+from nebula.game.ship import SpaceShip
 from nebula.input import KeyboardTilt
 
 FRAME = 1 / 60
@@ -74,7 +74,6 @@ def test_enemy_bullet_hits_the_player_with_sound_and_speech():
     scene, services, keys = make()
     enemy = target(scene, code=9)
     bullet = enemy.fire_bullet()
-    key = services.aureal.next_key()
     assert any(s.linked is bullet for s in services.aureal.library.values())
     run(scene, services, 1.5)
     assert 'player_hit.caf' in services.effects.played

@@ -1,7 +1,5 @@
 import os
 
-import pytest
-
 from nebula.strings import LANGUAGES, Strings, choose_language, objc_format, windows_language
 
 

@@ -1,6 +1,6 @@
 import pytest
 
-from nebula.game.base_scene import BaseScene, H, LEFT, RIGHT, STOPPED, W
+from nebula.game.base_scene import BaseScene, H, RIGHT, STOPPED, W
 from nebula.game.services import Services
 from nebula.input import KeyboardTilt
 
