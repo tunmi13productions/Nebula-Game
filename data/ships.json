@@ -1,0 +1,458 @@
+{
+ "0": {
+  "life": 2,
+  "score": 10,
+  "fire_interval": 2.0,
+  "move_interval": 0.9,
+  "damage": 1,
+  "laser": false
+ },
+ "1": {
+  "life": 3,
+  "score": 12,
+  "fire_interval": 1.3,
+  "move_interval": 1.0,
+  "damage": 1,
+  "laser": false
+ },
+ "2": {
+  "life": 5,
+  "score": 12,
+  "fire_interval": 2.0,
+  "move_interval": 1.0,
+  "damage": 1,
+  "laser": false
+ },
+ "3": {
+  "life": 30,
+  "score": 25,
+  "fire_interval": 1.2,
+  "move_interval": 1.0,
+  "damage": 1,
+  "laser": true
+ },
+ "4": {
+  "life": 20,
+  "score": 50,
+  "fire_interval": 1.2,
+  "move_interval": 0.8,
+  "damage": 3,
+  "laser": false
+ },
+ "5": {
+  "life": 80,
+  "score": 55,
+  "fire_interval": 1.2,
+  "move_interval": 1.0,
+  "damage": 3,
+  "laser": true
+ },
+ "6": {
+  "life": 25,
+  "score": 30,
+  "fire_interval": 1.5,
+  "move_interval": 3.0,
+  "damage": 5,
+  "laser": false
+ },
+ "7": {
+  "life": 7,
+  "score": 25,
+  "fire_interval": 1.2,
+  "move_interval": 1.0,
+  "damage": 1,
+  "laser": true
+ },
+ "8": {
+  "life": 13,
+  "score": 17,
+  "fire_interval": 1.5,
+  "move_interval": 1.0,
+  "damage": 1,
+  "laser": true
+ },
+ "9": {
+  "life": 12,
+  "score": 35,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 1,
+  "laser": false
+ },
+ "10": {
+  "life": 13,
+  "score": 17,
+  "fire_interval": 1.5,
+  "move_interval": 1.0,
+  "damage": 1,
+  "laser": false
+ },
+ "11": {
+  "life": 15,
+  "score": 40,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 1,
+  "laser": false
+ },
+ "12": {
+  "life": 18,
+  "score": 35,
+  "fire_interval": 0.8,
+  "move_interval": 0.3,
+  "damage": 2,
+  "laser": false
+ },
+ "13": {
+  "life": 46,
+  "score": 55,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 10,
+  "laser": false
+ },
+ "14": {
+  "life": 25,
+  "score": 45,
+  "fire_interval": 1.0,
+  "move_interval": 0.5,
+  "damage": 5,
+  "laser": false
+ },
+ "15": {
+  "life": 50,
+  "score": 58,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 4,
+  "laser": true
+ },
+ "16": {
+  "life": 45,
+  "score": 55,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 12,
+  "laser": false
+ },
+ "17": {
+  "life": 35,
+  "score": 50,
+  "fire_interval": 1.0,
+  "move_interval": 0.8,
+  "damage": 4,
+  "laser": false
+ },
+ "18": {
+  "life": 60,
+  "score": 80,
+  "fire_interval": 0.9,
+  "move_interval": 1.0,
+  "damage": 6,
+  "laser": false
+ },
+ "19": {
+  "life": 65,
+  "score": 70,
+  "fire_interval": 1.5,
+  "move_interval": 1.5,
+  "damage": 8,
+  "laser": false
+ },
+ "20": {
+  "life": 30,
+  "score": 29,
+  "fire_interval": 1.3,
+  "move_interval": 2.0,
+  "damage": 3,
+  "laser": false
+ },
+ "21": {
+  "life": 32,
+  "score": 75,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 2,
+  "laser": false
+ },
+ "22": {
+  "life": 6,
+  "score": 25,
+  "fire_interval": 1.0,
+  "move_interval": 0.2,
+  "damage": 2,
+  "laser": false
+ },
+ "23": {
+  "life": 35,
+  "score": 34,
+  "fire_interval": 1.3,
+  "move_interval": 1.0,
+  "damage": 2,
+  "laser": true
+ },
+ "24": {
+  "life": 35,
+  "score": 90,
+  "fire_interval": 0.8,
+  "move_interval": 1.0,
+  "damage": 3,
+  "laser": false
+ },
+ "25": {
+  "life": 90,
+  "score": 175,
+  "fire_interval": 1.8,
+  "move_interval": 1.6,
+  "damage": 8,
+  "laser": false
+ },
+ "26": {
+  "life": 42,
+  "score": 100,
+  "fire_interval": 0.7,
+  "move_interval": 1.0,
+  "damage": 3,
+  "laser": false
+ },
+ "27": {
+  "life": 70,
+  "score": 110,
+  "fire_interval": 0.6,
+  "move_interval": 1.0,
+  "damage": 4,
+  "laser": true
+ },
+ "28": {
+  "life": 40,
+  "score": 115,
+  "fire_interval": 1.0,
+  "move_interval": 0.6,
+  "damage": 2,
+  "laser": false
+ },
+ "29": {
+  "life": 55,
+  "score": 120,
+  "fire_interval": 1.2,
+  "move_interval": 1.0,
+  "damage": 4,
+  "laser": false
+ },
+ "30": {
+  "life": 57,
+  "score": 125,
+  "fire_interval": 1.5,
+  "move_interval": 1.0,
+  "damage": 4,
+  "laser": true
+ },
+ "31": {
+  "life": 60,
+  "score": 135,
+  "fire_interval": 1.6,
+  "move_interval": 2.0,
+  "damage": 8,
+  "laser": false
+ },
+ "32": {
+  "life": 58,
+  "score": 130,
+  "fire_interval": 0.8,
+  "move_interval": 1.0,
+  "damage": 6,
+  "laser": false
+ },
+ "33": {
+  "life": 63,
+  "score": 135,
+  "fire_interval": 0.7,
+  "move_interval": 1.0,
+  "damage": 6,
+  "laser": false
+ },
+ "34": {
+  "life": 65,
+  "score": 140,
+  "fire_interval": 1.0,
+  "move_interval": 1.1,
+  "damage": 4,
+  "laser": false
+ },
+ "35": {
+  "life": 70,
+  "score": 150,
+  "fire_interval": 0.7,
+  "move_interval": 1.0,
+  "damage": 6,
+  "laser": false
+ },
+ "36": {
+  "life": 75,
+  "score": 155,
+  "fire_interval": 0.7,
+  "move_interval": 1.0,
+  "damage": 5,
+  "laser": false
+ },
+ "37": {
+  "life": 1,
+  "score": -100,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 5,
+  "laser": false
+ },
+ "38": {
+  "life": 1,
+  "score": -100,
+  "fire_interval": 1.0,
+  "move_interval": 2.0,
+  "damage": 7,
+  "laser": false
+ },
+ "39": {
+  "life": 1,
+  "score": -100,
+  "fire_interval": 1.0,
+  "move_interval": 3.0,
+  "damage": 8,
+  "laser": false
+ },
+ "40": {
+  "life": 15,
+  "score": 18,
+  "fire_interval": 1.5,
+  "move_interval": 1.0,
+  "damage": 2,
+  "laser": false
+ },
+ "41": {
+  "life": 15,
+  "score": 17,
+  "fire_interval": 1.4,
+  "move_interval": 0.5,
+  "damage": 1,
+  "laser": false
+ },
+ "42": {
+  "life": 19,
+  "score": 20,
+  "fire_interval": 1.3,
+  "move_interval": 1.0,
+  "damage": 1,
+  "laser": true
+ },
+ "43": {
+  "life": 22,
+  "score": 25,
+  "fire_interval": 2.0,
+  "move_interval": 3.0,
+  "damage": 4,
+  "laser": false
+ },
+ "44": {
+  "life": 80,
+  "score": 270,
+  "fire_interval": 0.6,
+  "move_interval": 1.0,
+  "damage": 8,
+  "laser": false
+ },
+ "45": {
+  "life": 140,
+  "score": 300,
+  "fire_interval": 0.6,
+  "move_interval": 1.0,
+  "damage": 12,
+  "laser": false
+ },
+ "46": {
+  "life": 1,
+  "score": 5,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 2,
+  "laser": false
+ },
+ "47": {
+  "life": 1,
+  "score": 5,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 2,
+  "laser": false
+ },
+ "48": {
+  "life": 3,
+  "score": 10,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 3,
+  "laser": false
+ },
+ "49": {
+  "life": 4,
+  "score": 15,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 4,
+  "laser": false
+ },
+ "50": {
+  "life": 6,
+  "score": 20,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 5,
+  "laser": false
+ },
+ "100": {
+  "life": 30,
+  "score": 1000,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 1,
+  "laser": true
+ },
+ "101": {
+  "life": 30,
+  "score": 1000,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 1,
+  "laser": true
+ },
+ "102": {
+  "life": 30,
+  "score": 1000,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 1,
+  "laser": true
+ },
+ "103": {
+  "life": 50,
+  "score": 1000,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 1,
+  "laser": false
+ },
+ "104": {
+  "life": 30,
+  "score": 1000,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 1,
+  "laser": false
+ },
+ "105": {
+  "life": 30,
+  "score": 1000,
+  "fire_interval": 1.0,
+  "move_interval": 1.0,
+  "damage": 1,
+  "laser": false
+ }
+}
