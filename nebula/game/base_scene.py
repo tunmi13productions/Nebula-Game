@@ -5,6 +5,7 @@ from ..engine import actions as A
 from ..engine.nodes import Node, Scene
 from ..engine.physics import Body, Circle, PhysicsWorld, attach, rectangle
 from ..data import engine_sound
+from . import looks
 from .powerups import FAST_SHOT, LIFE, SHIELD, SPEED, PowerUp
 from .rand import between
 from .ship import (CAT_ENEMY, CAT_ENEMY_SHOT, CAT_LASER, CAT_OBSTACLE, CAT_PLAYER, CAT_PLAYER_SHOT, CAT_POWERUP,
@@ -108,6 +109,8 @@ class BaseScene(Scene):
         p = self.player
         w, h = p.ship_size
         shot = Shot(p, (w * 0.5, h * 0.2))
+        shot.texture = looks.ARRAY_POWER_1[0]
+        shot.run(A.animate_with_textures(looks.ARRAY_POWER_1, looks.PLAYER_SHOT_FRAME))
         shot.position = (p.position[0], p.position[1] * 1.2)
         attach(shot, Body(Circle(W / 30.0), category=CAT_PLAYER_SHOT, contact=CAT_ENEMY | CAT_OBSTACLE,
                           collision=CAT_PLAYER_SHOT | CAT_ENEMY_SHOT))
@@ -411,7 +414,7 @@ class BaseScene(Scene):
         hit = _pair(a, b, CAT_ENEMY, CAT_PLAYER_SHOT)
         if hit:
             enemy, shot = hit[0].node, hit[1].node
-            burst_and_remove(shot, ENEMY_BURST_FRAMES)
+            burst_and_remove(shot, ENEMY_BURST_FRAMES, looks.ARRAY_POWER_3)
             fx.play('enemy_hit.caf')
             if enemy.inflict_damage(self.services.globals.get_shot()):
                 self.destroy_enemy(enemy.code)
@@ -427,7 +430,7 @@ class BaseScene(Scene):
         struck = _pair(a, b, CAT_ENEMY_SHOT, CAT_PLAYER)
         if struck:
             shot = struck[0].node
-            burst_and_remove(shot, SHOT_BURST_FRAMES)
+            burst_and_remove(shot, SHOT_BURST_FRAMES, looks.ARRAY_POWER_2)
             if self.last_shot_hit is not shot:
                 self.last_shot_hit = shot
                 fx.play('player_hit.caf')
@@ -437,8 +440,8 @@ class BaseScene(Scene):
         clash = _pair(a, b, CAT_PLAYER_SHOT, CAT_ENEMY_SHOT)
         if clash:
             fx.play('colisaoTiro.mp3')
-            burst_and_remove(clash[1].node, SHOT_BURST_FRAMES)
-            burst_and_remove(clash[0].node, SHOT_BURST_FRAMES)
+            burst_and_remove(clash[1].node, SHOT_BURST_FRAMES, looks.ARRAY_POWER_2)
+            burst_and_remove(clash[0].node, SHOT_BURST_FRAMES, looks.ARRAY_POWER_3)
         grab = _pair(a, b, CAT_POWERUP, CAT_PLAYER)
         if grab and grab[0].node.parent is not None:
             self.collect_power_up(grab[0].node)

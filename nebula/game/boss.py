@@ -10,6 +10,7 @@ from ..data import BOSSES
 from ..engine import actions as A
 from ..engine.nodes import Node
 from ..engine.physics import Body, Circle, Polygon, attach, rectangle
+from . import looks
 from .rand import arc4random, between
 from .ship import CAT_ENEMY, CAT_ENEMY_SHOT, CAT_LASER, CAT_OBSTACLE, CAT_PLAYER, CAT_PLAYER_SHOT, Shot
 
@@ -99,6 +100,8 @@ class Boss(Node):
     def shoot_on_position(self, x, y):
         w = self.game.size[0]
         bullet = Shot(self, (w / 12.0, w / 12.0))
+        bullet.texture = looks.FIREBALL[2]   # a colour is set, but with no blend factor it doesn't show
+        bullet.run(A.repeat_forever(A.animate_with_textures(looks.FIREBALL, looks.BOSS_BULLET_FRAME)))
         attach(bullet, Body(Circle(5.0), category=CAT_ENEMY_SHOT, contact=CAT_PLAYER | CAT_PLAYER_SHOT, collision=CAT_ENEMY_SHOT))
         bullet.position = (x, y)
         bullet.run(A.sequence([A.move_to_y(-20.0, SHOT_FLIGHT), A.remove_from_parent()]))

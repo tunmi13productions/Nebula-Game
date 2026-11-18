@@ -83,3 +83,22 @@ def test_ships_carry_their_pictures_and_the_player_banks():
     for _ in range(40):
         player.sprite.update_actions(1 / 60)
     assert player.sprite.texture == 'Player_10'
+
+
+def test_shot_frames_follow_the_original_lists():
+    from nebula.game import looks
+    assert looks.ARRAY_POWER_1 == ['PlayerPower_%02d' % i for i in range(2, 8)]
+    assert looks.ARRAY_POWER_3 == ['PlayerPower_%02d' % i for i in (3, 5, 7, 9, 11, 12, 13, 14, 15)]
+    assert looks.ship_color(3) == looks.ORANGE
+    assert looks.ship_color(13) == (1.0, 1.0, 1.0, 1.0)     # 56, 148, 240 clamp to white
+    assert looks.ship_color(45) == looks.BLACK
+
+
+def test_tint_multiplies_the_texture():
+    n = Node(position=(160, 284), size=(40, 40))
+    n.texture = 'Fireball_08'
+    plain = draw(n)
+    n.tint, n.color_blend = (1.0, 0.0, 0.0), 1.0
+    red = draw(n)
+    assert red.get_at((160, 284))[1] <= plain.get_at((160, 284))[1]
+    assert red.get_at((160, 284))[1] == 0

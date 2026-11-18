@@ -3,6 +3,7 @@ from ..data import SHIPS, TEXTURES
 from ..engine import actions as A
 from ..engine.nodes import Node
 from ..engine.physics import Body, Circle, Polygon, attach, rectangle
+from . import looks
 from .rand import arc4random, between
 
 PLAYER_CODE = 98
@@ -45,10 +46,13 @@ def fit_size(texture, box):
     return w * k, h * k
 
 
-def burst_and_remove(node, frames):
-    """A hit shot stops, plays its burst animation (frames x 0.02 s) and is then removed. Its linked sound lives until then."""
+def burst_and_remove(node, frames, textures=None):
+    """A hit shot stops, plays its burst animation (frames x 0.02 s) and is then removed. Its linked sound lives
+    until then. textures are the burst's pictures (visual only)."""
     node.remove_all_actions()
     node.run(A.sequence([A.wait(frames * BURST_FRAME), A.remove_from_parent()]))
+    if textures:
+        node.run(A.animate_with_textures(textures, BURST_FRAME))
 
 
 class Shot(Node):
@@ -336,6 +340,9 @@ class SpaceShip(Node):
         """The non-laser branch of shoot: (size W/6), also used by manualShot (size W/12)."""
         size = self.parent_width // 6 if size is None else size
         bullet = Shot(self, (float(size), float(size)))
+        bullet.texture = looks.FIREBALL[2]
+        bullet.tint, bullet.color_blend = looks.ship_color(self.code), 1.0
+        bullet.run(A.repeat_forever(A.animate_with_textures(looks.FIREBALL, looks.BULLET_FRAME)))
         attach(bullet, Body(Circle(5.0), category=CAT_ENEMY_SHOT, contact=CAT_PLAYER | CAT_PLAYER_SHOT, collision=CAT_ENEMY_SHOT))
         bullet.position = (self.position[0], self.position[1] - self.ship_size[1] * 0.5)
         bullet.z = self.z

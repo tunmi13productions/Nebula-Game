@@ -1,7 +1,8 @@
 """Draws a scene graph the way SpriteKit did: y up, nodes drawn by global z (parent z plus own z) and then in
 tree order, with position, scale, rotation and alpha inherited from parents and the anchor point applied.
 
-A node is drawn when it has a texture name (node.texture) or a fill colour (node.color, RGBA from 0 to 1).
+A node is drawn when it has a texture name (node.texture) or a fill colour (node.color, RGBA from 0 to 1). A
+texture is tinted by node.tint (RGB from 0 to 1) when node.color_blend is above 0, like colorBlendFactor.
 Points are converted to pixels with the window scale.
 """
 import math
@@ -56,6 +57,9 @@ class Renderer:
         iw, ih = int(round(w)), int(round(h))
         if tex is not None:
             img = self._sized(name, tex, iw, ih)
+            blend = getattr(node, 'color_blend', 0.0)
+            if blend > 0.0 and getattr(node, 'tint', None):
+                img = self._tinted(img, node.tint, blend)
         elif getattr(node, 'color', None):
             img = pygame.Surface((iw, ih), pygame.SRCALPHA)
             r, g, b = (int(c * 255) for c in node.color[:3])
@@ -78,6 +82,14 @@ class Renderer:
             img = img.copy()
             img.set_alpha(int(alpha * 255))
         surface.blit(img, rect)
+
+    @staticmethod
+    def _tinted(img, tint, blend):
+        """colorBlendFactor: the texture's colour multiplied by the tint, mixed in by the blend factor."""
+        mult = [int(round(255 * (1.0 - blend + blend * c))) for c in tint[:3]]
+        out = img.copy()
+        out.fill(mult + [255], special_flags=pygame.BLEND_RGBA_MULT)
+        return out
 
     def _sized(self, name, tex, w, h):
         key = (name, w, h)
