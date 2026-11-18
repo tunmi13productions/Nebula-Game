@@ -1,10 +1,9 @@
 """SpaceShip, the class the original uses for the player and for enemies (see docs/NOTES.md)."""
-import random
-
 from ..data import SHIPS, TEXTURES
 from ..engine import actions as A
 from ..engine.nodes import Node
-from ..engine.physics import Body, Circle, Polygon, attach
+from ..engine.physics import Body, Circle, Polygon, attach, rectangle
+from .rand import arc4random, between
 
 PLAYER_CODE = 98
 CAT_PLAYER, CAT_ENEMY, CAT_PLAYER_SHOT, CAT_ENEMY_SHOT = 0x1, 0x2, 0x4, 0x8
@@ -16,6 +15,14 @@ ALARM_INTERVAL = 4.0
 ENEMY_SHOT_FLIGHT = 1.5
 ENEMY_SHOT_1_CODES = {0, 21, 22, 41}
 BURST_FRAME = 0.02
+LASER_CODES = {3, 5, 7, 8, 15, 23, 27, 30, 42, 100, 101, 102}
+ALLY_CODES = {37, 38, 39}
+DRIFTER_CODES = {37, 38, 39, 46, 47, 48, 49, 50}     # allies, the fuel tank and rocks: they fall instead of fighting
+ROCK_CODES = {47, 48, 49, 50}
+DRIFTER_OFFSCREEN = 90                              # destroyEnemy: code for a drifter that left the screen
+LASER_CHARGE, LASER_WARM = 1.0, 1.5                 # charge sound, then firing sound, then the beam
+LASER_RETREAT = 3.0
+SPIN = 3.14159274                                   # rotateByAngle: M_PI as a float, every 3 seconds
 
 
 def player_hitbox(w):
@@ -87,17 +94,81 @@ class SpaceShip(Node):
         return ship
 
     @classmethod
-    def enemy(cls, code, scene):
-        """initEnemyOfType:inParentView: stats and sizing. Spawning, entrance and AI come with the enemy step."""
+    def enemy(cls, code, scene, entrance=True):
+        """initEnemyOfType:inParentView: and createEnemyWithLife:...: stats, sizing, start position and entrance."""
         stats = SHIPS[code]
         ship = cls(code, stats['life'], 0, scene)
         ship.shoot_damage = stats['damage']
         ship.score = stats['score']
+        ship.fire_interval = stats['fire_interval']
+        ship.move_interval = stats['move_interval']
         tex = TEXTURES.get('SpaceShips_%d' % code, (40.0, 40.0))
         ship.ship_size = fit_size(tex, scene.size[0] / 4.3)
         ship.size = ship.ship_size
         ship.scale = 0.8
+        ship.position = (float(ship.parent_width // 2), ship.parent_height + ship.ship_size[1])
+        if entrance:
+            ship.run_entrance()
         return ship
+
+    def run_entrance(self):
+        W, H = self.parent_width, self.parent_height
+        sw = self.ship_size[0]
+        if self.code in DRIFTER_CODES:
+            x = between(int(sw), int(W - sw))
+            self.run(A.move_to(float(x), float(H + H // 2), 1.5),
+                     completion=lambda: (self.set_physics_body_specs(), self.push_spaceship()))
+        elif self.code in LASER_CODES:
+            x = sw * 1.8 if arc4random() & 1 == 0 else W - sw * 1.8
+            y = between(int(H * 0.8), int(H * 0.85))
+            self.run(A.move_to(float(int(x)), float(y), 1.0),
+                     completion=lambda: (self.start_shooting(self.fire_interval), self.set_physics_body_specs()))
+        else:
+            x = between(int(sw), int(W - sw))
+            y = between(int(H * 0.75), int(H * 0.9))
+            self.run(A.move_to(float(x), float(y), 1.5).with_timing(A.EASE_IN_EASE_OUT),
+                     completion=lambda: (self.start_shooting(self.fire_interval),
+                                         self.start_moving(self.move_interval), self.set_physics_body_specs()))
+
+    # movement (startMovingWithInterval:, move:, pushSpaceShip)
+
+    def start_moving(self, interval):
+        self.move_interval = interval
+        self.run(A.repeat_forever(A.sequence([A.run_block(self.move_tick), A.wait(interval)])), key='MovingAction')
+
+    def move_tick(self):
+        game = self.game
+        if not game.is_active or self.life < 1:
+            self.remove_spaceship(autodestruction=True)
+            return
+        if game.game_paused or arc4random() & 1 == 0:
+            return
+        sw = self.ship_size[0]
+        x = between(int(sw * 0.5), int(self.parent_width - sw * 0.5))
+        y = between(int(self.parent_height * 0.7), int(self.parent_height * 0.85))
+        t = self.move_interval
+        duration = t if t <= 1.0 else (1.5 if t <= 3.0 else 2.0)
+        self.run(A.move_to(float(x), float(y), duration).with_timing(A.EASE_IN_EASE_OUT))
+
+    def push_spaceship(self):
+        """Drifters fall 2H over 5 to 8 seconds (allies 2 to 5, rocks 3 to 6) with a random sideways drift.
+        Rocks and the fuel tank spin. At the bottom, allies and rocks leave and report code 90, while the
+        fuel tank explodes and reports itself."""
+        quarter = self.parent_width // 4
+        dx = between(-quarter, quarter)
+        lo, hi = (2, 5) if self.code in ALLY_CODES else ((3, 6) if self.code in ROCK_CODES else (5, 8))
+        fall = A.move_by(float(dx), float(-2 * self.parent_height), float(between(lo, hi)))
+        if self.code not in ALLY_CODES:
+            self.run(A.repeat_forever(A.rotate_by(SPIN, 3.0)))
+
+        def landed():
+            if self.code == 46:
+                self.destroy()
+                self.game.destroy_enemy(self.code)
+            else:
+                self.remove_spaceship(autodestruction=True)
+                self.game.destroy_enemy(DRIFTER_OFFSCREEN)
+        self.run(fall, completion=landed)
 
     def set_physics_body_specs(self):
         w, h = self.size
@@ -158,7 +229,7 @@ class SpaceShip(Node):
         aureal = self.services.aureal
         if self.sound_id is not None:
             aureal.stop(self.sound_id, 2)
-        name, ext = random.choice((('explosion_1', 'caf'), ('Explosion_', 'mp3'), ('explosion', 'mp3')))
+        name, ext = (('explosion_1', 'caf'), ('Explosion_', 'mp3'), ('explosion', 'mp3'))[arc4random() % 3]
         self.play_unlinked(name, ext, self.position)
         attach(self, None)
         if self.is_player:
@@ -168,8 +239,11 @@ class SpaceShip(Node):
         self.run(A.sequence([A.wait(1.0), A.remove_from_parent()]))
 
     def remove_spaceship(self, autodestruction):
-        """removeSpaceshipOnAutodestruction: stops the alarm and all actions. With autodestruction it also leaves."""
+        """removeSpaceshipOnAutodestruction: stops the alarm and all actions and removes a laser beam.
+        With autodestruction the ship also leaves the scene."""
         self.remove_action('alarme')
+        if getattr(self, 'laser_body', None) is not None:
+            self.laser_body.remove_from_parent()
         self.remove_all_actions()
         if autodestruction:
             self.remove_from_parent()
@@ -217,8 +291,12 @@ class SpaceShip(Node):
             self.remove_spaceship(autodestruction=True)
         if game.game_paused:
             return
-        if random.getrandbits(1):
-            self.fire_bullet()
+        if arc4random() & 1:
+            if self.code in LASER_CODES:
+                if not self.laser_active:
+                    self.laser_shoot()
+            else:
+                self.fire_bullet()
 
     def fire_bullet(self, flight=ENEMY_SHOT_FLIGHT):
         """The non-laser branch of shoot:. Lasers are added with the enemy step."""
@@ -231,6 +309,42 @@ class SpaceShip(Node):
         self.game.add_child(bullet)
         self.shot_sound(bullet)
         return bullet
+
+    # lasers (laserShoot)
+
+    def laser_shoot(self):
+        """Charge sound, wait 1 s, firing sound, wait 1.5 s, then a beam W/50 wide and H tall centred on the
+        ship's column holds for 3 to 7 whole seconds. The firing sound then fades while the beam slides up
+        over 3 s, still harmful, and is removed."""
+        if self.game.game_paused:
+            return
+        hold = float(arc4random() % 5 + 3)
+        self.laser_active = True
+        beam = self.laser_body = Shot(self, (0.0, 0.0))
+        beam.anchor = (0.5, 1.0)
+        self.game.add_child(beam)
+        keys = {}
+
+        def charge():
+            keys['sound'] = self.play_linked('Laser_Charge', 'caf', self)
+
+        def fire():
+            keys['sound'] = self.play_linked('Laser_Firing', 'mp3', self)
+
+        def beam_on():
+            beam.position = (self.position[0], float(self.parent_height // 2))
+            beam.size = (float(self.parent_width // 50), float(self.parent_height))
+            attach(beam, Body(rectangle(*beam.size), category=CAT_LASER, contact=CAT_PLAYER, collision=CAT_LASER))
+
+        def retreat():
+            self.services.aureal.stop(keys.get('sound'), 1)
+
+            def done():
+                beam.remove_from_parent()
+                self.laser_active = False
+            beam.run(A.move_to_y(float(self.parent_height), LASER_RETREAT), completion=done)
+        beam.run(A.sequence([A.run_block(charge), A.wait(LASER_CHARGE), A.run_block(fire), A.wait(LASER_WARM),
+                             A.run_block(beam_on), A.wait(hold), A.run_block(retreat)]))
 
     # visual-only in the original: sprite frame animations for banking and levelling out
     def move_left(self):

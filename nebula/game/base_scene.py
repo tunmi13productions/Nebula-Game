@@ -4,7 +4,8 @@ collisions, swoosh fields and side walls, shots, damage model).
 from ..engine import actions as A
 from ..engine.nodes import Node, Scene
 from ..engine.physics import Body, Circle, PhysicsWorld, attach, rectangle
-from .ship import (CAT_ENEMY, CAT_ENEMY_SHOT, CAT_OBSTACLE, CAT_PLAYER, CAT_PLAYER_SHOT, CAT_SWOOSH_LEFT,
+from ..data import engine_sound
+from .ship import (CAT_ENEMY, CAT_ENEMY_SHOT, CAT_LASER, CAT_OBSTACLE, CAT_PLAYER, CAT_PLAYER_SHOT, CAT_SWOOSH_LEFT,
                    CAT_SWOOSH_RIGHT, CAT_WALL, Shot, SpaceShip, burst_and_remove)
 
 W, H = 320.0, 568.0
@@ -52,6 +53,7 @@ class BaseScene(Scene):
         self._last_spoken_state = STOPPED
         self.should_lateral_play_hit_sound = True
         self.last_shot_hit = None          # lastShoot
+        self.toaster = None                # the laser beam the player is touching
         self.score_counter = 0
         self.death_counter = 0
         self.velocidade = W / services.globals.get_speed()
@@ -146,6 +148,14 @@ class BaseScene(Scene):
     def base_actions(self):
         if self.game_paused:
             return
+        beam = self.toaster
+        if beam is not None:
+            if beam.ship.parent is not None and self.player.parent is not None and self.player.life > 0:
+                # Standing in a laser hurts again every second.
+                if self.player.inflict_damage(beam.ship.shoot_damage):
+                    self._schedule_end_game()
+            elif beam.ship.parent is None:
+                self.toaster = None
         if self.talking_move and self.allow_move:
             if not self._talking_running:
                 self._talking_running = True
@@ -190,6 +200,25 @@ class BaseScene(Scene):
             attach(wall, Body(rectangle(3.0, h), category=CAT_WALL, contact=CAT_PLAYER, collision=CAT_WALL))
             self.add_child(wall)
             self.walls.append(wall)
+
+    # enemies
+
+    def create_enemy_with_type(self, code):
+        """createEnemyWithType: builds the ship (which starts its entrance), gives it a looping engine sound
+        linked to it, and adds it to the scene."""
+        ship = SpaceShip.enemy(code, self)
+        ship.z = 5
+        aureal = self.services.aureal
+        sound = engine_sound(code)
+        key = aureal.next_key()
+        if sound is not None:
+            aureal.add_sound(sound[0], sound[1], key)
+        ship.sound_id = key
+        aureal.link(key, ship)
+        aureal.play_forever(key, ship.position)
+        aureal.sound_id += 1
+        self.add_child(ship)
+        return ship
 
     # hooks for subclasses
 
@@ -244,6 +273,11 @@ class BaseScene(Scene):
             fx.play('colisaoTiro.mp3')
             burst_and_remove(clash[1].node, SHOT_BURST_FRAMES)
             burst_and_remove(clash[0].node, SHOT_BURST_FRAMES)
+        laser = _pair(a, b, CAT_LASER, CAT_PLAYER)
+        if laser:
+            self.toaster = laser[0].node
+            if self.player.inflict_damage(self.toaster.ship.shoot_damage):
+                self._schedule_end_game()
         if _pair(a, b, CAT_SWOOSH_LEFT, CAT_ENEMY_SHOT):
             fx.play('Swoosh_Left.caf')
         elif _pair(a, b, CAT_SWOOSH_RIGHT, CAT_ENEMY_SHOT):
@@ -259,5 +293,7 @@ class BaseScene(Scene):
     def did_end_contact(self, a, b):
         if self.game_paused:
             return
+        if a.category == CAT_LASER or b.category == CAT_LASER:
+            self.toaster = None
         if a.category == CAT_WALL or b.category == CAT_WALL:
             self.should_lateral_play_hit_sound = True

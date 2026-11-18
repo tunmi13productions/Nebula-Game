@@ -40,7 +40,7 @@ def run(scene, services, seconds):
 
 
 def target(scene, code=9, x=160.0, y=450.0):
-    ship = SpaceShip.enemy(code, scene)
+    ship = SpaceShip.enemy(code, scene, entrance=False)
     ship.position = (x, y)
     ship.set_physics_body_specs()
     scene.add_child(ship)

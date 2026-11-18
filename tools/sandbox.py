@@ -3,7 +3,9 @@
 Keys:
   Left and right arrows: steer (held keys stand in for tilting the device).
   Space: fire.
-  F: spawn a target ship at a random spot near the top. It hovers, fires at you and carries its engine sound.
+  F: spawn a fighter. It enters from the top, wanders and shoots.
+  G: spawn a laser ship. It parks near a side and fires its laser: charge, firing sound, then the beam.
+  R: spawn a rock, A: spawn an ally. Both fall past you. Allies are worth minus 100 points if destroyed.
   S: speak the score.
   L: speak your life.
   T: toggle talking movement ("Right", "Left", "Stopped", "End of Screen").
@@ -23,12 +25,10 @@ sys.path.insert(0, ROOT)
 import pygame
 
 from nebula.audio.openal_backend import OpenALBackend
-from nebula.data import SHIPS, engine_sound
 from nebula.engine.nodes import Node
 import random
 
-from nebula.game.base_scene import BaseScene, H, W
-from nebula.game.ship import SpaceShip
+from nebula.game.base_scene import BaseScene, H
 from nebula.game.services import Services
 from nebula.input import KeyboardTilt
 from nebula.settings import load_settings
@@ -50,7 +50,7 @@ def main():
 
     class Sandbox(BaseScene):
         def destroy_enemy(self, code):
-            reader.say('Target destroyed')
+            reader.say('Drifter left the screen' if code == 90 else 'Ship %d destroyed' % code)
 
         def end_game(self):
             reader.say('You were destroyed. Life restored.')
@@ -62,23 +62,16 @@ def main():
     scene.did_move_to_view()
     scene.talking_move = True
     engine = None
-    reader.say('Sandbox. Arrows steer, Space fires, F spawns a target, L life, S score, '
+    reader.say('Sandbox. Arrows steer, Space fires. F fighter, G laser ship, R rock, A ally. L life, S score, '
                'T talking movement, E enemy engine, up and down change tilt, now %.2f. Escape quits.' % keys.tilt)
 
-    def spawn_target():
-        code = random.choice([0, 1, 2, 9, 10, 11])
-        ship = SpaceShip.enemy(code, scene)
-        ship.position = (random.uniform(ship.ship_size[0], W - ship.ship_size[0]), random.uniform(H * 0.75, H * 0.9))
-        ship.set_physics_body_specs()
-        scene.add_child(ship)
-        name, ext = engine_sound(code)
-        key = services.aureal.next_key()
-        services.aureal.add_sound(name, ext, key)
-        ship.sound_id = key
-        services.aureal.sound_id += 1
-        services.aureal.link(key, ship)
-        services.aureal.play_forever(key, ship.position)
-        ship.start_shooting(SHIPS[code]['fire_interval'])
+    groups = {pygame.K_f: ('Fighter', [0, 1, 2, 9, 10, 11]), pygame.K_g: ('Laser ship', [3, 7, 8]),
+              pygame.K_r: ('Rock', [47, 48, 49, 50]), pygame.K_a: ('Ally', [37, 38, 39])}
+
+    def spawn(key):
+        label, codes = groups[key]
+        scene.create_enemy_with_type(random.choice(codes))
+        reader.say(label + ' incoming')
 
     last = time.perf_counter()
     acc = 0.0
@@ -97,8 +90,8 @@ def main():
                     running = False
                 elif down and ev.key == pygame.K_SPACE:
                     scene.player_shoot()
-                elif down and ev.key == pygame.K_f:
-                    spawn_target()
+                elif down and ev.key in groups:
+                    spawn(ev.key)
                 elif down and ev.key == pygame.K_s:
                     reader.say('Score %d' % scene.score_counter)
                 elif down and ev.key == pygame.K_l:
