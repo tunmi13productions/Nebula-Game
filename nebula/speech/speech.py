@@ -16,6 +16,8 @@ VoiceSynthesizer behaviour reproduced here:
 - pause() and resume() only hold back the completion. The voice itself keeps talking, as in the original.
 """
 
+import re
+
 POLL = 0.3
 IGNORED_POLLS = 2
 
@@ -52,6 +54,44 @@ class NullRenderer:
         return [0.0] * max(1, int(seconds * sample_rate)), 1, sample_rate
 
 
+# Silence after a clause, by the punctuation that ends it. AVSpeechSynthesizer paused clearly at punctuation;
+# the OneCore voice barely does at these rates, so each clause is rendered on its own and these gaps are added.
+PAUSES = {',': 0.25, ';': 0.3, ':': 0.3, '.': 0.45, '!': 0.45, '?': 0.45}
+_CLAUSE = re.compile(r'(.*?[,;:.!?]+)(?:\s+|$)', re.S)
+
+
+def split_clauses(text):
+    """Splits text after punctuation that is followed by a space (or ends the text). Returns a list of
+    (clause, pause seconds). Runs like "., " count once, with the longest of their pauses. Numbers such as
+    "1.5" stay whole."""
+    out, pos = [], 0
+    for m in _CLAUSE.finditer(text):
+        if m.start() != pos:
+            break
+        clause = m.group(1).strip()
+        marks = clause[len(clause.rstrip(',;:.!?')):]
+        if clause:
+            out.append((clause, max(PAUSES[c] for c in marks)))
+        pos = m.end()
+    rest = text[pos:].strip()
+    if rest:
+        out.append((rest, 0.0))
+    return out
+
+
+def render_with_pauses(render_one, text, rate):
+    """render_one(text, rate) -> (samples, channels, sample_rate). Renders clause by clause, adding the
+    silences, and drops the pause after the last clause so the end of speech stays where it was."""
+    clauses = split_clauses(text) or [(text, 0.0)]
+    pcm, channels, sample_rate = [], 1, 16000
+    for i, (clause, pause) in enumerate(clauses):
+        samples, channels, sample_rate = render_one(clause, rate)
+        pcm.extend(samples)
+        if i < len(clauses) - 1 and pause > 0:
+            pcm.extend([0.0] * int(pause * sample_rate) * channels)
+    return pcm or [0.0], channels, sample_rate
+
+
 class PrismRenderer:
     """Renders text with a Prism backend that supports speak_to_memory (OneCore, falling back to SAPI)."""
 
@@ -84,6 +124,9 @@ class PrismRenderer:
         return False
 
     def render(self, text, rate):
+        return render_with_pauses(self._render_one, text, rate)
+
+    def _render_one(self, text, rate):
         self.backend.rate = max(0.0, min(1.0, rate))
         out = {'pcm': [], 'channels': 1, 'rate': 16000}
         ffi = self._ffi

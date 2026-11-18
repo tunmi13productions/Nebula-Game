@@ -115,3 +115,23 @@ def test_prism_renders_to_memory_without_playing():
     assert ch == 1 and rate > 0
     assert 1.0 < len(slow) / rate < 6.0
     assert len(fast) < len(slow)
+
+
+def test_clauses_split_after_punctuation_with_pauses():
+    from nebula.speech.speech import split_clauses
+    assert split_clauses('PUT YOUR HEADPHONES FOR A BETTER EXPERIENCE., Thunder at the right side.') == [
+        ('PUT YOUR HEADPHONES FOR A BETTER EXPERIENCE.,', 0.45), ('Thunder at the right side.', 0.45)]
+    assert split_clauses('Score: 120.') == [('Score:', 0.3), ('120.', 0.45)]
+    assert split_clauses('Version 1.5 now') == [('Version 1.5 now', 0.0)]
+
+
+def test_rendering_inserts_silence_between_clauses_only():
+    from nebula.speech.speech import render_with_pauses
+    calls = []
+
+    def one(text, rate):
+        calls.append(text)
+        return [1.0] * 10, 1, 100
+    pcm, channels, rate = render_with_pauses(one, 'Score: 120.', 0.55)
+    assert calls == ['Score:', '120.']
+    assert pcm == [1.0] * 10 + [0.0] * 30 + [1.0] * 10
