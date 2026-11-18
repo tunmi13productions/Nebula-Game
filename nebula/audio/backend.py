@@ -11,6 +11,10 @@ class AudioBackend:
         """Loads a sound file and returns a handle used by the other calls."""
         raise NotImplementedError
 
+    def load_samples(self, samples, channels, rate):
+        """Loads float samples (-1 to 1, interleaved) already in memory, such as rendered speech."""
+        raise NotImplementedError
+
     def play(self, handle, loops=0):
         """Starts playback from the beginning. loops=-1 repeats forever, as in AVAudioPlayer."""
         raise NotImplementedError
@@ -54,6 +58,11 @@ class NullBackend(AudioBackend):
         self._next += 1
         self.state[handle] = {'path': path, 'playing': False, 'volume': 1.0, 'pan': 0.0, 'loops': 0}
         self.calls.append(('load', handle, path))
+        return handle
+
+    def load_samples(self, samples, channels, rate):
+        handle = self.load('<samples %d>' % (len(samples) // max(channels, 1)))
+        self.state[handle]['seconds'] = len(samples) / max(channels, 1) / rate
         return handle
 
     def play(self, handle, loops=0):

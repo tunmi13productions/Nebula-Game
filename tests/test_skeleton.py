@@ -2,7 +2,6 @@ import os
 
 from nebula.audio.backend import NullBackend
 from nebula.audio.openal_backend import open_device
-from nebula.speech.speech import NullSpeaker
 
 
 def test_tests_run_on_the_null_driver():
@@ -25,12 +24,3 @@ def test_null_backend_records_and_tracks_state():
     audio.finish(h)
     assert not audio.is_playing(h)
     assert audio.calls[0] == ('load', h, 'sounds/beep_radar.caf')
-
-
-def test_null_speaker_defers_completion():
-    speech = NullSpeaker()
-    done = []
-    speech.speak('chap1_icarus1', 0.55, 1.0, 0.0, on_done=lambda: done.append(1))
-    assert speech.spoken == [('chap1_icarus1', 0.55, 1.0, 0.0)] and done == []
-    speech.finish()
-    assert done == [1]

@@ -72,3 +72,10 @@ Each entry is a settled decision. Don't change a deviated behaviour unless the u
 - Original: the language follows the device setting. Portuguese on a Portuguese device, otherwise English.
 - Changed: the port follows the Windows display language the same way. It also reads an optional settings file that can force English or Portuguese.
 - Reason: Windows players may use one language for the system and want the other for the game. Decided by the user on 2026-11-17.
+
+## Game speech uses a Windows OneCore voice, and accessibility labels go to the screen reader
+
+- Original: the game's own speech (I.C.A.R.U.S. lines, status lines like "Your life is 5", in-game SpriteKit menus, the countdown) went through AVSpeechSynthesizer, a text-to-speech voice separate from VoiceOver. It requested the English "Alex" voice, which most devices didn't have installed, so they fell back to the system voice for the device language. Rates were AVSpeechUtterance rates (0.55 and 0.6 against a default of 0.5). UIKit buttons and labels (main menu, Hangar, tutorial selection, info) were read by VoiceOver.
+- Changed: the same split is kept. Game speech is rendered by a Windows OneCore voice through Prism (SAPI if OneCore isn't available), into memory, and played through the game's own audio output, centred. The voice is the first one matching the game language. Rates are passed through one to one, since Prism also uses a 0 to 1 scale with 0.5 as normal. UIKit-style labels go to the user's screen reader through Prism.
+- Reason: Prism can't report when NVDA finishes speaking, and the game's scripts depend on that moment (spawns after I.C.A.R.U.S. finishes, for example). Rendering to memory gives the exact end of each line. Decided by the user on 2026-11-17.
+- Note: this machine has English OneCore voices only (David, Zira, Mark). Playing in Portuguese needs a Portuguese Windows voice installed, otherwise Portuguese text is read by an English voice.

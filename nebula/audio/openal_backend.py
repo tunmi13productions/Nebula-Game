@@ -56,14 +56,25 @@ class OpenALBackend(AudioBackend):
         clip = self._clips.get(path)
         if clip is None:
             data, rate = soundfile.read(path, dtype='int16', always_2d=True)
-            stereo = data.shape[1] > 1
-            bufs = []
-            for ch in ((0, 1) if stereo else (0, 0)):
-                b = self.context.gen_buffer()
-                b.set_data(np.ascontiguousarray(data[:, ch]).tobytes(), sample_rate=rate, format=cyal.BufferFormat.MONO16)
-                bufs.append(b)
-            clip = self._clips[path] = (bufs[0], bufs[1], stereo)
+            clip = self._clips[path] = self._make_clip(data, rate)
         return clip
+
+    def _make_clip(self, data, rate):
+        stereo = data.shape[1] > 1
+        bufs = []
+        for ch in ((0, 1) if stereo else (0, 0)):
+            b = self.context.gen_buffer()
+            b.set_data(np.ascontiguousarray(data[:, ch]).tobytes(), sample_rate=rate, format=cyal.BufferFormat.MONO16)
+            bufs.append(b)
+        return (bufs[0], bufs[1], stereo)
+
+    def load_samples(self, samples, channels, rate):
+        pcm = np.clip(np.asarray(samples, dtype=np.float32), -1.0, 1.0)
+        data = (pcm * 32767).astype(np.int16).reshape(-1, max(channels, 1))
+        handle = self._next
+        self._next += 1
+        self._voices[handle] = _Voice(self._make_clip(data, rate))
+        return handle
 
     def load(self, path):
         handle = self._next
