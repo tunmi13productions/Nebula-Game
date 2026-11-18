@@ -252,8 +252,20 @@ class SpaceShip(Node):
         if self.is_player:
             self.game.can_shoot = False
             self.game.remove_action('BlockShoot')
-        # The rest is the explosion animation; the node then leaves the scene.
+        self.show_explosion()
         self.run(A.sequence([A.wait(1.0), A.remove_from_parent()]))
+
+    def show_explosion(self):
+        """destroyShip's picture: the ship's children go, and the ship, three times its size, plays the
+        Explosion02 frames (Global Explosion_1) at 0.032 seconds each. Visual only; the ship's size for the
+        game is untouched, so the explosion is a child of that size."""
+        for child in list(self.children):
+            child.remove_from_parent()
+        w, h = self.ship_size
+        boom = Node(name='explosion', size=(w * 3, h * 3))
+        boom.texture = looks.EXPLOSION_1[0]
+        boom.run(A.animate_with_textures(looks.EXPLOSION_1, looks.EXPLOSION_FRAME))
+        self.add_child(boom)
 
     def remove_spaceship(self, autodestruction):
         """removeSpaceshipOnAutodestruction: stops the alarm and all actions and removes a laser beam.

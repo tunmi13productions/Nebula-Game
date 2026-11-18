@@ -35,6 +35,10 @@ ARRAY_POWER_1 = _array_power_1()   # the player's shot in flight
 ARRAY_POWER_2 = FIREBALL           # an enemy bullet bursting
 ARRAY_POWER_3 = _array_power_3()   # the player's shot bursting
 
+EXPLOSION_1 = _prefixed('Explosion02_', 24)    # Global Explosion_1, a destroyed ship
+EXPLOSION_2 = ['Explosion03_%02d' % i for i in range(1, 33) if i != 21]   # Global Explosion_2 (there is no 21)
+EXPLOSION_FRAME = 0.032
+
 PLAYER_SHOT_FRAME = 0.04
 BULLET_FRAME = 0.8                  # SpaceShip shoot: animateWithTextures:timePerFrame: 0.8, repeated
 BOSS_BULLET_FRAME = 0.03
