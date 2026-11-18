@@ -437,3 +437,18 @@ def test_campaign_escape_during_a_slide_leaves():
     window.scene.handle_key('escape')
     window.run(4.0)
     assert isinstance(window.scene, MainMenuScreen)
+
+
+def test_campaign_back_is_not_restarted_by_more_presses():
+    app, window, services, spoken = campaign(2, 4)
+    scene = window.scene
+    scene.menu_next()
+    window.run(3.0)
+    scene.menu_activate()
+    for _ in range(5):
+        window.run(0.2)
+        scene.menu_activate()
+        scene.handle_key('escape')
+    assert spoken.lines.count('Back') == 2      # the item, then the one goodbye
+    window.run(2.0)
+    assert isinstance(window.scene, MainMenuScreen)

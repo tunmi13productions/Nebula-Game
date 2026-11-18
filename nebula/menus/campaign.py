@@ -43,6 +43,7 @@ class CampaignSelectScene:
         self.reading = False      # an item is being spoken and input waits for it (interruptible here)
         self.pending = None       # the timer of a chapter slide or an error hold still locking input
         self.swiping_from_slide = False
+        self.leaving = False      # Back is under way: further keys are ignored so they can't restart it
         self.started = False
 
     # what the window calls
@@ -72,6 +73,8 @@ class CampaignSelectScene:
         pass
 
     def handle_key(self, key):
+        if self.leaving:
+            return True
         if key == 'control':
             self.services.voice.stop()
             self._interrupt()
@@ -86,14 +89,20 @@ class CampaignSelectScene:
         return True
 
     def menu_next(self):
+        if self.leaving:
+            return
         self._interrupt()
         self.swipe_right_detected()
 
     def menu_previous(self):
+        if self.leaving:
+            return
         self._interrupt()
         self.swipe_left_detected()
 
     def menu_activate(self):
+        if self.leaving:
+            return
         self._interrupt()
         self.double_tap_detected()
 
@@ -217,7 +226,7 @@ class CampaignSelectScene:
 
     def load_previous_chapter(self):
         if self.chapter < 2:
-            self.services.voice.speak_then(self.strings().get('cap_sair'), RATE, 0.0, 0.0, self.app.back_to_screen)
+            self._leave(0.0)
             self.swiping = False
             return
         self.chapter -= 1
@@ -229,7 +238,12 @@ class CampaignSelectScene:
     def did_swipe_up(self):
         if self.swiping:
             return
-        self.services.voice.speak_then(self.strings().get('cap_sair'), RATE, 0.0, 0.0, self.app.back_to_screen)
+        self._leave(0.0)
+
+    def _leave(self, pre_delay):
+        """Says "Back", then leaves (backMenuController). Once started, keys no longer restart it."""
+        self.leaving = True
+        self.services.voice.speak_then(self.strings().get('cap_sair'), RATE, pre_delay, 0.0, self.app.back_to_screen)
 
     def double_tap_detected(self):
         if self.swiping:
@@ -242,7 +256,7 @@ class CampaignSelectScene:
         voice = self.services.voice
         if self.selection == 1:
             fx.play('acceptButton.mp3')
-            voice.speak_then(self.strings().get('cap_sair'), RATE, ACTIVATE_PRE_DELAY, 0.0, self.app.back_to_screen)
+            self._leave(ACTIVATE_PRE_DELAY)
         elif self.selection >= 2:
             level = self.selection - 1
             self.swiping = True
