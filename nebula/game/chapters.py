@@ -822,7 +822,92 @@ class Chapter7Scene(ChapterScene):
         self.end_lvl_speech('chap7_icarus7', 0.5, 0.0, self.default_victorious_animation)
 
 
+class Chapter8Scene(ChapterScene):
+    """Revenge."""
+    CHAPTER = 8
+    SPAWNS = {'small1': ('small', 17), 'small2': ('small', 18), 'medium1': ('medium', 19), 'medium2': ('medium', 25),
+              'laser1': ('laser', 27)}
+
+    def opening(self, stage):
+        if stage == 1:
+            def go():
+                self.create('small1')
+                self.later(DELAYED_SPAWN, lambda: self.create('small2'))
+            self.say('chap8_icarus1', 0.5, 0.5, go)
+        elif stage == 2:
+            self.create('small2')
+            self.create('medium1')
+        elif stage == 3:
+            self.create('laser1')
+            self.create('medium2')
+        else:
+            self.stage4_loop([('chap8_icarus2', 0.5, 0.5)], lambda: self.boss_now(8))
+
+    def destroy_enemy(self, code):
+        st = self.stage_number
+        if st == 3:
+            if code == 17:
+                if self._dec('small_in') <= 1 and self.laser < 5:
+                    self.create('laser1')
+            elif code == 19:
+                if self._dec('medium_in') <= 1 and self.medium < 7:
+                    self.create('medium2')
+            elif code == 25:
+                if self._dec('medium_in') <= 1 and self.medium < 7:
+                    self.create('medium1')
+            elif code == 27:
+                if self._dec('laser_in') <= 1:
+                    if self.laser < 3:
+                        if self.laser == 2:
+                            self.release_power_up(FAST_SHOT)
+                        self.create('small1')
+                    elif self.laser < 6:
+                        self.create('laser1')
+            if self.laser >= 5 and self.small_in == 0 and self.medium_in == 0 and self.laser_in == 0:
+                self.default_victorious_animation()
+        elif st == 2:
+            if code == 27:
+                if self._dec('laser_in') <= 1:
+                    if self.laser < 5:
+                        if self.laser == 4:
+                            self.release_power_up(FAST_SHOT)
+                        self.create('small2')
+                    elif self.laser < 6:
+                        if self.medium > 5:
+                            self.release_power_up(FAST_SHOT)
+                        self.create('laser1')
+            elif code == 19:
+                if self._dec('medium_in') <= 1 and self.laser < 6:
+                    if self.medium == 5:
+                        self.release_power_up(SHIELD)
+                    self.create('medium1')
+            elif code == 18:
+                if self._dec('small_in') < 3 and self.laser < 6:
+                    self.create('laser1')
+            if self.laser >= 6 and self.small_in == 0 and self.laser_in == 0 and self.medium_in == 0:
+                self.default_victorious_animation()
+        elif st == 1:
+            if code == 19:
+                if self._dec('medium_in') <= 1 and self.medium < 6:
+                    if self.medium == 3:
+                        self.release_power_up(FAST_SHOT)
+                    self.create('small1')
+            elif code == 18:
+                if self._dec('small_in') < 3 and self.medium < 6:
+                    self.create('small2')
+            elif code == 17:
+                if self._dec('small_in') < 3 and self.medium < 6:
+                    self.create('medium1')
+            if self.medium >= 6 and self.small_in <= 0 and self.medium_in <= 0:
+                self.default_victorious_animation()
+        else:
+            self.end_lvl()
+
+    def end_lvl(self):
+        self.end_lvl_speech('chap8_icarus3', 0.5, 0.5, self.default_victorious_animation)
+
+
 CHAPTERS = {c.CHAPTER: c for c in (
     Chapter1Scene, Chapter2Scene, Chapter3Scene, Chapter4Scene, Chapter5Scene,
-    Chapter6Scene, Chapter7Scene,
+    Chapter6Scene, Chapter7Scene, Chapter8Scene,
 )}
