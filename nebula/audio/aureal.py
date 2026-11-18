@@ -32,6 +32,7 @@ class AurealSound:
         self.linked = None
         self.is_linked = False
         self.last_position = (0.0, 0.0)
+        self.released = False      # set once the player is released; a running fade then stops
 
 
 class Aureal:
@@ -114,6 +115,8 @@ class Aureal:
         return True
 
     def _fade_step(self, s):
+        if s.released:
+            return
         s.max_audio = _f32(s.max_audio - FADE_STEP)
         if s.max_audio <= 0.0:
             self.backend.stop(s.handle)
@@ -140,6 +143,7 @@ class Aureal:
         for s in list(self.library.values()):
             self.backend.stop(s.handle)
             self.backend.release(s.handle)
+            s.released = True
         self.library.clear()
 
     def pause_all(self):
@@ -171,6 +175,7 @@ class Aureal:
             s = self.library.pop(key, None)
             if s is not None:
                 self.backend.release(s.handle)
+                s.released = True
 
     # math, matching the original functions one to one
 

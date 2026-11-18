@@ -144,3 +144,15 @@ def _double_args(t, obj, sel, value):
     lo, hi = struct.unpack('<II', struct.pack('<d', value))
     t.send(obj, sel, lo, hi)
     return t.mu.reg_read(t.regs_r0), t.mu.reg_read(t.regs_r1)
+
+
+def test_a_fade_stops_quietly_when_its_sound_is_released_mid_fade():
+    a, audio, clock, scene = make()
+    a.add_sound('Laser_Firing', 'mp3', 'laser')
+    a.play_once('laser', (160.0, 400.0))
+    s = a.library['laser']
+    a.stop('laser', FADE)
+    a.stop_all()
+    clock.update(4.0)
+    assert s.released
+    assert ('stop', s.handle) in audio.calls
