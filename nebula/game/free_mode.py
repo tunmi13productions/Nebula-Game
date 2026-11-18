@@ -127,8 +127,15 @@ class FreeModeScene(BaseScene):
         self.menu_items = [(s.get('game_proximo'), self.on_new_game), (s.get('game_selecionar'), self.on_menu)]
         self.menu_selection = 1
         self.in_menu = True
+        self.end_screen = True
         summary = s.format('game_over_freemode', self.score_counter, best)
         self.services.voice.speak('%s , %s' % (summary, self.menu_items[0][0]), RATE_STATUS)
+
+    def pause_restart(self):
+        self.on_new_game()
+
+    def pause_leave(self):
+        self.on_menu()
 
     def stop_audio(self):
         self.services.aureal.stop_all()

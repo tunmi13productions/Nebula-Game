@@ -303,18 +303,60 @@ class BaseScene(Scene):
         their ending screen."""
         self.is_active = False
 
+    # pause (swipe up, Escape here)
+
+    end_screen = False   # controleTelaMenu: an end screen (game over, mission or tutorial complete) is up
+
     def swipe_up(self):
-        """Swipe up (Escape): the pause menu in gameplay scenes, which comes with the menus step."""
+        """swipeUpDetected: the pause menu, unless paused already, in a menu or on an end screen."""
+        if self.game_paused or self.in_menu or self.end_screen:
+            return
+        self.call_pause()
+
+    def call_pause(self):
+        """callPause: the pause menu (Continue, Restart, Leave game), then pauseGame."""
+        s = self.services.strings
+        self.open_menu(s.get('pause'), [(s.get('pause_continueLabel'), self.continue_game),
+                                        (s.get('pause_replayLabel'), lambda: self._leave_pause(self.pause_restart)),
+                                        (s.get('pause_exitLabel'), lambda: self._leave_pause(self.pause_leave))],
+                       end_screen=False)
+        self.pause_game()
+
+    def pause_game(self):
+        """pauseGame: speech completions held back, Aureal paused, and the scene's actions stop."""
+        self.game_paused = True
+        self.services.voice.pause()
+        self.services.aureal.pause_all()
+        self.paused = True
+
+    def continue_game(self):
+        self.in_menu = False
+        self.game_paused = False
+        self.services.voice.resume()
+        self.services.aureal.resume_all()
+        self.paused = False
+
+    def _leave_pause(self, fn):
+        """The voice is shared by every scene, so its paused state mustn't outlive this one."""
+        self.services.voice.resume()
+        fn()
+
+    def pause_restart(self):
+        """Restart posts reinicia: the game view controller starts the same game again."""
+
+    def pause_leave(self):
+        """Leave game posts backMenuCampanha: the level selection in the campaign, otherwise the menu."""
 
     # in-game menus (menuObjects)
 
-    def open_menu(self, title, items):
+    def open_menu(self, title, items, end_screen=True):
         """Shows an in-game menu. items is a list of (label, action). Selection starts on the first item and
         the title and that item are spoken together, as "%@, %@"."""
         self.menu_title = title
         self.menu_items = list(items)
         self.menu_selection = 1
         self.in_menu = True
+        self.end_screen = end_screen
         self.services.voice.speak('%s, %s' % (title, self.menu_items[0][0]), RATE_STATUS)
 
     in_menu = False

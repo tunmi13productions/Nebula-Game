@@ -195,6 +195,12 @@ class ChapterScene(BaseScene):
         self.open_menu(s.get('game_over'), [(s.get('game_proximo'), self.on_restart),
                                             (s.get('missao_selecionar'), self.on_select)])
 
+    def pause_restart(self):
+        self.on_restart()
+
+    def pause_leave(self):
+        self.on_select()
+
     def stop_audio(self):
         self.services.aureal.stop_all()
         self.services.voice.stop()
