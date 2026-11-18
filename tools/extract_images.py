@@ -7,11 +7,16 @@
   with premultiplied alpha, which is undone here.
 - HACKED_Title.ttf, the bundled font.
 
+Most bundle pngs are Apple "CgBI" pngs (made by Xcode for iPhones): BGRA, premultiplied alpha, and deflate data
+without a zlib header. They're converted to standard pngs on the way.
+
 usage: python -I tools/extract_images.py   (from the repository root, with the ipa unpacked in decompiled/ipa)
 """
 import os
 import shutil
+import struct
 import sys
+import zlib
 
 import numpy
 import pygame
@@ -33,6 +38,55 @@ def wanted(name):
     return True
 
 
+def is_cgbi(path):
+    with open(path, 'rb') as f:
+        return f.read(40).find(b'CgBI') >= 0
+
+
+def decode_cgbi(path):
+    """Returns (width, height, BGRA premultiplied bytes) of an Apple CgBI png."""
+    with open(path, 'rb') as f:
+        data = f.read()
+    pos, idat, w = 8, b'', 0
+    while pos < len(data):
+        n, kind = struct.unpack('>I4s', data[pos:pos + 8])
+        body = data[pos + 8:pos + 8 + n]
+        if kind == b'IHDR':
+            w, h, depth, ctype = struct.unpack('>IIBB', body[:10])
+            if depth != 8 or ctype != 6:
+                raise ValueError('%s: unsupported png type %d/%d' % (path, depth, ctype))
+        elif kind == b'IDAT':
+            idat += body
+        elif kind == b'IEND':
+            break
+        pos += 12 + n
+    raw = zlib.decompress(idat, -15)
+    stride = w * 4
+    out = numpy.zeros((h, stride), dtype=numpy.int32)
+    prev = numpy.zeros(stride, dtype=numpy.int32)
+    for y in range(h):
+        f = raw[y * (stride + 1)]
+        line = numpy.frombuffer(raw, dtype=numpy.uint8, count=stride, offset=y * (stride + 1) + 1).astype(numpy.int32)
+        cur = line.copy()
+        if f == 1 or f == 3 or f == 4:
+            for x in range(stride):
+                a = cur[x - 4] if x >= 4 else 0
+                if f == 1:
+                    cur[x] = (line[x] + a) & 255
+                elif f == 3:
+                    cur[x] = (line[x] + ((a + prev[x]) >> 1)) & 255
+                else:
+                    b, c = prev[x], (prev[x - 4] if x >= 4 else 0)
+                    pa, pb, pc = abs(b - c), abs(a - c), abs(a + b - 2 * c)
+                    pred = a if pa <= pb and pa <= pc else (b if pb <= pc else c)
+                    cur[x] = (line[x] + pred) & 255
+        elif f == 2:
+            cur = (line + prev) & 255
+        out[y] = cur
+        prev = cur
+    return w, h, out.astype(numpy.uint8).tobytes()
+
+
 def unpremultiply_bgra(raw, w, h):
     a = numpy.frombuffer(raw, dtype=numpy.uint8).reshape(h, w, 4).astype(numpy.float32)
     alpha = a[:, :, 3:4]
@@ -44,9 +98,17 @@ def unpremultiply_bgra(raw, w, h):
 def main():
     os.makedirs(os.path.join(OUT, 'catalog'), exist_ok=True)
     copied = 0
+    converted = 0
     for name in sorted(os.listdir(APP)):
         if wanted(name):
-            shutil.copy2(os.path.join(APP, name), os.path.join(OUT, name))
+            src = os.path.join(APP, name)
+            if name.lower().endswith('.png') and is_cgbi(src):
+                w, h, raw = decode_cgbi(src)
+                surface = pygame.image.frombuffer(unpremultiply_bgra(raw, w, h), (w, h), 'RGBA')
+                pygame.image.save(surface, os.path.join(OUT, name))
+                converted += 1
+            else:
+                shutil.copy2(src, os.path.join(OUT, name))
             copied += 1
     atlas = os.path.join(OUT, 'gameTextures.atlasc')
     if os.path.isdir(atlas):
@@ -62,7 +124,8 @@ def main():
         surface = pygame.image.frombuffer(unpremultiply_bgra(raw, w, h), (w, h), 'RGBA')
         pygame.image.save(surface, os.path.join(OUT, 'catalog', name))
         decoded += 1
-    print('copied', copied, 'images, the atlas and the font; decoded', decoded, 'catalog images')
+    print('copied', copied, 'images (%d converted from CgBI), the atlas and the font; decoded' % converted, decoded,
+          'catalog images')
 
 
 if __name__ == '__main__':
