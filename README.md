@@ -1,5 +1,18 @@
 # Nebula Game for Windows
 
+## Download
+
+The latest version, ready to play:
+
+- [Download for Windows](https://github.com/tunmi13productions/Nebula-Game/releases/latest/download/nebula_windows.zip)
+- [Download for Mac with Apple Silicon](https://github.com/tunmi13productions/Nebula-Game/releases/latest/download/nebula_macos_arm64.tar.gz)
+- [Download for Mac with an Intel processor](https://github.com/tunmi13productions/Nebula-Game/releases/latest/download/nebula_macos_x86_64.tar.gz)
+- [Download for Linux](https://github.com/tunmi13productions/Nebula-Game/releases/latest/download/nebula_linux.tar.gz)
+
+Unpack the archive and run Nebula (Nebula.exe on Windows, the Nebula app on a Mac). The first time, macOS may refuse to open a game that is not from the App Store; the Mac archive includes a text file saying how to open it anyway. Every release, with its notes, is on the [releases page](https://github.com/tunmi13productions/Nebula-Game/releases).
+
+## About
+
 A port of Nebula Game, an iOS audio space shooter by Gray Company, to Windows, in Python. The original `.ipa` is the source of truth: the game's logic, timings, sounds, speech and visuals are reproduced from its decompiled code and data, and every intentional difference is recorded in [docs/DEVIATIONS.md](docs/DEVIATIONS.md).
 
 It is an audiogame first. Sound carries everything; visuals are drawn only where the original had them.
