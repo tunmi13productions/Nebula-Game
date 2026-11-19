@@ -17,7 +17,7 @@ POINTS = (320, 568)    # the original's screen in points (iPhone 5)
 
 
 class GameWindow:
-    def __init__(self, services, tilt, title='Nebula', scale=1.5):
+    def __init__(self, services, tilt, title='Nebula Game', scale=1.5):
         """scale is pixels per point: the window is the original 320 by 568 point screen times scale."""
         self.services, self.tilt = services, tilt
         self.scene = None

@@ -1,6 +1,6 @@
-# Nebula for Windows
+# Nebula Game for Windows
 
-A port of Nebula, an iOS audio space shooter by Gray Company, to Windows, in Python. The original `.ipa` is the source of truth: the game's logic, timings, sounds, speech and visuals are reproduced from its decompiled code and data, and every intentional difference is recorded in [docs/DEVIATIONS.md](docs/DEVIATIONS.md).
+A port of Nebula Game, an iOS audio space shooter by Gray Company, to Windows, in Python. The original `.ipa` is the source of truth: the game's logic, timings, sounds, speech and visuals are reproduced from its decompiled code and data, and every intentional difference is recorded in [docs/DEVIATIONS.md](docs/DEVIATIONS.md).
 
 It is an audiogame first. Sound carries everything; visuals are drawn only where the original had them.
 
@@ -64,6 +64,6 @@ This opens a menu to build for this computer, make a console test build, build L
 
 ## Credits
 
-Nebula was made by Gray Company: developed by Bruno Moreira, Diego Pereira, Felipe Delazeri, Leonardo Gubert and Lucas Carletti, with revision and testing by Márcia Campos, Lucas Santurio, Raí Carvalho and Ricardo Rauber. Its sounds came from FreeSFX, OpenGameArt and SoundJay, and its graphics from OpenGameArt and MillionthVector.
+Nebula Game was made by Gray Company: developed by Bruno Moreira, Diego Pereira, Felipe Delazeri, Leonardo Gubert and Lucas Carletti, with revision and testing by Márcia Campos, Lucas Santurio, Raí Carvalho and Ricardo Rauber. Its sounds came from FreeSFX, OpenGameArt and SoundJay, and its graphics from OpenGameArt and MillionthVector.
 
 Windows port by tunmi13productions. The controller motion module comes from Sixth Sense Reborn (MIT License).

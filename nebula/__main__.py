@@ -1,4 +1,4 @@
-r"""Starts Nebula: python -m nebula
+r"""Starts Nebula Game: python -m nebula
 
 Progress is saved in %APPDATA%\Nebula\save.json and settings are read from %APPDATA%\Nebula\settings.json.
 """
@@ -21,7 +21,7 @@ def main():
     services = Services(OpenALBackend(), PrismRenderer(lang), ScreenReader(), Strings(lang),
                         GlobalState.load(save), save=save)
     tilt = KeyboardTilt()
-    window = GameWindow(services, tilt, 'Nebula', float(setting(settings, 'scale')))
+    window = GameWindow(services, tilt, 'Nebula Game', float(setting(settings, 'scale')))
     apply_settings(settings, services, tilt, window)
     App(window, services, tilt, settings=settings).start()
     window.run()
