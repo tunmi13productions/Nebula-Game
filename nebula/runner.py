@@ -63,6 +63,8 @@ class GameWindow:
                 and getattr(voice, 'awaiting_continue', False) and not in_game_menu):
             voice.continue_()       # "press Enter or Space to continue", in screen reader mode
             return
+        if down and hasattr(s, 'handle_text_event') and s.handle_text_event(ev):
+            return                  # a text box took the key
         named = {pygame.K_ESCAPE: 'escape', pygame.K_LEFT: 'left', pygame.K_RIGHT: 'right',
                  pygame.K_LCTRL: 'control', pygame.K_RCTRL: 'control', pygame.K_F1: 'f1'}.get(ev.key)
         if down and named and hasattr(s, 'handle_key') and s.handle_key(named):
@@ -120,6 +122,9 @@ class GameWindow:
                     self.running = False
                 elif ev.type in (pygame.KEYDOWN, pygame.KEYUP):
                     self.handle(ev)
+                elif ev.type == pygame.TEXTINPUT:
+                    if hasattr(self.scene, 'handle_text_event'):
+                        self.scene.handle_text_event(ev)
                 else:
                     self.handle_pad(ev)
             now = time.perf_counter()
