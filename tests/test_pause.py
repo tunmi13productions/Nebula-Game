@@ -107,3 +107,15 @@ def test_home_and_end_in_the_pause_menu():
     scene.menu_first()
     assert scene.menu_selection == 1
     assert services.voice.spoken[-1][0] == scene.menu_items[0][0]
+
+
+def test_control_in_the_pause_menu_keeps_a_line_s_follow_up():
+    scene, services = chapter([])
+    run(scene, services, 1.0)
+    done = []
+    services.voice.speak_then('Commander, enemies ahead.', 0.55, 0.0, 0.0, lambda: done.append(True))
+    scene.swipe_up()
+    scene.handle_key('control')
+    scene.menu_activate()                    # Continue
+    run(scene, services, 3.0)
+    assert done == [True]

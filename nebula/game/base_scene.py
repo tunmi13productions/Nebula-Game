@@ -378,7 +378,7 @@ class BaseScene(Scene):
         usual way."""
         if key == 'control':
             if self.in_menu:
-                self.services.voice.stop()
+                self.services.voice.silence()     # keeps a completion the game is waiting on
             return True
         return False
 
