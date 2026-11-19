@@ -12,6 +12,10 @@ from .view import new_view
 
 BACK_DOORS = 1.0   # the doors close over 1 second before a screen is popped
 
+# The word VoiceOver added after a button's label, in the game's language. A Portuguese VoiceOver said
+# "botão" itself; a screen reader here may be speaking with any voice, so the word is part of the text.
+BUTTON_WORD = {'en': 'button', 'pt': 'botão'}
+
 
 class Element:
     def __init__(self, label, action=None, button=True, visible=None):
@@ -28,8 +32,10 @@ class Element:
     def visible(self):
         return self._visible is None or self._visible()
 
-    def spoken(self):
-        return '%s, button' % self.label if self.button else self.label
+    def spoken(self, language='en'):
+        if not self.button:
+            return self.label
+        return '%s, %s' % (self.label, BUTTON_WORD.get(language, BUTTON_WORD['en']))
 
 
 class Screen:
@@ -91,16 +97,20 @@ class Screen:
         self.focus = min(self.focus, len(items) - 1)
         return items[self.focus]
 
+    def spoken(self, element):
+        """An element as VoiceOver read it, with "button" in the game's language."""
+        return element.spoken(self.services.strings.language)
+
     def announce_first(self):
         self.focus = 0
         e = self.focused()
         if e is not None:
-            self.say(e.spoken())
+            self.say(self.spoken(e))
 
     def announce(self):
         e = self.focused()
         if e is not None:
-            self.say(e.spoken())
+            self.say(self.spoken(e))
 
     def say(self, text):
         self.services.screen_reader.say(text)

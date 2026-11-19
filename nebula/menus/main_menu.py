@@ -164,7 +164,7 @@ class TutorialAlert(Screen):
         self.busy = False
         self.focus = 2
         s = self.services.strings
-        self.say('%s, %s, %s' % (s.get('alert_titulo'), s.get('alert_mesagem'), self.elements[2].spoken()))
+        self.say('%s, %s, %s' % (s.get('alert_titulo'), s.get('alert_mesagem'), self.spoken(self.elements[2])))
 
     def _dismiss(self):
         self.app.window.scene = self.menu   # the menu stays as it was under the alert

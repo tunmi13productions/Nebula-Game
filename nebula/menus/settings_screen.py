@@ -173,7 +173,7 @@ class SettingsScreen(Screen):
     def announce_first(self):
         """The title, the first setting, and how to change it."""
         self.focus = 0
-        self.say('%s. %s. %s' % (self.words['title'], self.focused().spoken(), self.words['hint']))
+        self.say('%s. %s. %s' % (self.words['title'], self.spoken(self.focused()), self.words['hint']))
 
     def change(self, direction):
         e = self.focused()

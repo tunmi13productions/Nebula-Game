@@ -506,3 +506,14 @@ def test_exit_closes_the_game():
     window.scene.menu_activate()
     assert closed == [True]
     assert services.effects.played[-1] == 'acceptButton.mp3'
+
+
+def test_portuguese_screens_say_botao():
+    services = Services.silent('pt')
+    window = Window(services)
+    app = App(window, services, None, open_url=lambda url: None)
+    services.save.set_integer('primeiraVez', 1)
+    app.open_main_menu()
+    window.scene.menu_next()
+    assert services.screen_reader.said[-1].endswith(', bot\u00e3o')
+    assert 'button' not in ' '.join(services.screen_reader.said)
