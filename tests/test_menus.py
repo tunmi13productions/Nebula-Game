@@ -475,3 +475,24 @@ def test_campaign_spells_its_chapter_in_letter_pictures():
     assert 'portaLisaCampanha' in textures and 'AlfabetoAct_D' in textures   # DIRECTION, unlocked
     assert any(t.startswith('Alfabeto_') for t in textures)                    # the locked levels
     assert glyph_name('\u00e3', True) == 'AlfabetoAct_A\u2560\u00e2'          # a with tilde
+
+
+def test_home_and_end_jump_to_the_ends_of_a_screen():
+    app, window, services = at_main_menu()
+    menu = window.scene
+    menu.menu_last()
+    assert said(services)[-1] == 'About, button'
+    menu.menu_first()
+    assert said(services)[-1] == 'Campaign, button'
+
+
+def test_home_and_end_in_the_campaign_selector():
+    app, window, services, spoken = campaign(2, 2)
+    window.scene.menu_last()
+    window.run(4.0)
+    assert spoken.lines[-1] == 'Level 4: Deception, Locked'
+    window.scene.menu_first()
+    window.run(4.0)
+    assert spoken.lines[-1] == 'Chapter 2: DIRECTION'
+    window.scene.menu_first()
+    assert services.effects.played[-1] == 'errorButton.mp3'

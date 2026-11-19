@@ -111,6 +111,20 @@ class Screen:
             self.focus += 1
             self.announce()
 
+    def menu_first(self):
+        """Home: the first element (a port addition, DEVIATIONS.md, "Home and End in menus")."""
+        if self.busy or not self._visible():
+            return
+        self.focus = 0
+        self.announce()
+
+    def menu_last(self):
+        """End: the last element."""
+        if self.busy or not self._visible():
+            return
+        self.focus = len(self._visible()) - 1
+        self.announce()
+
     def menu_previous(self):
         if self.busy:
             return

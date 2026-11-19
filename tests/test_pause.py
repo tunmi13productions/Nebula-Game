@@ -92,3 +92,18 @@ def test_control_silences_an_open_menu_but_not_play():
     scene.swipe_up()
     scene.handle_key('control')
     assert not services.voice.speaking
+
+
+def test_home_and_end_in_the_pause_menu():
+    scene, services = chapter([])
+    run(scene, services, 1.0)
+    scene.swipe_up()
+    count = len(scene.menu_items)
+    scene.menu_last()
+    assert scene.menu_selection == count
+    assert services.voice.spoken[-1][0] == scene.menu_items[-1][0]
+    scene.menu_last()
+    assert services.effects.played[-1] == 'errorButton.mp3'
+    scene.menu_first()
+    assert scene.menu_selection == 1
+    assert services.voice.spoken[-1][0] == scene.menu_items[0][0]

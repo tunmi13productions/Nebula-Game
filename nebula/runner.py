@@ -79,6 +79,10 @@ class GameWindow:
             s.menu_next()
         elif ev.key == pygame.K_UP:
             s.menu_previous()
+        elif ev.key == pygame.K_HOME and hasattr(s, 'menu_first'):
+            s.menu_first()
+        elif ev.key == pygame.K_END and hasattr(s, 'menu_last'):
+            s.menu_last()
         elif ev.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
             s.menu_activate()
 

@@ -419,6 +419,26 @@ class BaseScene(Scene):
         self.menu_selection -= 1
         self.services.voice.speak(self.menu_items[self.menu_selection - 1][0], RATE_STATUS)
 
+    def menu_first(self):
+        """Home: the first item, with the change sound (a port addition, DEVIATIONS.md, "Home and End in
+        menus"). Already there, the error sound, as at either end of the list."""
+        self._menu_jump(1)
+
+    def menu_last(self):
+        """End: the last item."""
+        if self.in_menu:
+            self._menu_jump(self._menu_count() - 1)
+
+    def _menu_jump(self, selection):
+        if not self.in_menu:
+            return
+        if selection == self.menu_selection:
+            self.services.effects.play('errorButton.mp3')
+            return
+        self.services.effects.play('chageButton.mp3')
+        self.menu_selection = selection
+        self.services.voice.speak(self.menu_items[selection - 1][0], RATE_STATUS)
+
     def menu_activate(self):
         """Double tap with VoiceOver (Enter here): the accept sound, then the item's action."""
         if not self.in_menu:

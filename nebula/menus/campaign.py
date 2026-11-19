@@ -146,6 +146,28 @@ class CampaignSelectScene:
         self._interrupt()
         self.swipe_left_detected()
 
+    def menu_first(self):
+        """Home: the chapter name (a port addition, DEVIATIONS.md, "Home and End in menus")."""
+        self._jump(0)
+
+    def menu_last(self):
+        """End: the last level."""
+        self._jump(ITEMS - 1)
+
+    def _jump(self, selection):
+        if self.leaving:
+            return
+        self._interrupt()
+        if self.swiping:
+            return
+        self.swiping = True
+        if selection == self.selection:
+            self._error()
+            return
+        self.services.effects.play('chageButton.mp3')
+        self.selection = selection
+        self._speak_item()
+
     def menu_activate(self):
         if self.leaving:
             return
