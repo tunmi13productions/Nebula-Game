@@ -114,6 +114,21 @@ def test_a_round_ends_with_the_winner_and_restarts():
     assert a.started and b.started
 
 
+def test_the_loser_can_keep_shooting_after_a_restart():
+    sides = pair()
+    (a, sa, _), (b, sb, _) = sides
+    run(sides, 4.5)
+    a.enemy.inflict_damage(5)               # B loses: its ship is destroyed
+    run(sides, 1.5 + 5.5 + 4.5)             # end screen, the restart, the countdown
+    assert b.started
+    shots = 0
+    for _ in range(3):
+        if b.player_shoot() is not None:
+            shots += 1
+        run(sides, 1.0)
+    assert shots == 3
+
+
 def test_the_opponent_leaving_returns_to_the_menu():
     sides = pair()
     (a, sa, aleft), (b, sb, bleft) = sides

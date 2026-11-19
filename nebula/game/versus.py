@@ -347,6 +347,7 @@ class VersusScene(BaseScene):
             self.add_child(self.label)
         self._remake_player()
         self._make_enemy(5, 0)
+        self.starting_shoot_loop()      # destroy() removed it from whoever lost the round
         self.allow_move = self.allow_shoot = False
         self.map.suspend_foreground()
         self.match_started()
