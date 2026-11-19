@@ -6,6 +6,7 @@ from ..engine.nodes import Node, Scene
 from ..engine.physics import Body, Circle, PhysicsWorld, attach, rectangle
 from ..data import engine_sound
 from . import looks
+from . import overlays
 from .hud import PlayerBars
 from .powerups import FAST_SHOT, LIFE, SHIELD, SPEED, PowerUp
 from .rand import between
@@ -307,6 +308,9 @@ class BaseScene(Scene):
 
     def add_score(self, ship):
         self.score_counter += ship.score
+        display = getattr(self, 'display', None)
+        if display is not None:
+            display.set_score(self.score_counter)
         if self.stage_number == 0:
             # VoiceOver-only in the original, always on here (see DEVIATIONS).
             self.services.voice.speak(self.services.strings.format('freemode_Score', self.score_counter), RATE_MOVE)
@@ -333,7 +337,7 @@ class BaseScene(Scene):
         self.open_menu(s.get('pause'), [(s.get('pause_continueLabel'), self.continue_game),
                                         (s.get('pause_replayLabel'), lambda: self._leave_pause(self.pause_restart)),
                                         (s.get('pause_exitLabel'), lambda: self._leave_pause(self.pause_leave))],
-                       end_screen=False)
+                       end_screen=False, overlay=overlays.pause(self))
         self.pause_game()
 
     def pause_game(self):
@@ -372,7 +376,7 @@ class BaseScene(Scene):
             return True
         return False
 
-    def open_menu(self, title, items, end_screen=True):
+    def open_menu(self, title, items, end_screen=True, overlay=None):
         """Shows an in-game menu. items is a list of (label, action). Selection starts on the first item and
         the title and that item are spoken together, as "%@, %@"."""
         self.menu_title = title
@@ -380,6 +384,7 @@ class BaseScene(Scene):
         self.menu_selection = 1
         self.in_menu = True
         self.end_screen = end_screen
+        self.menu_overlay = overlay          # the menu's picture (visual only), removed with the menu
         self.services.voice.speak('%s, %s' % (title, self.menu_items[0][0]), RATE_STATUS)
 
     in_menu = False
@@ -420,6 +425,10 @@ class BaseScene(Scene):
             return
         self.services.effects.play('acceptButton.mp3')
         self.in_menu = False
+        overlay = getattr(self, 'menu_overlay', None)
+        if overlay is not None:
+            overlay.remove_from_parent()
+            self.menu_overlay = None
         self.menu_items[self.menu_selection - 1][1]()
 
     def _schedule_end_game(self):

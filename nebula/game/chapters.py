@@ -10,6 +10,7 @@ The message window that shows each line is visual only. The lines are spoken, as
 """
 from ..engine import actions as A
 from . import rand
+from . import overlays
 from .base_scene import BaseScene, H, W
 from .cutscene import CutScene
 from .map_generator import MapGenerator
@@ -182,7 +183,8 @@ class ChapterScene(BaseScene):
             save.synchronize()
             on_next = self.on_select
         self.open_menu(s.get('missao_completou'), [(s.get('missao_proximo'), on_next),
-                                                   (s.get('missao_selecionar'), self.on_select)])
+                                                   (s.get('missao_selecionar'), self.on_select)],
+                       overlay=overlays.end_screen(self, 'missaoCompleta', 90))
 
     def _record_progress(self):
         g, save = self.services.globals, self.services.save
@@ -218,7 +220,8 @@ class ChapterScene(BaseScene):
         """telaGameOverCampanha: New game (restart the level), then Select level."""
         s = self.services.strings
         self.open_menu(s.get('game_over'), [(s.get('game_proximo'), self.on_restart),
-                                            (s.get('missao_selecionar'), self.on_select)])
+                                            (s.get('missao_selecionar'), self.on_select)],
+                       overlay=overlays.end_screen(self, 'gameOver', 80))
 
     def pause_restart(self):
         self.on_restart()

@@ -5,6 +5,7 @@ are Localizable.strings keys (tut_1.0 and so on) that resolve to the localized m
 """
 from ..audio.players import Narration
 from ..engine import actions as A
+from . import overlays
 from .map_generator import MapGenerator
 from .base_scene import BaseScene, H
 
@@ -218,7 +219,7 @@ class TutorialScene(BaseScene):
         self.open_menu(s.get('tutorial_completou'), [
             (s.get('tutorial_proximo'), self.on_select if last else self.on_next),
             (s.get('tutorial_selecionar'), self.on_select),
-        ])
+        ], overlay=overlays.end_screen(self, 'tutorialCompleto', 80))
 
     def stop_audio(self):
         """willMoveFromView: silence everything when leaving the scene."""

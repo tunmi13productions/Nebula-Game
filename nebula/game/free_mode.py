@@ -1,6 +1,7 @@
 """FreeModeScene: endless play with two enemy pools, a boss every tenth special, timed power-ups and a saved
 best score (see docs/MODES.md, Free mode)."""
 from ..engine import actions as A
+from . import overlays
 from .map_generator import MapGenerator
 from .base_scene import BaseScene, RATE_STATUS
 from .rand import between
@@ -30,6 +31,7 @@ class FreeModeScene(BaseScene):
         self.on_new_game = on_new_game or (lambda: None)   # novoJogo
         self.map = MapGenerator(self, services)            # initFreemodeMapInScene:
         self.map.free_mode()
+        self.display = overlays.FreeModeDisplay(self)      # the score and countdown labels (visual only)
 
     # start
 
@@ -42,9 +44,11 @@ class FreeModeScene(BaseScene):
         voice, s = self.services.voice, self.services.strings
         if self.segundos > 0:
             voice.speak('%d' % self.segundos, RATE_STATUS)
+            self.display.set_count('%d' % self.segundos)
         else:
             self.remove_action('RegressiveCounter')
             voice.speak(s.get('versus_Inicio'), RATE_STATUS)
+            self.display.set_count(s.get('versus_Inicio'))
             self.services.scheduler.after(FIRST_ENEMY_DELAY, self.create_first_enemy)
             self.time_between_power_ups = 60
             self.time_to_next_power_up = 60
@@ -54,6 +58,7 @@ class FreeModeScene(BaseScene):
     # spawning
 
     def create_first_enemy(self):
+        self.display.remove_count()
         self.base_in_scene = self.special_in_scene = 0
         self.total_base = self.total_special = 0
         self.ini_base, self.fin_base = 0, 3
@@ -131,6 +136,8 @@ class FreeModeScene(BaseScene):
         self.menu_selection = 1
         self.in_menu = True
         self.end_screen = True
+        self.menu_overlay = overlays.end_screen(self, 'gameOver', 80)
+        overlays.final_score(self, self.score_counter, best)
         summary = s.format('game_over_freemode', self.score_counter, best)
         self.services.voice.speak('%s , %s' % (summary, self.menu_items[0][0]), RATE_STATUS)
 

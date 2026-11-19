@@ -139,3 +139,20 @@ def test_bars_follow_life_and_shield():
     enemy = SpaceShip.enemy(12, scene, entrance=False)
     assert enemy.life_bar is not None
     assert getattr(SpaceShip.enemy(37, scene, entrance=False), 'life_bar', None) is None
+
+
+def test_menus_show_their_pictures_and_remove_them():
+    from nebula.game.free_mode import FreeModeScene
+    from nebula.game.services import Services
+    services = Services.silent('en')
+    scene = FreeModeScene(services)
+    scene.swipe_up()
+    pictures = [c.texture for n in scene.children for c in n.children if getattr(c, 'texture', None)]
+    assert 'pause_en' in pictures
+    scene.menu_activate()
+    assert not any(n.name == 'Pause background' for n in scene.children)
+    assert scene.display.score.text == '0'
+    s = draw(*[])     # labels render without a display
+    label_node = Node(position=(160, 300))
+    label_node.text, label_node.font_size, label_node.font_color = '12', 20, (1.0, 1.0, 0.0)
+    assert draw(label_node).get_size() == (320, 568)

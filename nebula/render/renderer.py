@@ -12,6 +12,12 @@ import math
 import pygame
 
 SCENE_BACKGROUND = (0.15, 0.15, 0.15)   # SKScene's default backgroundColor
+# iOS fonts the original named, and the closest Windows fonts (pygame SysFont names, first found wins)
+FONTS = {
+    'Futura-CondensedExtraBold': ('impact', 'arialblack', 'arial'),
+    'HelveticaNeue-Thin': ('segoeuilight', 'segoeui', 'arial'),
+    'Futura': ('centurygothic', 'segoeui', 'arial'),
+}
 
 
 class Renderer:
@@ -41,7 +47,8 @@ class Renderer:
             wpos = (pos[0] + scale * (x * c - y * s), pos[1] + scale * (x * s + y * c))
             wscale, wrot, walpha = scale * node.scale, rot + node.rotation, alpha * node.alpha
         counter[0] += 1
-        if getattr(node, 'texture', None) or getattr(node, 'color', None) or getattr(node, 'particles', None):
+        if (getattr(node, 'texture', None) or getattr(node, 'color', None) or getattr(node, 'particles', None)
+                or getattr(node, 'text', None)):
             items.append((gz, counter[0], node, wpos, wscale, wrot, walpha))
         for child in list(node.children):
             self._collect(child, gz, wpos, wscale, wrot, walpha, items, counter)
@@ -49,6 +56,9 @@ class Renderer:
     def _draw_node(self, surface, node, pos, scale, rot, alpha, height):
         if getattr(node, 'particles', None) is not None:
             self._draw_particles(surface, node, pos, scale, rot, alpha, height)
+            return
+        if getattr(node, 'text', None):
+            self._draw_label(surface, node, pos, scale, alpha, height)
             return
         k = self.scale
         name = getattr(node, 'texture', None)
@@ -94,6 +104,28 @@ class Renderer:
             img = img.copy()
             img.set_alpha(int(alpha * 255))
         surface.blit(img, rect)
+
+    def _font(self, name, size):
+        key = ('font', name, size)
+        font = self._scaled.get(key)
+        if font is None:
+            choices = FONTS.get(name, ('arial',))
+            font = pygame.font.SysFont(','.join(choices), max(1, size))
+            self._scaled[key] = font
+        return font
+
+    def _draw_label(self, surface, node, pos, scale, alpha, height):
+        """SKLabelNode: centred horizontally on its position, with the text's baseline on it."""
+        if not pygame.font.get_init():
+            pygame.font.init()
+        k = self.scale
+        font = self._font(getattr(node, 'font_name', 'Futura'), int(round(node.font_size * scale * k)))
+        color = [int(c * 255) for c in getattr(node, 'font_color', (1.0, 1.0, 1.0))[:3]]
+        img = font.render(str(node.text), True, color)
+        if alpha < 1.0:
+            img.set_alpha(int(alpha * 255))
+        x, y = pos[0] * k, (height - pos[1]) * k
+        surface.blit(img, (round(x - img.get_width() / 2), round(y - font.get_ascent())))
 
     def _draw_particles(self, surface, emitter, pos, scale, rot, alpha, height):
         """An SKEmitterNode's particles: the texture at its own size times each particle's scale, tinted by the
