@@ -24,6 +24,7 @@ from .settings_screen import LABELS as _SETTINGS_LABELS
 from .screen import Element, Screen
 
 RATE = 0.55
+EXIT_LABELS = {'en': 'Exit', 'pt': 'Sair'}
 LOADING_FADE = 2.0
 DOORS_DELAY = 2.0      # the 1 second flash, then the 1 second door fade-in
 MUSIC_DELAY = 3.4      # then the 0.4 second door opening and two 0.5 second steps
@@ -42,6 +43,8 @@ class MainMenuScreen(Screen):
             Element(settings_label(s), lambda: self.open(self.app.open_settings)),
             Element(s.get('WWl-xv-diA.normalTitle'), lambda: self.open(self.app.open_hangar)),
             Element(s.get('ZcV-1U-Bf2.normalTitle'), lambda: self.open(self.app.open_about)),
+            # Exit, a port addition with no picture (DEVIATIONS.md, "Exit on the main menu")
+            Element(EXIT_LABELS.get(s.language, EXIT_LABELS['en']), self.exit_game),
         ]
 
     def appeared(self):
@@ -98,6 +101,12 @@ class MainMenuScreen(Screen):
             self.services.voice.speak(self.services.strings.get('tela_load'), RATE)
             fn()
         self.services.scheduler.after(LOADING_FADE, loaded)
+
+    def exit_game(self):
+        """Closes the game. iOS apps had no exit; the home button left them."""
+        self.busy = True
+        self.services.effects.play('acceptButton.mp3')
+        self.app.quit()
 
     def handle_key(self, key):
         if key == 'f1' and not self.busy:

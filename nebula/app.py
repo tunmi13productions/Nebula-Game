@@ -142,6 +142,12 @@ class App:
     def open_about(self):
         self.push(AboutScreen(self))
 
+    def quit(self):
+        """Closes the window, which ends the game."""
+        quit_window = getattr(self.window, 'quit', None)
+        if quit_window is not None:
+            quit_window()
+
     def open_settings(self):
         """The Settings screen, a port addition."""
         self.push(SettingsScreen(self, self.settings, self.settings_path))

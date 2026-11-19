@@ -136,3 +136,9 @@ Each entry is a settled decision. Don't change a deviated behaviour unless the u
   - The pad vibrates: a short buzz on both motors when the player is hit (shield or life), a long strong buzz when the player explodes, a small pulse on the light motor for a power-up, and the left (low) or right (high) motor when the ship arrives at that edge of the screen.
   - The Systems screen has controller tilt steering on or off, controller tilt sensitivity, and controller vibration on or off. Shaking the pad does nothing.
 - Reason: a pad's motion sensor is the closest Windows has to the phone's tilt, and vibration gives a sense of touch the keyboard can't. Requested by the user on 2026-11-18, with the vibration patterns chosen by the user.
+
+## Exit on the main menu
+
+- Original: an iOS app had no way to quit from inside it; the home button left it.
+- Changed: Exit (Sair in Portuguese) is the last item on the main menu, after About. It plays the accept sound and closes the game. It has no picture: the menu's door artwork is unchanged, so it is heard but not seen.
+- Reason: a Windows program needs a way to close it besides the window's close button, which a screen reader user may not reach easily. Requested by the user on 2026-11-18.

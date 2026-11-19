@@ -64,12 +64,12 @@ def test_startup_speaks_the_headphones_notice_then_thunder_then_opens_the_menu()
 def test_main_menu_reads_its_buttons_in_screen_order():
     app, window, services = at_main_menu()
     menu = window.scene
-    for _ in range(7):
+    for _ in range(8):
         menu.menu_next()
     assert said(services) == ['Campaign, button', 'Free Mode, button', 'Tutorial, button', 'Systems, button',
-                              'Hangar, button', 'About, button']   # Systems is a port addition
+                              'Hangar, button', 'About, button', 'Exit, button']   # Systems and Exit are additions
     menu.menu_previous()
-    assert said(services)[-1] == 'Hangar, button'
+    assert said(services)[-1] == 'About, button'
 
 
 def test_main_menu_plays_the_doors_once_and_resets_chapter_control():
@@ -481,7 +481,7 @@ def test_home_and_end_jump_to_the_ends_of_a_screen():
     app, window, services = at_main_menu()
     menu = window.scene
     menu.menu_last()
-    assert said(services)[-1] == 'About, button'
+    assert said(services)[-1] == 'Exit, button'
     menu.menu_first()
     assert said(services)[-1] == 'Campaign, button'
 
@@ -496,3 +496,13 @@ def test_home_and_end_in_the_campaign_selector():
     assert spoken.lines[-1] == 'Chapter 2: DIRECTION'
     window.scene.menu_first()
     assert services.effects.played[-1] == 'errorButton.mp3'
+
+
+def test_exit_closes_the_game():
+    app, window, services = at_main_menu()
+    closed = []
+    window.quit = lambda: closed.append(True)
+    window.scene.menu_last()
+    window.scene.menu_activate()
+    assert closed == [True]
+    assert services.effects.played[-1] == 'acceptButton.mp3'

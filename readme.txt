@@ -22,6 +22,7 @@ Tutorial: the six lessons.
 Systems: the settings, described further down.
 Hangar: spend the points you earn in the campaign on upgrades for life, shield, ship speed, attack speed and the power shot.
 About: the credits.
+Exit: close the game. It is spoken only; the menu picture has no Exit button.
 
 
 Keyboard
