@@ -94,25 +94,42 @@ def render_with_pauses(render_one, text, rate):
     return pcm or [0.0], channels, sample_rate
 
 
-class PrismRenderer:
-    """Renders text with a Prism backend that supports speak_to_memory (OneCore, falling back to SAPI)."""
+# The text-to-speech engines tried for the game voice, in order: Windows (OneCore, then SAPI), macOS
+# (AVSpeech) and Linux (Spiel, then Speech Dispatcher). The game voice stands for the original's
+# AVSpeechSynthesizer, so plain engines come before screen readers.
+VOICE_BACKENDS = ('ONE_CORE', 'SAPI', 'AV_SPEECH', 'SPIEL', 'SPEECH_DISPATCHER')
+CHARS_PER_SECOND = 15.0   # a live engine's speed at rate 0.5, for timing lines it can't render
 
-    def __init__(self, language='en', backend_names=('OneCore', 'SAPI')):
+
+class PrismRenderer:
+    """Renders the game voice with a Prism engine that supports speak_to_memory, so the game hears the exact
+    end of each line and plays it through its own audio.
+
+    Where no engine can render to memory, the first engine that works speaks live instead, and render()
+    returns silence of the line's estimated length, so the game's timing still has an end to wait for
+    (`live` is then True)."""
+
+    def __init__(self, language='en', backend_names=VOICE_BACKENDS):
         import prism
         from prism import core
         self._lib, self._ffi = core.lib, core.ffi
         ctx = prism.Context()
         self.backend = None
+        self.live = False
+        fallback = None
         for name in backend_names:
             try:
-                b = ctx.create(ctx.id_of(name))
+                b = ctx.create(getattr(prism.BackendId, name))
             except Exception:
                 continue
             if b.features.supports_speak_to_memory:
                 self.backend = b
                 break
+            fallback = fallback or b
         if self.backend is None:
-            raise RuntimeError('No speech backend that can render to memory (OneCore or SAPI) is available')
+            if fallback is None:
+                raise RuntimeError('No text-to-speech engine is available for the game voice')
+            self.backend, self.live = fallback, True
         self._context = ctx
         self.select_language(language)
 
@@ -126,7 +143,28 @@ class PrismRenderer:
         return False
 
     def render(self, text, rate):
+        if self.live:
+            return self._speak_live(text, rate)
         return render_with_pauses(self._render_one, text, rate)
+
+    def _speak_live(self, text, rate):
+        """Speaks the line now and returns silence as long as it should take."""
+        try:
+            self.backend.rate = max(0.0, min(1.0, rate))
+            self.backend.speak(text, interrupt=False)
+        except Exception:
+            pass
+        seconds = len(text) / (CHARS_PER_SECOND * (0.5 + max(0.0, min(1.0, rate))))
+        sample_rate = 16000
+        return [0.0] * max(1, int(seconds * sample_rate)), 1, sample_rate
+
+    def stop(self):
+        """Silences a live engine (a rendered line is stopped with its sound)."""
+        if self.live:
+            try:
+                self.backend.stop()
+            except Exception:
+                pass
 
     def _render_one(self, text, rate):
         self.backend.rate = max(0.0, min(1.0, rate))
@@ -218,6 +256,9 @@ class GameVoice(Speaker):
                 self.audio.stop(self._current['handle'])
                 self.audio.release(self._current['handle'])
             self._current = None
+            stop = getattr(self.renderer, 'stop', None)
+            if stop is not None:
+                stop()                  # an engine speaking live
 
     def _enqueue(self, text, rate, pre, post):
         self._queue.append((text, rate, pre, post))

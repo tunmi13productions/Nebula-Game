@@ -24,12 +24,26 @@ def _load(name):
 
 
 def windows_language():
-    """'pt' if the Windows display language is any Portuguese, otherwise 'en', like iOS picked pt.lproj or Base."""
+    """'pt' if the system's display language is any Portuguese, otherwise 'en', like iOS picked pt.lproj or Base.
+    On macOS and Linux, where there is no Windows display language, the locale settings decide."""
     try:
         langid = ctypes.windll.kernel32.GetUserDefaultUILanguage()
     except (AttributeError, OSError):
-        return 'en'
+        return _locale_language()
     return 'pt' if (langid & 0x3FF) == _PORTUGUESE_PRIMARY_LANGID else 'en'
+
+
+def _locale_language():
+    import locale
+    for name in ('LC_ALL', 'LC_MESSAGES', 'LANG', 'LANGUAGE'):
+        value = os.environ.get(name, '')
+        if value:
+            return 'pt' if value.lower().startswith('pt') else 'en'
+    try:
+        code = locale.getlocale()[0] or ''
+    except (ValueError, TypeError):
+        code = ''
+    return 'pt' if code.lower().startswith('pt') else 'en'
 
 
 def choose_language(settings):

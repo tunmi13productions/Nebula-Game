@@ -15,10 +15,18 @@ A missing or unreadable file means no overrides.
 """
 import json
 import os
+import sys
 
 
 def user_dir():
-    base = os.environ.get('APPDATA') or os.path.expanduser('~')
+    r"""Where the save and settings live: %APPDATA%\Nebula on Windows, ~/Library/Application Support/Nebula
+    on macOS, and $XDG_DATA_HOME/Nebula (~/.local/share/Nebula) on Linux, as Sixth Sense Reborn does."""
+    if sys.platform == 'win32':
+        base = os.environ.get('APPDATA') or os.path.expanduser('~')
+    elif sys.platform == 'darwin':
+        base = os.path.join(os.path.expanduser('~'), 'Library', 'Application Support')
+    else:
+        base = os.environ.get('XDG_DATA_HOME') or os.path.join(os.path.expanduser('~'), '.local', 'share')
     return os.path.join(base, 'Nebula')
 
 
