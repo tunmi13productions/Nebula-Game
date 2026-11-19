@@ -15,7 +15,8 @@ the reading order, opens the Systems (settings) screen instead, a port addition.
   (menuSound.mp3, looping forever, full volume, kept in Global.mainMenuMusic), plays it if the menu is on
   screen, and shows the first-launch alert when primeiraVez isn't 1.
 - Every time the menu appears, ControleCapitulo is reset to "no" and the menu music plays if it exists.
-- Gameplay stops the music: free mode on entry and the campaign when a level starts. Tutorials don't.
+- Gameplay stops the music: free mode on entry, the campaign when a level starts, and a tutorial when it's
+  opened from the tutorial selection (its stopMenuMusic notification).
 """
 from ..engine import actions as A
 from . import view as V

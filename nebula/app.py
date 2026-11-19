@@ -116,6 +116,9 @@ class App:
         self.push(TutorialSelectionScreen(self))
 
     def start_tutorial(self, n):
+        """TutorialSelectionViewController prepareForSegue:sender: posts stopMenuMusic before the tutorial
+        opens. The next section keeps it stopped."""
+        self.stop_menu_music()
         self.window.set_scene(TutorialScene(self.services, self.tilt, n, on_select=self.tutorial_selected_back,
                                             on_next=lambda: self.next_tutorial(n)))
 

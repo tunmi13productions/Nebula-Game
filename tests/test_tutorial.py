@@ -121,3 +121,18 @@ def test_hits_in_the_tutorial_still_sound_but_cost_nothing():
     assert 'player_hit.caf' in services.effects.played
     assert scene.player.life == scene.player.max_life
     assert not any(l.startswith('Your life is') for l in lines(services))
+
+
+def test_opening_a_tutorial_stops_the_menu_music_and_select_tutorial_resumes_it():
+    from test_menus import open_tutorials
+    app, window, services = open_tutorials()
+    app.create_menu_music()
+    app.play_menu_music()
+    music = app.menu_music
+    window.scene.menu_next()
+    window.scene.menu_activate()
+    window.run(2.1)
+    assert type(window.scene).__name__ == 'TutorialScene'
+    assert not music.playing
+    app.tutorial_selected_back()
+    assert music.playing
