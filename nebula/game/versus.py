@@ -41,6 +41,7 @@ SEND_INTERVAL = 0.05              # sendMove: (DAT_00080220)
 COUNT_INTERVAL = 1.0
 END_DELAY = 1.0
 MAX_WAITING_TIME = 5.0
+MATCH_PAUSE = 3.0                 # after pairing, time to hear who the opponent is (a port addition)
 SHOT_FRAME = 0.04                 # DAT_00082010 / DAT_00080ef8
 SHOT_FLIGHT = 1.0
 COUNT_START = 4                   # counter: speaks 3, 2, 1, then versus_Inicio
@@ -90,7 +91,7 @@ class VersusScene(BaseScene):
             self.lobby_music = LoopingMusic(services.audio, path)
             self.lobby_music.play()
             services.audio.set_volume(self.lobby_music.handle, 0.5 * VOLUMES.music)
-        net.on_matched = lambda name: self.match_started()
+        net.on_matched = lambda name: self.matched()
         net.on_data = self.receive
         net.on_opponent_left = self.match_ended
         net.on_error = lambda reason: self.match_ended()
@@ -153,6 +154,11 @@ class VersusScene(BaseScene):
             self.match_ended()
             return False
         return True
+
+    def matched(self):
+        """The relay paired the players. The App says who with; matchStarted follows after a pause so it can
+        be heard (DEVIATIONS.md, "Being paired is announced")."""
+        self.services.scheduler.after(MATCH_PAUSE, lambda: None if self.ended else self.match_started())
 
     def match_started(self):
         """matchStarted: the nebulas begin, the lobby goes, the specs are sent, and the 5 second watchdog."""

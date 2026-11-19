@@ -201,6 +201,14 @@ class App:
             say(w['waiting'])
 
         net.on_waiting = waiting
+        scene_matched = net.on_matched
+        paired = {'host': 'joined', 'join': 'joined_game'}.get(mode, 'matched')
+
+        def matched(name):
+            say(w[paired] % name)
+            scene_matched(name)
+
+        net.on_matched = matched
         def got_code(c):     # not named code: that would replace the joining code above before welcome runs
             scene.invite_code = c
             say(w['your_code'] % spelled(c))

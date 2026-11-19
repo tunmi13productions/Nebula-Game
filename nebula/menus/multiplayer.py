@@ -30,6 +30,8 @@ WORDS = {
         'your_code': 'Your code is %s. Give it to your friend; waiting for them to join. Press C to hear it '
                      'again, or Shift C to copy it.',
         'code_copied': 'Code %s copied.',
+        'joined': '%s has joined.', 'joined_game': "You joined %s's game.",
+        'matched': 'You have been matched with %s.',
         'unreachable': "Can't reach the multiplayer server.", 'bad_code': 'No game with that code.',
         'version': 'This version of the game is too old for the multiplayer server.',
         'disconnected': 'The connection to the multiplayer server was lost.',
@@ -45,6 +47,8 @@ WORDS = {
         'your_code': 'Seu código é %s. Passe para o seu amigo; esperando ele entrar. Pressione C para ouvir '
                      'de novo, ou Shift C para copiar.',
         'code_copied': 'Código %s copiado.',
+        'joined': '%s entrou.', 'joined_game': 'Você entrou na partida de %s.',
+        'matched': 'Você foi pareado com %s.',
         'unreachable': 'Não foi possível alcançar o servidor multijogador.',
         'bad_code': 'Nenhuma partida com esse código.',
         'version': 'Esta versão do jogo é antiga demais para o servidor multijogador.',

@@ -4,7 +4,7 @@ import random
 
 import pygame
 
-from nebula.game.versus import VersusScene
+from nebula.game.versus import MATCH_PAUSE, VersusScene
 from nebula.menus.multiplayer import MultiplayerScreen, NameChoiceScreen, generate_name, spelled
 from test_menus import at_main_menu, said
 
@@ -98,6 +98,9 @@ def test_quick_match_connects_waits_and_starts_the_scene(tmp_path):
     assert window.scene.is_host              # the one who waited hosts
     client.opponent = 'Starship 17'
     client.on_matched('Starship 17')
+    assert said(services)[-1] == 'You have been matched with Starship 17.'
+    assert window.scene.lobby is not None    # a pause, so the line is heard before the countdown
+    services.scheduler.update(MATCH_PAUSE + 0.1)
     assert window.scene.lobby is None
 
 
@@ -112,6 +115,20 @@ def test_joining_sends_the_typed_code(tmp_path):
     assert isinstance(window.scene, VersusScene)
     client.on_welcome('Nebula 482')
     assert client.calls[-1] == ('join', '4127') and not window.scene.is_host
+    client.on_matched('Nebula 1')
+    assert said(services)[-1] == "You joined Nebula 1's game."
+
+
+def test_hosting_says_who_joined_in_portuguese(tmp_path):
+    app, window, services, client = open_multiplayer(tmp_path, 'Nebula 482')
+    services.strings.__init__('pt')
+    window.scene.menu_next()
+    window.scene.menu_next()
+    window.scene.menu_activate()                     # Invite a friend
+    client.on_welcome('Nebula 482')
+    client.on_code('4821')
+    client.on_matched('Estrela 9')
+    assert said(services)[-1] == 'Estrela 9 entrou.'
 
 
 def test_hosting_reads_the_code_and_a_bad_code_returns(tmp_path):

@@ -2,7 +2,7 @@
 import pytest
 
 from nebula.game.services import Services
-from nebula.game.versus import VersusScene, enemy_stats
+from nebula.game.versus import MATCH_PAUSE, VersusScene, enemy_stats
 from nebula.input import KeyboardTilt
 
 FRAME = 1 / 60
@@ -54,6 +54,7 @@ def pair(a_points=(0, 0), b_points=(0, 0)):
     sides[0][0].is_host = True
     for net in nets:
         net.on_matched('x')
+    run(sides, MATCH_PAUSE)
     return sides
 
 
@@ -187,7 +188,25 @@ def test_no_answer_within_five_seconds_returns_to_the_menu():
     left = []
     scene = VersusScene(services, KeyboardTilt(0.3), net, lambda: left.append(True))
     net.on_matched('Silent')
-    for _ in range(int(5.2 / FRAME)):
+    for _ in range(int((MATCH_PAUSE + 5.2) / FRAME)):
         services.scheduler.update(FRAME)
         scene.step(FRAME)
     assert left == [True]
+
+
+def test_the_match_waits_after_pairing_and_escape_still_leaves():
+    services = Services.silent('en')
+    net = FakeNet('Alone')
+    net.partner = other = FakeNet('Other')
+    left = []
+    scene = VersusScene(services, KeyboardTilt(0.3), net, lambda: left.append(True))
+    net.on_matched('Other')
+    for _ in range(int((MATCH_PAUSE - 0.5) / FRAME)):
+        services.scheduler.update(FRAME)
+        scene.step(FRAME)
+    assert scene.lobby is not None and not other.inbox            # nothing sent yet
+    assert scene.handle_key('escape') and left == [True]
+    for _ in range(int(1.0 / FRAME)):
+        services.scheduler.update(FRAME)
+        scene.step(FRAME)
+    assert not other.inbox                   # leaving cancelled the match start
