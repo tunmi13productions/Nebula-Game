@@ -89,7 +89,7 @@ Steering speed: how fast the ship moves while you hold a steering key or button.
 Fast steering speed, with Shift: the same while holding Shift. Default 0.6.
 Controller tilt steering: on or off.
 Controller tilt sensitivity: how far you need to roll the controller. Higher means a smaller roll steers harder.
-Danger zone width: when enemy shots sound right in front of you, move. Higher warns you from further away.
+Danger zone width: how wide enemy shots and lasers sound. Higher makes them sound wider, so you hear them in front of you from further to the side.
 Controller vibration: on or off.
 Sound volume, music volume and speech volume: 0 to 100 percent. Speech means the game's own voice and the story narration, not your screen reader.
 Speech rate: how fast the game's own voice talks. 1 is the original speed.
