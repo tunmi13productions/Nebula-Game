@@ -42,9 +42,8 @@ EXPLAIN = {
         'tilt': 'How fast the ship slides while you hold an arrow key. Higher is faster. 1 is like tipping the '
                 'phone fully on its side.',
         'fast_tilt': 'The same, while you also hold Shift.',
-        'danger_zone': "How wide the area is where an enemy's shots and lasers sound straight ahead of you. "
-                       'At 1, they sound centred about when they could hit you. Higher also centres near misses, '
-                       'so you start dodging sooner. Lower centres only the shots right in front of you.',
+        'danger_zone': 'When enemy shots sound right in front of you, move. Higher warns you from further '
+                       'away.',
         'sound_volume': 'Ships, shots, explosions and the other game sounds.',
         'music_volume': 'The music.',
         'speech_volume': "The game's own voice and the story narration. Your screen reader is not affected.",
@@ -69,10 +68,8 @@ EXPLAIN = {
         'tilt': 'A velocidade com que a nave desliza enquanto você segura uma seta. Maior é mais '
                 'rápido. 1 é como deitar o celular totalmente de lado.',
         'fast_tilt': 'O mesmo, enquanto você também segura Shift.',
-        'danger_zone': 'A largura da área em que os tiros e lasers inimigos soam bem à sua frente. '
-                       'Em 1, eles soam no centro mais ou menos quando podem te acertar. Maior também '
-                       'centraliza os tiros que passam perto, para você desviar antes. Menor centraliza '
-                       'só os tiros bem à sua frente.',
+        'danger_zone': 'Quando os tiros inimigos soam bem à sua frente, desvie. Maior avisa de mais '
+                       'longe.',
         'sound_volume': 'Naves, tiros, explosões e os outros sons do jogo.',
         'music_volume': 'A música.',
         'speech_volume': 'A voz do próprio jogo e a narração da história. Seu leitor de '

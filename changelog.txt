@@ -6,6 +6,7 @@ Choose Multiplayer on the main menu. The first time, type a pilot name or have o
 Quick match plays whoever else is waiting. Invite a friend gives you a four-digit code for your friend to type in Join a friend. While you wait, C reads the code again and Shift C copies it.
 Matches play as in the original: a countdown, your opponent's ship heard where it is, the winner or a draw announced, and a new round after five seconds. Your Hangar upgrades count.
 Multiplayer is back in its place on the main menu doors. Systems is now spoken after About, and F1 still opens it.
+The explanation of Danger zone width in Systems is simpler.
 
 1.1
 New: a Game voice option in Systems. Your screen reader can speak the game's own lines instead of the built-in voice. This is experimental and may not behave as intended. Where the game waits for a line to finish, it asks you to press Enter or Space to continue.
