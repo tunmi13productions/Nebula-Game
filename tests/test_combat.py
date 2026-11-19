@@ -169,7 +169,7 @@ def test_laser_sound_is_centred_inside_the_danger_zone_and_pans_from_its_edge():
     services = Services.silent('en')
     scene = FreeModeScene(services)
     px = scene.player.position[0]
-    reach = (scene.player.ship_size[0] * 0.5 * scene.player.scale + scene.size[0] / 100.0) * 1.5
+    reach = (scene.player.ship_size[0] * 0.25 * scene.player.scale + scene.size[0] / 100.0) * 1.5
     ship = SpaceShip.enemy(3, scene, entrance=False)
     scene.add_child(ship)
     source = laser_sound(ship)
@@ -187,7 +187,7 @@ def test_bullet_sounds_are_centred_while_the_bullet_can_hit():
     services = Services.silent('en')
     scene = FreeModeScene(services)
     px = scene.player.position[0]
-    reach = (scene.player.ship_size[0] * 0.5 * scene.player.scale + 5.0) * 1.5
+    reach = (scene.player.ship_size[0] * 0.25 * scene.player.scale + 5.0) * 1.5
     ship = SpaceShip.enemy(1, scene, entrance=False)
     scene.add_child(ship)
     ship.position = (px + reach - 2, 400.0)

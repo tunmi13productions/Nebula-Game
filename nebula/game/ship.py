@@ -62,8 +62,9 @@ class DangerZoneSound:
 
     The original linked laser and bullet sounds to a single point (the laser ship, or the bullet). But a laser
     beam or a falling bullet hits the player anywhere its column comes within the player's hitbox half-width
-    plus its own half-width. Here the sound sits at the player's own x while the column is inside that zone,
-    times services.danger_zone (1.5 by default, the "danger_zone" setting), so it's heard straight ahead,
+    plus its own half-width. Here the sound sits at the player's own x while the column is inside a zone of a
+    quarter of the player's width plus the attack's half-width, times services.danger_zone (1.5 by default,
+    the "danger_zone" setting): about 45 to 47 points either side. There it's heard straight ahead,
     and otherwise at the distance past the zone's edge, so it pans only once the player is clear. The height
     stays the source's. Aureal reads `position` and `parent` from it as from a node.
     """
@@ -82,7 +83,7 @@ class DangerZoneSound:
         if game is None:
             return (x, y)
         player = game.player
-        reach = (player.ship_size[0] * 0.5 * player.scale + self.half_width) * game.services.danger_zone
+        reach = (player.ship_size[0] * PLAYER_SHARE * player.scale + self.half_width) * game.services.danger_zone
         px = player.position[0]
         d = x + self.column_offset - px
         if abs(d) <= reach:
@@ -95,6 +96,7 @@ class DangerZoneSound:
 
 
 BULLET_RADIUS = 5.0
+PLAYER_SHARE = 0.25   # how much of the player's width counts towards the zone; chosen by the user by ear
 
 
 def laser_sound(source, column_offset=0.0):
