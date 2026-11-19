@@ -1,5 +1,14 @@
 Nebula changelog
 
+1.2.1
+Fixed: joining a friend always said there was no game with that code. The code you typed is now the one sent.
+Fixed: whoever lost a round could only fire once in the next round.
+Changed: rounds no longer restart by themselves. When a round ends, the host can choose Restart or Back to menu; the other player can go back to the menu, or wait for the host to restart. The host is whoever shared the invite code, or in a quick match whoever was waiting first.
+New: when you are paired, you hear who with: your friend has joined, you joined your friend's game, or you have been matched with another pilot. The countdown starts a few seconds later.
+New: if your opponent leaves, you hear that they left.
+Everything new is in Portuguese too.
+Multiplayer needs 1.2.1 or newer on both computers. 1.2 is told it is too old.
+
 1.2
 New: multiplayer is back. Play against another player over the internet, as the original's versus mode did through Game Center, now through the game's own server.
 Choose Multiplayer on the main menu. The first time, type a pilot name or have one generated, like Nebula 482. You can change it in Systems, under Pilot name.

@@ -77,8 +77,8 @@ Quick match: play whoever else is waiting.
 Invite a friend: you get a four-digit code. Read it out to your friend, who chooses Join a friend and types it in. While you wait, press C to hear the code again, or Shift C to copy it to the clipboard.
 Join a friend: type your friend's code.
 While you wait, the lobby music plays. Escape leaves.
-Once matched, the game counts down 3, 2, 1 and says Start. Your opponent's ship is at the top of the screen, and you hear its engine where it is. Dodge their shots and fire back. Your Hangar upgrades count in multiplayer too.
-When a ship is destroyed, the winner is announced, or a draw if both fall together, and a new round starts after five seconds. Choose Back to menu to leave.
+Once matched, you hear who you are playing: your friend has joined, you joined your friend's game, or you have been matched with another pilot. A few seconds later the game counts down 3, 2, 1 and says Start. Your opponent's ship is at the top of the screen, and you hear its engine where it is. Dodge their shots and fire back. Your Hangar upgrades count in multiplayer too.
+When a ship is destroyed, the winner is announced, or a draw if both fall together. The host (whoever shared the invite code, or in a quick match whoever was waiting first) can then choose Restart for a new round, or Back to menu. The other player can choose Back to menu, or wait for the host to restart. If your opponent leaves, you are told, and you return to the multiplayer menu.
 
 
 Systems (settings)
