@@ -15,6 +15,7 @@ on the button.
 Back: the accept sound, ControleCapitulo goes back to "no", the doors close over 1 second and the screen is
 popped.
 """
+from . import view as V
 from .screen import Element, Screen
 
 MAX_POINTS = 5
@@ -45,6 +46,62 @@ class HangarScreen(Screen):
                 (lambda a, k: lambda: s.format(k, getattr(g, a), g.win_points))(attr, button_key),
                 (lambda a: lambda: self.action_up_power(a))(attr),
                 visible=(lambda a: lambda: getattr(g, a) < MAX_POINTS and g.win_points >= 1)(attr)))
+        self.build_pictures()
+
+    def build_pictures(self):
+        """viewDidLoad's look (visual only), from the traced frames: portaLisa over the screen; "N AVAILABLE
+        POINTS" centred near the top; the five stat names (lbl_*, white 0.9 at half opacity, bold condensed
+        21 points) at x 48 every 56.8 points from y 113.6; under each an empty glass bar (Vidro_Vazio, 256 by
+        28.4) with the filled glass (Vidro_Preenchimento) at 256 / 5 per point; a plus button (42.6 square)
+        at the left, PlusActive when it can be used, PlusInactive otherwise; the ship (95.85 by 153.36) on
+        base_ship and base_ship2 at the bottom; the back picture at the top; and the doors."""
+        W, H = V.W, V.H
+        s, g = self.services.strings, self.services.globals
+        self.view.add_child(V.image('portaLisa', 0, 0, W, H))
+        grey = (0.9, 0.9, 0.9)
+        self.points_label = V.text('', 0, 81.1429 - 14.2, W, 28.4, 21, 'Futura-CondensedExtraBold', grey, z=2)
+        self.points_label.alpha = 0.5
+        self.view.add_child(self.points_label)
+        names = ('lbl_life', 'lbl_shield', 'lbl_speed', 'lbl_atkSpeed', 'lbl_power')
+        self.fills, self.pluses = [], []
+        for i, ((attr, _, _), name) in enumerate(zip(STATS, names)):
+            y = 113.6 + 56.8 * i
+            label = V.text(s.get(name), 48, y, 160, 28.4, 21, 'Futura-CondensedExtraBold', grey, z=2)
+            label.alpha, label.align = 0.5, 'left'
+            label.position = (48.0, label.position[1])
+            self.view.add_child(label)
+            self.view.add_child(V.image('Vidro_Vazio', 48, y + 28.4, 256, 28.4, z=1))
+            fill = V.image('Vidro_Preenchimento', 48, y + 28.4, 0, 28.4, z=2)
+            fill.anchor = (0.0, 0.5)
+            fill.position = (48, fill.position[1])
+            self.view.add_child(fill)
+            self.fills.append((attr, fill))
+            plus = V.image('PlusInactive', 2.7, y + 14.2, 42.6, 42.6, z=2)
+            self.view.add_child(plus)
+            self.pluses.append((attr, plus))
+        self.view.add_child(V.image('base_ship2', 74.8, 397.6, 170.4, 170.4, z=1))
+        self.view.add_child(V.image('base_ship', 74.8, 397.6, 170.4, 170.4, z=2))
+        self.view.add_child(V.image('ship', 160 - 95.85 / 2, 482.8 - 153.36 / 2, 95.85, 153.36, z=3))
+        self.view.add_child(V.image(V.localized('back', s), W / 4, 21.3333 - 24.615, W / 2, 49.2308, z=3))
+        self.doors = V.Doors(self.view, s)
+        self.refresh_pictures()
+
+    def refresh_pictures(self):
+        g = self.services.globals
+        self.points_label.text = self.services.strings.format('pontosDisponiveis', g.win_points)
+        for attr, fill in self.fills:
+            width = 256.0 * min(getattr(g, attr), MAX_POINTS) / MAX_POINTS
+            fill.size, fill.hidden = (width, 28.4), width <= 0
+        for attr, plus in self.pluses:
+            plus.texture = 'PlusActive' if getattr(g, attr) < MAX_POINTS and g.win_points >= 1 else 'PlusInactive'
+
+    def step(self, dt):
+        self.refresh_pictures()
+        super().step(dt)
+
+    def did_move_to_view(self):
+        super().did_move_to_view()
+        self.doors.open()
 
     def action_up_power(self, attr):
         g = self.services.globals
@@ -65,6 +122,8 @@ class HangarScreen(Screen):
             self.focus = max(0, self.focus - 1)
 
     def back(self):
+        self.doors.close()
+
         def leave():
             save = self.services.save
             if save.get('ControleCapitulo') == 'yes':

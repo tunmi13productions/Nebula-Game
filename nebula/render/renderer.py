@@ -118,7 +118,8 @@ class Renderer:
         return font
 
     def _draw_label(self, surface, node, pos, scale, alpha, height):
-        """SKLabelNode: centred horizontally on its position, with the text's baseline on it."""
+        """SKLabelNode: centred horizontally on its position (or starting there with node.align 'left'), with
+        the text's baseline on it."""
         if not pygame.font.get_init():
             pygame.font.init()
         k = self.scale
@@ -128,7 +129,8 @@ class Renderer:
         if alpha < 1.0:
             img.set_alpha(int(alpha * 255))
         x, y = pos[0] * k, (height - pos[1]) * k
-        surface.blit(img, (round(x - img.get_width() / 2), round(y - font.get_ascent())))
+        left = x if getattr(node, 'align', 'center') == 'left' else x - img.get_width() / 2
+        surface.blit(img, (round(left), round(y - font.get_ascent())))
 
     def _draw_particles(self, surface, emitter, pos, scale, rot, alpha, height):
         """An SKEmitterNode's particles: the texture at its own size times each particle's scale, tinted by the
