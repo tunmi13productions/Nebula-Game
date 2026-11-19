@@ -1,5 +1,12 @@
 Nebula changelog
 
+1.2
+New: multiplayer is back. Play against another player over the internet, as the original's versus mode did through Game Center, now through the game's own server.
+Choose Multiplayer on the main menu. The first time, type a pilot name or have one generated, like Nebula 482. You can change it in Systems, under Pilot name.
+Quick match plays whoever else is waiting. Invite a friend gives you a four-digit code for your friend to type in Join a friend. While you wait, C reads the code again and Shift C copies it.
+Matches play as in the original: a countdown, your opponent's ship heard where it is, the winner or a draw announced, and a new round after five seconds. Your Hangar upgrades count.
+Multiplayer is back in its place on the main menu doors. Systems is now spoken after About, and F1 still opens it.
+
 1.1
 New: a Game voice option in Systems. Your screen reader can speak the game's own lines instead of the built-in voice. This is experimental and may not behave as intended. Where the game waits for a line to finish, it asks you to press Enter or Space to continue.
 In Portuguese, buttons on the menus are now announced as botão instead of button, whatever voice your screen reader uses.
