@@ -89,7 +89,10 @@ The game is in English and Portuguese, and follows your Windows display language
 
 Saved games and settings
 
-Your progress and settings are kept in the Nebula folder inside your AppData Roaming folder (type %APPDATA%\Nebula in the Run dialog to open it). Progress is saved as you play.
+Your progress and settings are kept in a Nebula folder, and progress is saved as you play.
+On Windows: inside your AppData Roaming folder (type %APPDATA%\Nebula in the Run dialog to open it).
+On a Mac: Library, Application Support, Nebula, in your home folder.
+On Linux: .local/share/Nebula in your home folder.
 
 
 Differences from the iPhone version
