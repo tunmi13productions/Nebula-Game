@@ -1,7 +1,7 @@
-"""The Settings screen, a port addition (DEVIATIONS.md, "Settings screen").
+"""The Systems screen (the settings), a port addition (DEVIATIONS.md, "Settings screen").
 
-Opened from the main menu, as an item after About or with F1. Up and down move through the settings, left
-and right change the focused one (the new value is spoken), and Back or Escape saves them and returns. Every
+Opened from the main menu, as the Systems item in Multiplayer's old slot or with F1. Up and down move
+through the settings, left and right change the focused one (the new value is spoken), and Back or Escape saves them and returns. Every
 change is written to settings.json at once and put into effect where it can be: steering, the danger zone,
 the volumes, the speech rate and the window size. The language takes effect on the next start.
 
@@ -13,17 +13,53 @@ from .screen import Element, Screen
 from ..settings import DEFAULTS, apply_settings, save_settings, setting
 
 LABELS = {
-    'en': {'title': 'Settings', 'back': 'Back', 'tilt': 'Steering speed', 'fast_tilt': 'Fast steering speed, with Shift',
+    'en': {'title': 'Systems', 'back': 'Back', 'tilt': 'Steering speed', 'fast_tilt': 'Fast steering speed, with Shift',
            'danger_zone': 'Danger zone width', 'sound_volume': 'Sound volume', 'music_volume': 'Music volume',
            'speech_volume': 'Speech volume', 'speech_rate': 'Speech rate', 'language': 'Language',
            'scale': 'Window size', 'auto': 'Follow Windows', 'en': 'English', 'pt': 'Portuguese',
            'restart': 'takes effect after a restart', 'hint': 'Left and right arrows change it'},
-    'pt': {'title': 'Configurações', 'back': 'Voltar', 'tilt': 'Velocidade de direção',
+    'pt': {'title': 'Sistemas', 'back': 'Voltar', 'tilt': 'Velocidade de direção',
            'fast_tilt': 'Velocidade rápida, com Shift', 'danger_zone': 'Largura da zona de perigo',
            'sound_volume': 'Volume dos sons', 'music_volume': 'Volume da música',
            'speech_volume': 'Volume da fala', 'speech_rate': 'Velocidade da fala', 'language': 'Idioma',
            'scale': 'Tamanho da janela', 'auto': 'Seguir o Windows', 'en': 'Inglês', 'pt': 'Português',
            'restart': 'vale depois de reiniciar', 'hint': 'Setas esquerda e direita mudam'},
+}
+
+# What each option does, spoken after its name and value when it's focused.
+EXPLAIN = {
+    'en': {
+        'tilt': 'How fast the ship slides while you hold an arrow key. Higher is faster. 1 is like tipping the '
+                'phone fully on its side.',
+        'fast_tilt': 'The same, while you also hold Shift.',
+        'danger_zone': "How wide the area is where an enemy's shots and lasers sound straight ahead of you. "
+                       'At 1, they sound centred about when they could hit you. Higher also centres near misses, '
+                       'so you start dodging sooner. Lower centres only the shots right in front of you.',
+        'sound_volume': 'Ships, shots, explosions and the other game sounds.',
+        'music_volume': 'The music.',
+        'speech_volume': "The game's own voice and the story narration. Your screen reader is not affected.",
+        'speech_rate': "How fast the game's own voice talks. 1 is the original speed. Your screen reader is not "
+                       'affected.',
+        'language': "The game's language. Follow Windows uses your Windows display language.",
+        'scale': 'The size of the game window on screen, for anyone watching.',
+    },
+    'pt': {
+        'tilt': 'A velocidade com que a nave desliza enquanto você segura uma seta. Maior é mais '
+                'rápido. 1 é como deitar o celular totalmente de lado.',
+        'fast_tilt': 'O mesmo, enquanto você também segura Shift.',
+        'danger_zone': 'A largura da área em que os tiros e lasers inimigos soam bem à sua frente. '
+                       'Em 1, eles soam no centro mais ou menos quando podem te acertar. Maior também '
+                       'centraliza os tiros que passam perto, para você desviar antes. Menor centraliza '
+                       'só os tiros bem à sua frente.',
+        'sound_volume': 'Naves, tiros, explosões e os outros sons do jogo.',
+        'music_volume': 'A música.',
+        'speech_volume': 'A voz do próprio jogo e a narração da história. Seu leitor de '
+                         'tela não muda.',
+        'speech_rate': 'A velocidade da voz do próprio jogo. 1 é a velocidade original. Seu leitor '
+                       'de tela não muda.',
+        'language': 'O idioma do jogo. Seguir o Windows usa o idioma de exibição do Windows.',
+        'scale': 'O tamanho da janela do jogo na tela, para quem estiver assistindo.',
+    },
 }
 
 # key: (kind, minimum, maximum, step) or ('choice', options)
@@ -49,8 +85,11 @@ class SettingsScreen(Screen):
         super().__init__(app)
 
     def build(self):
-        self.words = LABELS.get(self.services.strings.language, LABELS['en'])
-        self.elements = [Element(lambda k=key: self.describe(k), button=False) for key in ORDER]
+        lang = self.services.strings.language
+        self.words = LABELS.get(lang, LABELS['en'])
+        self.explain = EXPLAIN.get(lang, EXPLAIN['en'])
+        self.elements = [Element(lambda k=key: '%s. %s' % (self.describe(k), self.explain[k]), button=False)
+                         for key in ORDER]
         self.elements.append(Element(self.words['back'], self.back))
         self.keys = list(ORDER) + [None]
         self.build_pictures()
@@ -67,8 +106,8 @@ class SettingsScreen(Screen):
         self.refresh_pictures()
 
     def refresh_pictures(self):
-        for i, (e, line) in enumerate(zip(self.elements, self.lines)):
-            line.text = e.label.replace(', ' + self.words['restart'], ' *')
+        for i, (e, key, line) in enumerate(zip(self.elements, self.keys, self.lines)):
+            line.text = '%s, %s' % (self.words[key], self.value_text(key)) if key else e.label
             line.alpha = 1.0 if i == self.focus else 0.6
 
     def step(self, dt):

@@ -66,10 +66,10 @@ def test_main_menu_reads_its_buttons_in_screen_order():
     menu = window.scene
     for _ in range(7):
         menu.menu_next()
-    assert said(services) == ['Campaign, button', 'Free Mode, button', 'Tutorial, button', 'Hangar, button',
-                              'About, button', 'Settings, button']   # Settings is a port addition
+    assert said(services) == ['Campaign, button', 'Free Mode, button', 'Tutorial, button', 'Systems, button',
+                              'Hangar, button', 'About, button']   # Systems is a port addition
     menu.menu_previous()
-    assert said(services)[-1] == 'About, button'
+    assert said(services)[-1] == 'Hangar, button'
 
 
 def test_main_menu_plays_the_doors_once_and_resets_chapter_control():
@@ -320,7 +320,7 @@ def open_hangar(points=3):
     from nebula.menus.hangar import HangarScreen
     app, window, services = at_main_menu()
     services.globals.win_points = points
-    for _ in range(3):
+    for _ in range(4):
         window.scene.menu_next()
     window.scene.menu_activate()
     assert isinstance(window.scene, HangarScreen)
@@ -385,7 +385,7 @@ def test_hangar_after_a_new_chapter_returns_to_the_campaign():
 def open_about():
     from nebula.menus.about import AboutScreen
     app, window, services = at_main_menu()
-    for _ in range(4):
+    for _ in range(5):
         window.scene.menu_next()
     window.scene.menu_activate()
     assert isinstance(window.scene, AboutScreen)
@@ -461,7 +461,7 @@ def test_screens_draw_their_pictures():
     app, window, services = at_main_menu()
     window.run(3.0)
     textures = {n.texture for n in window.scene.view.walk() if getattr(n, 'texture', None)}
-    assert {'nebulaMenu1', 'leftDoor_en_4', 'rightDoor_en_4'} <= textures
+    assert {'nebulaMenu1', 'leftDoor_en_4', 'rightDoorSystems_en_4'} <= textures
     surface = pygame.Surface((320, 568))
     window.scene.draw(surface, Renderer(TextureStore(), 1.0))
     window.scene.menu_activate()

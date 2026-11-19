@@ -57,6 +57,11 @@ def loading_view(strings):
     return root
 
 
+# The right door with SYSTEMS painted over MULTIPLAYER (tools/make_systems_door.py; DEVIATIONS.md,
+# "Settings screen").
+RIGHT_DOOR = 'rightDoorSystems'
+
+
 class Doors:
     """The sub screens' doors (leftDoor and rightDoor, the 4-inch versions): they start shut over the screen
     (the left one 0 to W / 2 * 1.124523, the right one the right half), slide open over 1 second when the
@@ -67,7 +72,7 @@ class Doors:
         self.A = A
         lw = W / 2 * 1.124523
         self.left = image(localized('leftDoor', strings, '_4'), 0, 0, lw, H, z=z + 1)
-        self.right = image(localized('rightDoor', strings, '_4'), W / 2, 0, W / 2, H, z=z)
+        self.right = image(localized(RIGHT_DOOR, strings, '_4'), W / 2, 0, W / 2, H, z=z)
         self.width = lw
         view.add_child(self.left)
         view.add_child(self.right)

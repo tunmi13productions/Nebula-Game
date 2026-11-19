@@ -2,7 +2,8 @@
 
 Button titles come from the storyboard (data/strings/storyboard_*.json). Buttons, in screen order (the
 order VoiceOver read them): Campaign (tag 1), Free Mode (tag 2), Tutorial (tag 3), Hangar (tag 5), About
-(tag 6). Multiplayer (tag 4) is left out with versus mode (DEVIATIONS.md).
+(tag 6). Multiplayer (tag 4) is left out with versus mode (DEVIATIONS.md); its place on the doors, and in
+the reading order, opens the Systems (settings) screen instead, a port addition.
 
 - Every button plays the accept sound first.
 - Campaign and Free Mode show the loading screen: it fades in over 2 seconds, then the game voice says
@@ -35,9 +36,11 @@ class MainMenuScreen(Screen):
             Element(s.get('hVd-Ez-Tht.normalTitle'), lambda: self.load_game(self.app.open_campaign)),
             Element(s.get('V1V-dx-jYs.normalTitle'), lambda: self.load_game(self.app.open_free_mode)),
             Element(s.get('mXA-bH-dA4.normalTitle'), lambda: self.open(self.app.open_tutorial_selection)),
+            # Systems takes Multiplayer's place on the doors, so it's read where Multiplayer stood (a port
+            # addition, DEVIATIONS.md, "Settings screen")
+            Element(settings_label(s), lambda: self.open(self.app.open_settings)),
             Element(s.get('WWl-xv-diA.normalTitle'), lambda: self.open(self.app.open_hangar)),
             Element(s.get('ZcV-1U-Bf2.normalTitle'), lambda: self.open(self.app.open_about)),
-            Element(settings_label(s), lambda: self.open(self.app.open_settings)),   # a port addition
         ]
 
     def appeared(self):
@@ -65,7 +68,7 @@ class MainMenuScreen(Screen):
         self.view.add_child(flash)
         lw = W / 2 * 1.124523
         left = V.image(V.localized('leftDoor', s, '_4'), -lw, 0, lw, H, z=2)
-        right = V.image(V.localized('rightDoor', s, '_4'), W, 0, W / 2, H, z=1)
+        right = V.image(V.localized(V.RIGHT_DOOR, s, '_4'), W, 0, W / 2, H, z=1)
         for door, dx in ((left, lw), (right, -W / 2)):
             door.alpha = 0.0
             door.run(A.sequence([A.wait(1.0), A.fade_alpha_to(1.0, 1.0),

@@ -35,8 +35,9 @@ def open_settings(tmp_path, settings=None):
 def test_f1_opens_settings_and_reads_the_first_option_with_a_hint(tmp_path):
     app, window, services, tilt, path = open_settings(tmp_path)
     assert isinstance(window.scene, SettingsScreen)
-    assert services.screen_reader.said[-1] == ('Settings. Steering speed, 0.3. '
-                                               'Left and right arrows change it')
+    first = services.screen_reader.said[-1]
+    assert first.startswith('Systems. Steering speed, 0.3. How fast the ship slides')
+    assert first.endswith('Left and right arrows change it')
 
 
 def test_up_and_down_move_left_and_right_change_the_value(tmp_path):
@@ -47,7 +48,8 @@ def test_up_and_down_move_left_and_right_change_the_value(tmp_path):
     assert services.screen_reader.said[-1] == '0.4'
     assert tilt.tilt == pytest.approx(0.4)
     screen.menu_next()
-    assert services.screen_reader.said[-1] == 'Fast steering speed, with Shift, 0.6'
+    assert services.screen_reader.said[-1] == ('Fast steering speed, with Shift, 0.6. '
+                                               'The same, while you also hold Shift.')
     screen.handle_key('left')
     assert tilt.fast_tilt == pytest.approx(0.55)
     with open(path, encoding='utf-8') as f:
@@ -89,3 +91,16 @@ def test_settings_file_values_apply_at_start(tmp_path):
     apply_settings({'tilt': 0.5, 'speech_volume': 0.3, 'laser_zone': 2.0}, services, tilt)
     assert tilt.tilt == 0.5 and tilt.fast_tilt == 0.6
     assert VOLUMES.speech == 0.3 and services.danger_zone == 2.0
+
+
+def test_systems_takes_the_multiplayer_slot_on_the_doors(tmp_path):
+    from test_menus import at_main_menu
+    app, window, services = at_main_menu()
+    window.run(4.0)
+    textures = {n.texture for n in window.scene.view.walk() if getattr(n, 'texture', None)}
+    assert 'rightDoorSystems_en_4' in textures and 'rightDoor_en_4' not in textures
+    menu = window.scene
+    for _ in range(3):
+        menu.menu_next()
+    menu.menu_activate()
+    assert isinstance(window.scene, SettingsScreen)
