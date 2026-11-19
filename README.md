@@ -67,3 +67,9 @@ This opens a menu to build for this computer, make a console test build, build L
 Nebula Game was made by Gray Company: developed by Bruno Moreira, Diego Pereira, Felipe Delazeri, Leonardo Gubert and Lucas Carletti, with revision and testing by Márcia Campos, Lucas Santurio, Raí Carvalho and Ricardo Rauber. Its sounds came from FreeSFX, OpenGameArt and SoundJay, and its graphics from OpenGameArt and MillionthVector.
 
 Windows port by tunmi13productions. The controller motion module comes from Sixth Sense Reborn (MIT License).
+
+## Disclaimer
+
+This port is an unofficial fan project. It is not affiliated with, endorsed by or connected to Gray Company or Nebula Game's original developers. Nebula Game, including its sounds, music, graphics, voice recordings, text and story, belongs to its original creators and rights holders, and all rights to it remain theirs.
+
+Gray Company is no longer operating. This port exists to keep the game playable. If you are one of the original developers or hold the rights to the game, and you would like this port changed or taken down, please contact tunmi13productions and your request will be honoured.
