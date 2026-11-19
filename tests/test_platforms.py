@@ -71,14 +71,19 @@ def reader_voice():
     return voice, scheduler
 
 
-def test_screen_reader_mode_sends_lines_to_the_screen_reader_with_estimated_lengths():
+def test_screen_reader_mode_never_times_a_line():
     voice, scheduler = reader_voice()
     done = []
-    voice.speak_then('2...', 0.55, 0.0, 0.2, lambda: done.append(True))
-    assert voice.screen_reader.said == ['2...']
-    for _ in range(100):
+    voice.speak_then('Level 1: The Coordinates. A line long enough to take seconds to read.', 0.55, 0.0, 0.0,
+                     lambda: done.append(True))
+    assert voice.screen_reader.said == ['Level 1: The Coordinates. A line long enough to take seconds to read.']
+    for _ in range(20):                        # one second: the voice's own polls, not the line's length
         scheduler.update(0.05)
-    assert done == [True]                      # no prompt: it went on by itself
+    assert done == [True]                      # no prompt: it went on without waiting for the line
+    voice.speak('One.', 0.55)
+    voice.speak_queued('Two.', 0.55)
+    scheduler.update(0.01)
+    assert voice.screen_reader.said[-2:] == ['One.', 'Two.'] and not voice.speaking
 
 
 def test_screen_reader_mode_waits_for_enter_or_space_where_the_game_waits_on_a_line():

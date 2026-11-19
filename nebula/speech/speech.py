@@ -16,9 +16,10 @@ VoiceSynthesizer behaviour reproduced here:
 - pause() and resume() only hold back the completion. The voice itself keeps talking, as in the original.
 
 Screen reader mode (reader_mode, the Systems screen's experimental "Game voice" option, DEVIATIONS.md): the
-lines go to the player's screen reader instead, which can't say when it has finished, so each line is given
-an estimated length. Where the game waits on a line before going on (speak_then with prompt=True), it adds
-"Press Enter or Space to continue" and waits for that key (continue_) instead.
+lines go to the player's screen reader instead, which can't say when it has finished, so no line is timed:
+each one is handed over and counts as finished at once. Where the game's script waits on a line before going
+on (speak_then with prompt=True), it adds "Press Enter or Space to continue" and waits for that key
+(continue_).
 """
 
 import re
@@ -232,8 +233,8 @@ class GameVoice(Speaker):
         self._enqueue(text, rate, pre_delay, post_delay)
 
     def speak_then(self, text, rate, pre_delay, post_delay, on_done, prompt=False):
-        """prompt: the game waits on this line before going on, so in reader mode it ends with a prompt to
-        press Enter or Space instead of an estimated length."""
+        """prompt: the game's script waits on this line before going on, so in reader mode it ends with a
+        prompt to press Enter or Space. Without it, reader mode goes on at once."""
         self.stop()
         self.should_stop = False
         self.should_pause = False
@@ -320,8 +321,7 @@ class GameVoice(Speaker):
                 if prompt:
                     self.screen_reader.say(self.continue_text, interrupt=False)
                 self.spoken.append((text, rate, pre, post))
-                seconds = len(text) / (CHARS_PER_SECOND * (0.5 + max(0.0, min(1.0, rate))))
-                cur['timer'] = self.scheduler.after(seconds + post, finish)
+                cur['timer'] = self.scheduler.after(0.0, finish)   # never timed: the screen reader queues it
                 return
             samples, channels, sample_rate = self.renderer.render(text, min(1.0, rate * VOLUMES.speech_rate))
             cur['handle'] = self.audio.load_samples(samples, channels, sample_rate)

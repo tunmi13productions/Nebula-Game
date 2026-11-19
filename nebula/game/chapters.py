@@ -1036,10 +1036,10 @@ class Chapter9Scene(ChapterScene):
         p = self.player
 
         def two():
-            self.services.voice.speak_then('2...', ICARUS_RATE, 0.0, 0.2, one)
+            self.services.voice.speak_then('2...', ICARUS_RATE, 0.0, 0.2, one, prompt=True)
 
         def one():
-            self.services.voice.speak_then('1...', ICARUS_RATE, 0.0, 0.2, impact)
+            self.services.voice.speak_then('1...', ICARUS_RATE, 0.0, 0.2, impact, prompt=True)
 
         def impact():
             self.services.effects.play('endingSound.mp3')
