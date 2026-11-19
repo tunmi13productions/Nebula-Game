@@ -15,7 +15,26 @@ Unpack the archive and run Nebula (Nebula.exe on Windows, the Nebula app on a Ma
 
 A port of Nebula Game, an iOS audio space shooter by Gray Company, to Windows, in Python. The original `.ipa` is the source of truth: the game's logic, timings, sounds, speech and visuals are reproduced from its decompiled code and data, and every intentional difference is recorded in [docs/DEVIATIONS.md](docs/DEVIATIONS.md).
 
-It is an audiogame first. Sound carries everything; visuals are drawn only where the original had them.
+The original App Store description:
+
+> Nebula is a spaceship battle arcade game that will provide you a new experience. With many features such as 3D audio, device movements and accessibility for the visually impaired.
+>
+> "Nebula is a fantastic game. It is both challenging and addicting. It is a must download."
+> - Liam Erven
+>
+> FEATURES:
+> - Gaming Modes: Campaign, Free and Multiplayer.
+> - 3D audio\*, allowing play without vision.
+> - 48 enemy spaceships
+> - Campaign with storyline
+> - Upgradeable spaceship.
+> - Detailed tutorials
+> - 9 chapters and 36 levels
+>
+> \*For a better experience, use your headphones.
+>
+> STORY:
+> During the last great inter-galactic war, the Spacial Defense Force created the Nebula project, an army of defense and attack composed by 2000 spaceships. The project got it's name due to the difficult the pilots had to perform combats in space, as they face huge nebulas that limited their vision and scrambled their systems. Because of this, engineers have invested heavily to develop a technology that would allow us to hear other ships and unknown objects.
 
 The player's guide, shipped with every build, is [readme.txt](readme.txt).
 
