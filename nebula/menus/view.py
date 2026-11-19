@@ -57,9 +57,9 @@ def loading_view(strings):
     return root
 
 
-# The right door with SYSTEMS painted over MULTIPLAYER (tools/make_systems_door.py; DEVIATIONS.md,
-# "Settings screen").
-RIGHT_DOOR = 'rightDoorSystems'
+# The right door, as the original painted it, MULTIPLAYER included. (rightDoorSystems, from
+# tools/make_systems_door.py, had SYSTEMS painted over it while multiplayer was left out.)
+RIGHT_DOOR = 'rightDoor'
 
 
 class Doors:

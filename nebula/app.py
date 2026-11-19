@@ -17,6 +17,10 @@ from .menus.campaign import CampaignSelectScene
 from .menus.hangar import HangarScreen
 from .menus.intro import IntroScreen
 from .menus.main_menu import MainMenuScreen
+from .menus.multiplayer import MultiplayerScreen, NameChoiceScreen
+from .game.versus import VersusScene
+from .net.relay_client import DEFAULT_SERVER, RelayClient
+from .settings import save_settings
 from .menus.settings_screen import SettingsScreen
 from .menus.tutorial_selection import TutorialSelectionScreen
 
@@ -147,6 +151,59 @@ class App:
         quit_window = getattr(self.window, 'quit', None)
         if quit_window is not None:
             quit_window()
+
+    # multiplayer (a port addition in place of Game Center)
+
+    def player_name(self):
+        return self.settings.get('player_name') or ''
+
+    def set_player_name(self, name):
+        self.settings['player_name'] = name
+        try:
+            save_settings(self.settings, self.settings_path)
+        except OSError:
+            pass
+
+    def open_multiplayer(self):
+        """The Multiplayer button: the name is chosen the first time, then quick match or invites."""
+        if self.player_name():
+            self.push(MultiplayerScreen(self))
+        else:
+            self.push(NameChoiceScreen(self, lambda: self.push(MultiplayerScreen(self))))
+
+    def start_versus(self, mode, code=None):
+        """Connects to the relay and shows VersusScene's lobby while it pairs the players: mode 'quick',
+        'host' (an invite code is read out) or 'join' (with the friend's code). The scene then plays the
+        match; leaving it, or a failure, comes back to the multiplayer screen."""
+        from .menus.multiplayer import spelled, words
+        w = words(self.services)
+        say = self.services.screen_reader.say
+        net = self.make_relay_client(self.settings.get('server') or DEFAULT_SERVER)
+        self.stop_menu_music()
+        scene = VersusScene(self.services, self.tilt, net, self.back_to_screen)
+
+        def welcome(name):
+            if mode == 'quick':
+                net.quick()
+            elif mode == 'host':
+                net.host()
+            else:
+                net.join(code)
+
+        def failed(reason):
+            scene.back_to_menu()
+            say(w.get(reason, w['disconnected']))     # after the menu's own line, so it isn't cut off
+
+        net.on_welcome = welcome
+        net.on_waiting = lambda: say(w['waiting'])
+        net.on_code = lambda c: say(w['your_code'] % spelled(c))
+        net.on_error = failed
+        self.window.set_scene(scene)
+        say(w['connecting'])
+        net.connect(self.player_name())
+
+    def make_relay_client(self, address):
+        return RelayClient(address)
 
     def open_settings(self):
         """The Settings screen, a port addition."""

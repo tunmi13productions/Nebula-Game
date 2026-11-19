@@ -64,12 +64,13 @@ def test_startup_speaks_the_headphones_notice_then_thunder_then_opens_the_menu()
 def test_main_menu_reads_its_buttons_in_screen_order():
     app, window, services = at_main_menu()
     menu = window.scene
-    for _ in range(8):
+    for _ in range(9):
         menu.menu_next()
-    assert said(services) == ['Campaign, button', 'Free Mode, button', 'Tutorial, button', 'Systems, button',
-                              'Hangar, button', 'About, button', 'Exit, button']   # Systems and Exit are additions
+    assert said(services) == ['Campaign, button', 'Free Mode, button', 'Tutorial, button', 'Multiplayer, button',
+                              'Hangar, button', 'About, button', 'Systems, button',
+                              'Exit, button']   # Systems and Exit are additions
     menu.menu_previous()
-    assert said(services)[-1] == 'About, button'
+    assert said(services)[-1] == 'Systems, button'
 
 
 def test_main_menu_plays_the_doors_once_and_resets_chapter_control():
@@ -461,7 +462,7 @@ def test_screens_draw_their_pictures():
     app, window, services = at_main_menu()
     window.run(3.0)
     textures = {n.texture for n in window.scene.view.walk() if getattr(n, 'texture', None)}
-    assert {'nebulaMenu1', 'leftDoor_en_4', 'rightDoorSystems_en_4'} <= textures
+    assert {'nebulaMenu1', 'leftDoor_en_4', 'rightDoor_en_4'} <= textures
     surface = pygame.Surface((320, 568))
     window.scene.draw(surface, Renderer(TextureStore(), 1.0))
     window.scene.menu_activate()

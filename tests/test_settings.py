@@ -93,14 +93,14 @@ def test_settings_file_values_apply_at_start(tmp_path):
     assert VOLUMES.speech == 0.3 and services.danger_zone == 2.0
 
 
-def test_systems_takes_the_multiplayer_slot_on_the_doors(tmp_path):
+def test_systems_is_spoken_after_about_and_the_doors_keep_multiplayer(tmp_path):
     from test_menus import at_main_menu
     app, window, services = at_main_menu()
     window.run(4.0)
     textures = {n.texture for n in window.scene.view.walk() if getattr(n, 'texture', None)}
-    assert 'rightDoorSystems_en_4' in textures and 'rightDoor_en_4' not in textures
+    assert 'rightDoor_en_4' in textures and 'rightDoorSystems_en_4' not in textures
     menu = window.scene
-    for _ in range(3):
+    for _ in range(6):
         menu.menu_next()
     menu.menu_activate()
     assert isinstance(window.scene, SettingsScreen)

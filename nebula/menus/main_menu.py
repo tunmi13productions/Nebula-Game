@@ -1,9 +1,10 @@
 """MainMenuViewController.
 
 Button titles come from the storyboard (data/strings/storyboard_*.json). Buttons, in screen order (the
-order VoiceOver read them): Campaign (tag 1), Free Mode (tag 2), Tutorial (tag 3), Hangar (tag 5), About
-(tag 6). Multiplayer (tag 4) is left out with versus mode (DEVIATIONS.md); its place on the doors, and in
-the reading order, opens the Systems (settings) screen instead, a port addition.
+order VoiceOver read them): Campaign (tag 1), Free Mode (tag 2), Tutorial (tag 3), Multiplayer (tag 4),
+Hangar (tag 5), About (tag 6). Multiplayer plays versus mode over the port's relay server instead of Game
+Center (DEVIATIONS.md). Systems (the settings) and Exit follow About as spoken-only items, port additions with
+no picture on the doors.
 
 - Every button plays the accept sound first.
 - Campaign and Free Mode show the loading screen: it fades in over 2 seconds, then the game voice says
@@ -38,11 +39,11 @@ class MainMenuScreen(Screen):
             Element(s.get('hVd-Ez-Tht.normalTitle'), lambda: self.load_game(self.app.open_campaign)),
             Element(s.get('V1V-dx-jYs.normalTitle'), lambda: self.load_game(self.app.open_free_mode)),
             Element(s.get('mXA-bH-dA4.normalTitle'), lambda: self.open(self.app.open_tutorial_selection)),
-            # Systems takes Multiplayer's place on the doors, so it's read where Multiplayer stood (a port
-            # addition, DEVIATIONS.md, "Settings screen")
-            Element(settings_label(s), lambda: self.open(self.app.open_settings)),
+            Element(s.get('Hnv-oy-p4z.normalTitle'), lambda: self.open(self.app.open_multiplayer)),
             Element(s.get('WWl-xv-diA.normalTitle'), lambda: self.open(self.app.open_hangar)),
             Element(s.get('ZcV-1U-Bf2.normalTitle'), lambda: self.open(self.app.open_about)),
+            # Systems, spoken only (DEVIATIONS.md, "Settings screen")
+            Element(settings_label(s), lambda: self.open(self.app.open_settings)),
             # Exit, a port addition with no picture (DEVIATIONS.md, "Exit on the main menu")
             Element(EXIT_LABELS.get(s.language, EXIT_LABELS['en']), self.exit_game),
         ]
