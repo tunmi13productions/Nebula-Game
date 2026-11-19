@@ -72,4 +72,4 @@ Windows port by tunmi13productions. The controller motion module comes from Sixt
 
 This port is an unofficial fan project. It is not affiliated with, endorsed by or connected to Gray Company or Nebula Game's original developers. Nebula Game, including its sounds, music, graphics, voice recordings, text and story, belongs to its original creators and rights holders, and all rights to it remain theirs.
 
-Gray Company is no longer operating. This port exists to keep the game playable. If you are one of the original developers or hold the rights to the game, and you would like this port changed or taken down, please contact tunmi13productions and your request will be honoured.
+Gray Company is no longer operating, and the original game has been removed from the App Store: once deleted from a device, it can no longer be downloaded again, even from purchase history. This port exists to keep the game playable. If you are one of the original developers or hold the rights to the game, and you would like this port changed or taken down, please contact tunmi13productions and your request will be honoured.
