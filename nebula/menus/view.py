@@ -55,3 +55,32 @@ def loading_view(strings):
     root.add_child(text(strings.get('tela_load') + '...', W / 4, H / 2, W / 2, 50, 17, 'HelveticaNeue', z=1))
     root.run(A.fade_alpha_to(1.0, 2.0))
     return root
+
+
+class Doors:
+    """The sub screens' doors (leftDoor and rightDoor, the 4-inch versions): they start shut over the screen
+    (the left one 0 to W / 2 * 1.124523, the right one the right half), slide open over 1 second when the
+    screen appears and shut again over 1 second before it's popped."""
+
+    def __init__(self, view, strings, z=50):
+        from ..engine import actions as A
+        self.A = A
+        lw = W / 2 * 1.124523
+        self.left = image(localized('leftDoor', strings, '_4'), 0, 0, lw, H, z=z + 1)
+        self.right = image(localized('rightDoor', strings, '_4'), W / 2, 0, W / 2, H, z=z)
+        self.width = lw
+        view.add_child(self.left)
+        view.add_child(self.right)
+        self.shut = True
+
+    def open(self, duration=1.0):
+        if self.shut:
+            self.shut = False
+            self.left.run(self.A.move_by(-self.width, 0, duration), key='doors')
+            self.right.run(self.A.move_by(W / 2, 0, duration), key='doors')
+
+    def close(self, duration=1.0):
+        if not self.shut:
+            self.shut = True
+            self.left.run(self.A.move_by(self.width, 0, duration), key='doors')
+            self.right.run(self.A.move_by(-W / 2, 0, duration), key='doors')

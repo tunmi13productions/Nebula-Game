@@ -48,6 +48,7 @@ FW_SIG = {
     'speakSentence:withRate:preUtteranceDelay:postUtteranceDelay:completition:': '@fddB',
     'colorizeWithColor:colorBlendFactor:duration:': '@fd', 'playAudioFileNamed:completion:': '@B',
     'showText:for:speaker:': '@d@', 'presentText:withSpeaker:': '@@',
+    'setFrame:': 'R', 'initWithFrame:': 'R', 'setCenter:': 'P', 'fontWithName:size:': '@f',
 }
 STRET_SELS = {'frame', 'size', 'position', 'anchorPoint', 'locationInNode:', 'calculateAccumulatedFrame', 'bounds', 'acceleration'}
 
@@ -81,6 +82,8 @@ class Tracer:
         self.objclass = {}     # heap object addr -> internal class addr
         self.pos = {}          # object -> (x, y) tracked positions
         self.sizes = {}        # object -> (w, h)
+        self.frames = {}       # UIView -> (x, y, w, h), from initWithFrame: and setFrame:
+        self.view_size = None  # (w, h): when set, a view controller's `view` reports this full-screen frame
         self.blocks = []       # copied blocks (addr, invoke, label)
         self.depth = 0
         # bindings: imported data pointers and external class refs
@@ -246,6 +249,8 @@ class Tracer:
             elif t == 'f': out.append('%g' % f32(take(1)[0]))
             elif t == 'P':
                 a, c = take(2); out.append('(%g, %g)' % (f32(a), f32(c)))
+            elif t == 'R':
+                v = take(4); out.append('(%g, %g, %g, %g)' % tuple(f32(x) for x in v))
             elif t == 'i': v = take(1)[0]; out.append(str(struct.unpack('<i', struct.pack('<I', v))[0]))
             elif t == 'A':
                 arr, = take(1); cnt = words[wi] if wi < len(words) else 0
@@ -409,6 +414,12 @@ class Tracer:
             m = re.search(r"'([^']+)'", args[0])
             if m and m.group(1).rsplit('.', 1)[0] in self.tex: self.sizes[val] = self.tex[m.group(1).rsplit('.', 1)[0]]
         if sel not in self.quiet: self.log('%s %s %s' % (who, sel, ' '.join(args)) + ('' if val is None else '  => ' + self.desc(val)))
+        if sel in ('setFrame:', 'initWithFrame:') and args and args[0].startswith('('):
+            target = val if sel == 'initWithFrame:' and val else recv
+            self.frames[target] = tuple(float(x) for x in args[0].strip('()').split(','))
+        if sel == 'setCenter:' and recv in self.frames:
+            cx, cy = (float(x) for x in args[0].strip('()').split(','))
+            x, y, w, h = self.frames[recv]; self.frames[recv] = (cx - w / 2, cy - h / 2, w, h)
         if sel == 'setPosition:': self.pos[recv] = tuple(float(x) for x in args[0].strip('()').split(','))
         if sel == 'setSize:': self.sizes[recv] = tuple(float(x) for x in args[0].strip('()').split(','))
         return self.ret(0 if val is None else val)
@@ -504,6 +515,11 @@ class Tracer:
         if sel in ('frame', 'bounds'):
             if recv in self.objclass and self.ext_base(self.objclass[recv]) in ('SKScene',):
                 v = (0.0, 0.0, SCENE_W, SCENE_H)
+            elif recv in self.frames:
+                v = self.frames[recv] if sel == 'frame' else (0.0, 0.0) + self.frames[recv][2:]
+            elif self.view_size and (self.handles.get(recv, '').endswith(' view') or
+                                     self.handles.get(recv, '').endswith(' mainScreen')):
+                v = (0.0, 0.0) + tuple(self.view_size)
             else:
                 w, h = self.size_of(recv); x, y = self.pos.get(recv, (0.0, 0.0)); v = (x - w / 2, y - h / 2, w, h)
             self.mu.mem_write(out, struct.pack('<4f', *v))
