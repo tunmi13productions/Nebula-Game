@@ -19,9 +19,10 @@ The main menu
 Campaign: the story, nine chapters of four levels each.
 Free Mode: endless play against the clock, for a high score.
 Tutorial: the six lessons.
-Systems: the settings, described further down.
+Multiplayer: play against another player over the internet. See Multiplayer, below.
 Hangar: spend the points you earn in the campaign on upgrades for life, shield, ship speed, attack speed and the power shot.
 About: the credits.
+Systems: the settings, described further down. It is spoken only; the menu picture has no Systems button.
 Exit: close the game. It is spoken only; the menu picture has no Exit button.
 
 
@@ -67,6 +68,19 @@ A small pulse when you collect a power-up.
 A buzz in the left grip when you reach the left edge of the screen, and in the right grip at the right edge.
 
 
+Multiplayer
+
+Two players face each other, each on their own computer, over the internet.
+The first time, choose a pilot name: type one, or let the game generate one, like Nebula 482. You can change it later in Systems, under Pilot name.
+Then choose:
+Quick match: play whoever else is waiting.
+Invite a friend: you get a four-digit code. Read it out to your friend, who chooses Join a friend and types it in.
+Join a friend: type your friend's code.
+While you wait, the lobby music plays. Escape leaves.
+Once matched, the game counts down 3, 2, 1 and says Start. Your opponent's ship is at the top of the screen, and you hear its engine where it is. Dodge their shots and fire back. Your Hangar upgrades count in multiplayer too.
+When a ship is destroyed, the winner is announced, or a draw if both fall together, and a new round starts after five seconds. Choose Back to menu to leave.
+
+
 Systems (settings)
 
 Move through the options with the up and down arrows and change the selected one with the left and right arrows. Each option explains itself when you move onto it. Changes are saved at once.
@@ -82,6 +96,7 @@ Speech rate: how fast the game's own voice talks. 1 is the original speed.
 Game voice: the game's own voice, or your screen reader. Screen reader is experimental and may not behave as intended. Where the game waits for a line to finish, it asks you to press Enter or Space to continue.
 Language: follow Windows, English or Portuguese. Takes effect the next time the game starts.
 Window size: the size of the game window, for anyone watching.
+Pilot name: your name in multiplayer. Press Enter to type a new one, or left and right to generate one.
 
 
 Language and voices
@@ -101,7 +116,7 @@ Differences from the iPhone version
 
 The port aims to be an exact copy of the original. The differences are:
 Keys and controller buttons take the place of tilting the phone, tapping and swiping.
-Multiplayer (versus mode) is not available. It depended on Apple's Game Center.
+Multiplayer runs through the port's own server instead of Apple's Game Center, with a pilot name in place of your Game Center name and photo.
 Leaderboards and analytics are removed.
 The Systems screen, controller support, vibration and Home and End jumps are new.
 The danger zone makes attack sounds centred across the whole area where they can hit you.

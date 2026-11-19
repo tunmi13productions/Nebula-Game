@@ -77,6 +77,16 @@ env\Scripts\python release.py
 
 This opens a menu to build for this computer, make a console test build, build Linux in WSL, check what would block a release, or release. A release tags the version in `main.py` and pushes the tag; the workflow in `.github/workflows/release.yml` then builds Windows, Linux and both kinds of Mac on GitHub and publishes them together.
 
+## The multiplayer server
+
+Versus mode pairs players through a small relay, `server/relay.py`, standing in for Game Center. It needs only Python 3.8 or newer:
+
+```
+python server/relay.py --port 13013
+```
+
+The game connects to tunmi13.com:13013 unless settings.json has a "server" entry like "localhost:13013", which is handy for testing two copies of the game on one computer.
+
 ## Layout
 
 - `nebula/`: the game.
@@ -87,6 +97,8 @@ This opens a menu to build for this computer, make a console test build, build L
   - `speech/`: the game voice and screen reader output.
   - `render/`: the renderer and texture loading.
   - `controller/`: game controllers, motion steering and vibration.
+  - `net/`: the connection to the multiplayer relay.
+- `server/`: the multiplayer relay server.
 - `sounds/`, `images/`, `data/`: the original's assets, extracted from the `.ipa`. `data/` also holds the strings, particle emitters and cutscene timelines.
 - `tools/`: asset extraction and the reverse-engineering tools (`tools/re/`, including an emulator-based tracer of the original's Objective-C).
 - `docs/`: [NOTES.md](docs/NOTES.md) (what the original does, as found), [MENUS.md](docs/MENUS.md) (its screens) and [DEVIATIONS.md](docs/DEVIATIONS.md) (every difference, with the original behaviour and the reason).
