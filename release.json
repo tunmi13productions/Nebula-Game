@@ -9,7 +9,7 @@
   "native_packages": ["cyal", "prism", "_soundfile_data"],
   "licenses": "off",
   "nuitka_args": {
-    "all": ["--lto=yes"],
+    "all": ["--lto=no"],
     "windows": [],
     "linux": [],
     "macos": []
