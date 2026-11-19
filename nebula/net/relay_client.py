@@ -20,7 +20,7 @@ import queue
 import socket
 import threading
 
-PROTOCOL_VERSION = 1
+PROTOCOL_VERSION = 2       # 2: the host restarts rounds (message 7); 1.2 spoke 1
 DEFAULT_SERVER = 'tunmi13.com:13013'
 CONNECT_TIMEOUT = 8.0
 

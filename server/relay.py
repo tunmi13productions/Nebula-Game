@@ -33,7 +33,7 @@ import json
 import logging
 import random
 
-PROTOCOL_VERSION = 1
+PROTOCOL_VERSION = 2       # 2: the host restarts rounds (message 7); 1.2 spoke 1
 DEFAULT_PORT = 13013
 MAX_LINE = 4096          # bytes; the game's largest message is 20 bytes before base64
 MAX_NAME = 24

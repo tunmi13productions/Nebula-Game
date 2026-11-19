@@ -109,10 +109,10 @@ def test_names_are_tidied_and_limited():
         def write(self, data):
             self.lines.append(data)
     p = relay.Player(Out())
-    assert r.handle(p, {'op': 'hello', 'name': '  Pilot   ' + 'x' * 40, 'version': 1})
+    assert r.handle(p, {'op': 'hello', 'name': '  Pilot   ' + 'x' * 40, 'version': 2})
     assert p.name.startswith('Pilot x') and len(p.name) == relay.MAX_NAME
     q = relay.Player(Out())
-    assert not r.handle(q, {'op': 'hello', 'name': 'Old', 'version': 0})
+    assert not r.handle(q, {'op': 'hello', 'name': 'Old', 'version': 1})
 
 
 def test_two_versus_scenes_play_through_a_real_relay(server):
