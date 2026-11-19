@@ -1,14 +1,12 @@
 Nebula changelog
 
 1.1
-
 New: a Game voice option in Systems. Your screen reader can speak the game's own lines instead of the built-in voice. This is experimental and may not behave as intended. Where the game waits for a line to finish, it asks you to press Enter or Space to continue.
 In Portuguese, buttons on the menus are now announced as botão instead of button, whatever voice your screen reader uses.
 Fixed: pressing Control in the pause menu while a line was being spoken, such as I.C.A.R.U.S. talking, could stop the level from going on after you continued.
 The readme no longer lists the unlocked campaign as a difference from the iPhone version: the original's final version, which this port follows, made the full campaign free.
 
 1.0
-
 The first release of the port, for Windows, Mac and Linux.
 The whole game from the iPhone version: the campaign of nine chapters with their story and cutscenes, free mode, the six tutorials, the Hangar upgrades, and the original sounds, voice lines and pictures.
 Keyboard controls in place of tilting, tapping and swiping, with Shift for faster steering and Home and End to jump to the first and last menu item.
