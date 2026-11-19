@@ -8,6 +8,7 @@ import time
 
 import pygame
 
+from .controller.pads import Pads, read_events
 from .render.renderer import Renderer
 from .render.textures import TextureStore
 
@@ -27,6 +28,10 @@ class GameWindow:
         pygame.display.set_caption(title)
         self.renderer = Renderer(TextureStore(), scale)
         self.scale = scale
+        # game controllers (a port addition): buttons become keys, a motion pad steers, and it vibrates
+        self.pads = Pads(pygame, say=services.screen_reader.say)
+        tilt.motion = self.pads.tilt
+        services.haptics.rumble = self.pads.rumble
 
     def set_scale(self, scale):
         """Resizes the window: the 320 by 568 point screen times scale."""
@@ -104,11 +109,13 @@ class GameWindow:
         last = time.perf_counter()
         acc = 0.0
         while self.running:
-            for ev in pygame.event.get():
+            for ev in read_events(pygame):
                 if ev.type == pygame.QUIT:
                     self.running = False
                 elif ev.type in (pygame.KEYDOWN, pygame.KEYUP):
                     self.handle(ev)
+                else:
+                    self.handle_pad(ev)
             now = time.perf_counter()
             acc += now - last
             last = now
@@ -120,5 +127,20 @@ class GameWindow:
             time.sleep(0.002)
         if self.scene is not None and hasattr(self.scene, 'stop_audio'):
             self.scene.stop_audio()
+        self.pads.close()
         self.services.audio.close()
         pygame.quit()
+
+    PAD_KEYS = {'up': pygame.K_UP, 'down': pygame.K_DOWN, 'left': pygame.K_LEFT, 'right': pygame.K_RIGHT,
+                'enter': pygame.K_RETURN, 'space': pygame.K_SPACE, 'escape': pygame.K_ESCAPE, 'l': pygame.K_l,
+                'home': pygame.K_HOME, 'end': pygame.K_END}
+
+    def handle_pad(self, ev):
+        """A controller event becomes the key events it stands for (nebula/controller/pads.py)."""
+        if self.scene is None:
+            return
+        controls = self.pads.feed(ev, bool(getattr(self.scene, 'in_menu', False)))
+        for name, down in controls or ():
+            key = pygame.event.Event(pygame.KEYDOWN if down else pygame.KEYUP, key=self.PAD_KEYS[name], mod=0,
+                                     unicode='')
+            self.handle(key)

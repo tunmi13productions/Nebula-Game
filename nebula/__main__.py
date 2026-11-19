@@ -21,8 +21,8 @@ def main():
     services = Services(OpenALBackend(), PrismRenderer(lang), ScreenReader(), Strings(lang),
                         GlobalState.load(save), save=save)
     tilt = KeyboardTilt()
-    apply_settings(settings, services, tilt)
     window = GameWindow(services, tilt, 'Nebula', float(setting(settings, 'scale')))
+    apply_settings(settings, services, tilt, window)
     App(window, services, tilt, settings=settings).start()
     window.run()
 

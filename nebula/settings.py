@@ -8,6 +8,9 @@ Recognised keys (all optional; the Settings screen writes them):
 - "sound_volume", "music_volume", "speech_volume": 0 to 1 (default 1).
 - "speech_rate": the game voice's rate as a multiple of the original rates (default 1).
 - "scale": pixels per point for the window (default 1.5).
+- "controller_tilt": "on" or "off", steering by rolling a motion-sensing controller (default on).
+- "controller_tilt_scale": how much roll counts as a full tilt, as a multiple (default 1).
+- "vibration": "on" or "off", controller vibration (default on).
 A missing or unreadable file means no overrides.
 """
 import json
@@ -30,7 +33,8 @@ def load_settings(path=None):
 
 
 DEFAULTS = {'tilt': 0.3, 'fast_tilt': 0.6, 'danger_zone': 1.5, 'sound_volume': 1.0, 'music_volume': 1.0,
-            'speech_volume': 1.0, 'speech_rate': 1.0, 'scale': 1.5, 'language': 'auto'}
+            'speech_volume': 1.0, 'speech_rate': 1.0, 'scale': 1.5, 'language': 'auto',
+            'controller_tilt': 'on', 'controller_tilt_scale': 1.0, 'vibration': 'on'}
 
 
 def setting(settings, key):
@@ -62,5 +66,10 @@ def apply_settings(settings, services, tilt, window=None):
     VOLUMES.music = float(setting(settings, 'music_volume'))
     VOLUMES.speech = float(setting(settings, 'speech_volume'))
     VOLUMES.speech_rate = float(setting(settings, 'speech_rate'))
+    services.haptics.enabled = setting(settings, 'vibration') != 'off'
     if window is not None and hasattr(window, 'set_scale'):
         window.set_scale(float(setting(settings, 'scale')))
+    pads = getattr(window, 'pads', None)
+    if pads is not None:
+        pads.tilt_enabled = setting(settings, 'controller_tilt') != 'off'
+        pads.tilt_scale = float(setting(settings, 'controller_tilt_scale'))

@@ -125,3 +125,13 @@ Each entry is a settled decision. Don't change a deviated behaviour unless the u
 - Original: VoiceOver moved through menu items one at a time with swipes; there was no way to jump to the first or last item.
 - Changed: Home jumps to the first item and End to the last, in every menu: the interface screens (main menu, tutorial selection, Hangar, About, Systems), the in-game menus (pause, end of level, free mode results) and the campaign selector (Home goes to the chapter name, End to the last level). In the in-game menus and the campaign selector the jump plays the change sound, or the error sound when already there, as moving past either end does.
 - Reason: a keyboard convenience for screen reader users. Requested by the user on 2026-11-18.
+
+## Game controllers
+
+- Original: the game was played on the phone: tilting it steered (the accelerometer's acceleration.x, read every 0.2 seconds), taps and swipes did the rest, and nothing vibrated.
+- Changed: game controllers work alongside the keyboard (nebula/controller). The first pad attached is the one read, and connecting or disconnecting one is announced through the screen reader.
+  - Buttons stand for keys: the D-pad and left stick for the arrows (sideways held, for steering), Cross or A for Enter in menus and Space in play (fire, skip a cutscene), Circle or B for Escape in menus, Options or Start for Escape in play (pause), Triangle or Y for L (speak life), and L1 and R1 for Home and End.
+  - A pad with a motion sensor (a DualSense, DualShock 4 or Switch Pro pad) steers by being rolled left and right: its roll becomes acceleration.x, as the phone's tilt did, through the same 0.2 second sampling and dead zone, so a small roll drifts and a large one is fast. Rolling the pad fully onto its side is a tilt of 1, scaled by the controller tilt sensitivity setting. A held steering key or button wins over the roll. The roll is read through SDL's sensor calls, which pygame doesn't wrap (the motion module comes from Sixth Sense Reborn, MIT License, the same authors).
+  - The pad vibrates: a short buzz on both motors when the player is hit (shield or life), a long strong buzz when the player explodes, a small pulse on the light motor for a power-up, and the left (low) or right (high) motor when the ship arrives at that edge of the screen.
+  - The Systems screen has controller tilt steering on or off, controller tilt sensitivity, and controller vibration on or off. Shaking the pad does nothing.
+- Reason: a pad's motion sensor is the closest Windows has to the phone's tilt, and vibration gives a sense of touch the keyboard can't. Requested by the user on 2026-11-18, with the vibration patterns chosen by the user.

@@ -155,6 +155,11 @@ class BaseScene(Scene):
             self.movement_state = STOPPED
         half = p.ship_size[0] * 0.5
         x = min(max(p.position[0] + accel * self.velocidade, half), W - half)
+        # the edge buzz, once on arriving at an edge (a port addition, controller vibration)
+        edge = -1 if (x <= half and accel < 0) else 1 if (x >= W - half and accel > 0) else 0
+        if edge and edge != getattr(self, '_at_edge', 0):
+            self.services.haptics.edge(edge)
+        self._at_edge = edge
         p.position = (x, p.position[1])
         self.services.aureal.listener = p.position
 
@@ -271,6 +276,7 @@ class BaseScene(Scene):
 
     def collect_power_up(self, p):
         p.remove_from_parent()
+        self.services.haptics.power_up()
         s, voice, fx = self.services.strings, self.services.voice, self.services.effects
         if p.kind == LIFE:
             voice.speak(s.get('life_grabbed'), RATE_STATUS)

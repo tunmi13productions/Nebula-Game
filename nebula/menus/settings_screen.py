@@ -17,13 +17,18 @@ LABELS = {
            'danger_zone': 'Danger zone width', 'sound_volume': 'Sound volume', 'music_volume': 'Music volume',
            'speech_volume': 'Speech volume', 'speech_rate': 'Speech rate', 'language': 'Language',
            'scale': 'Window size', 'auto': 'Follow Windows', 'en': 'English', 'pt': 'Portuguese',
-           'restart': 'takes effect after a restart', 'hint': 'Left and right arrows change it'},
+           'restart': 'takes effect after a restart', 'hint': 'Left and right arrows change it',
+           'controller_tilt': 'Controller tilt steering', 'controller_tilt_scale': 'Controller tilt sensitivity',
+           'vibration': 'Controller vibration', 'on': 'On', 'off': 'Off'},
     'pt': {'title': 'Sistemas', 'back': 'Voltar', 'tilt': 'Velocidade de direção',
            'fast_tilt': 'Velocidade rápida, com Shift', 'danger_zone': 'Largura da zona de perigo',
            'sound_volume': 'Volume dos sons', 'music_volume': 'Volume da música',
            'speech_volume': 'Volume da fala', 'speech_rate': 'Velocidade da fala', 'language': 'Idioma',
            'scale': 'Tamanho da janela', 'auto': 'Seguir o Windows', 'en': 'Inglês', 'pt': 'Português',
-           'restart': 'vale depois de reiniciar', 'hint': 'Setas esquerda e direita mudam'},
+           'restart': 'vale depois de reiniciar', 'hint': 'Setas esquerda e direita mudam',
+           'controller_tilt': 'Direção inclinando o controle',
+           'controller_tilt_scale': 'Sensibilidade da inclinação do controle',
+           'vibration': 'Vibração do controle', 'on': 'Ligado', 'off': 'Desligado'},
 }
 
 # What each option does, spoken after its name and value when it's focused.
@@ -42,6 +47,12 @@ EXPLAIN = {
                        'affected.',
         'language': "The game's language. Follow Windows uses your Windows display language.",
         'scale': 'The size of the game window on screen, for anyone watching.',
+        'controller_tilt': 'With a controller that senses motion, like a DualSense, roll it left or right to '
+                           'steer, the way the phone was tilted. The arrows, D-pad and stick still work.',
+        'controller_tilt_scale': 'How far you need to roll the controller. Higher means a smaller roll steers '
+                                 'harder. At 1, rolling it fully onto its side is the steepest tilt.',
+        'vibration': 'The controller buzzes when you are hit, longer when you explode, a small pulse for a '
+                     'power-up, and on the left or right side when you reach that edge of the screen.',
     },
     'pt': {
         'tilt': 'A velocidade com que a nave desliza enquanto você segura uma seta. Maior é mais '
@@ -59,6 +70,15 @@ EXPLAIN = {
                        'de tela não muda.',
         'language': 'O idioma do jogo. Seguir o Windows usa o idioma de exibição do Windows.',
         'scale': 'O tamanho da janela do jogo na tela, para quem estiver assistindo.',
+        'controller_tilt': 'Com um controle que sente movimento, como o DualSense, incline-o para a esquerda '
+                           'ou direita para guiar, como se inclinava o celular. As setas, o direcional e o '
+                           'analógico continuam funcionando.',
+        'controller_tilt_scale': 'O quanto você precisa inclinar o controle. Maior significa que uma '
+                                 'inclinação menor guia mais forte. Em 1, deitar o controle de lado '
+                                 'é a inclinação máxima.',
+        'vibration': 'O controle vibra quando você é atingido, mais longo quando você explode, '
+                     'um pulso curto ao pegar um power-up, e do lado esquerdo ou direito ao chegar nessa borda '
+                     'da tela.',
     },
 }
 
@@ -73,9 +93,12 @@ RANGES = {
     'speech_rate': ('number', 0.5, 1.8, 0.1),
     'language': ('choice', ('auto', 'en', 'pt')),
     'scale': ('number', 1.0, 3.0, 0.25),
+    'controller_tilt': ('choice', ('on', 'off')),
+    'controller_tilt_scale': ('number', 0.25, 3.0, 0.25),
+    'vibration': ('choice', ('on', 'off')),
 }
-ORDER = ('tilt', 'fast_tilt', 'danger_zone', 'sound_volume', 'music_volume', 'speech_volume', 'speech_rate',
-         'language', 'scale')
+ORDER = ('tilt', 'fast_tilt', 'controller_tilt', 'controller_tilt_scale', 'danger_zone', 'vibration',
+         'sound_volume', 'music_volume', 'speech_volume', 'speech_rate', 'language', 'scale')
 RESTART = ('language',)
 
 
@@ -100,7 +123,7 @@ class SettingsScreen(Screen):
         self.view.add_child(V.text(self.words['title'], 0, 30, V.W, 40, 28, 'Futura', (1.0, 1.0, 1.0), z=2))
         self.lines = []
         for i in range(len(self.elements)):
-            line = V.text('', 0, 90 + i * 42, V.W, 36, 15, 'Futura', (1.0, 1.0, 1.0), z=2)
+            line = V.text('', 0, 84 + i * 36, V.W, 32, 14, 'Futura', (1.0, 1.0, 1.0), z=2)
             self.view.add_child(line)
             self.lines.append(line)
         self.refresh_pictures()

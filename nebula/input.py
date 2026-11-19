@@ -3,6 +3,9 @@
 Holding right reads as a fixed positive acceleration.x and holding left as the same value negated. Neither
 or both reads as level. Holding Shift as well reads as a steeper tilt. The value is sampled every 0.2
 seconds like the original accelerometer, so everything downstream behaves as it did with tilt.
+
+A game controller with a motion sensor steers by its roll (`motion`, Pads.tilt, a port addition): while no
+steering key is held, its reading is the acceleration.x.
 """
 DEFAULT_TILT = 0.3        # chosen by playtesting. Must stay above 0.05 so the movement state changes.
 DEFAULT_FAST_TILT = 0.6   # with Shift held: twice as steep, so twice as fast
@@ -15,9 +18,11 @@ class KeyboardTilt:
         self.left = False
         self.right = False
         self.fast = False
+        self.motion = None        # returns the pad's roll as acceleration.x, or None
 
     def __call__(self):
         if self.left == self.right:
-            return 0.0
+            reading = self.motion() if self.motion is not None else None
+            return reading if reading is not None else 0.0
         value = self.fast_tilt if self.fast else self.tilt
         return value if self.right else -value

@@ -67,7 +67,7 @@ def test_values_stop_at_their_limits(tmp_path):
 def test_volumes_and_language(tmp_path):
     app, window, services, tilt, path = open_settings(tmp_path)
     screen = window.scene
-    for _ in range(3):
+    for _ in range(6):
         screen.menu_next()
     screen.handle_key('left')
     assert services.screen_reader.said[-1] == '90%'

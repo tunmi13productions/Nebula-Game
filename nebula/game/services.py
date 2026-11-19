@@ -9,7 +9,7 @@ from ..speech.speech import GameVoice, NullRenderer, NullScreenReader
 from ..save import SaveData
 from ..strings import SOUNDS, Strings
 from .globals import GlobalState
-
+from ..controller.haptics import Haptics
 
 class Services:
     def __init__(self, audio, voice_renderer, screen_reader, strings, global_state=None, scheduler=None, save=None):
@@ -23,6 +23,7 @@ class Services:
         self.screen_reader = screen_reader
         self.save = save if save is not None else SaveData.in_memory()
         self.danger_zone = 1.5  # attack sounds' centred zone, as a multiple of the real hit range
+        self.haptics = Haptics()  # controller vibration; the window connects it to a pad
 
     @staticmethod
     def sound_path(name, ext):

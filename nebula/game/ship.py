@@ -250,6 +250,8 @@ class SpaceShip(Node):
             return False
         say = self.services.voice.speak
         s = self.services.strings
+        if self.is_player and (self.shield >= 1 or self.life - damage >= 1):
+            self.services.haptics.hit()      # a fatal hit gets the explosion's buzz instead
         if self.shield >= 1:
             self.shield -= 1
             if self.is_player:
@@ -306,6 +308,7 @@ class SpaceShip(Node):
         # which explosion to show: arc4random() & 1, a draw in the original's random sequence
         frames = looks.EXPLOSION_1 if arc4random() & 1 == 0 else looks.EXPLOSION_2
         if self.is_player:
+            self.services.haptics.explode()
             self.game.can_shoot = False
             self.game.remove_action('BlockShoot')
         self.show_explosion(frames)
