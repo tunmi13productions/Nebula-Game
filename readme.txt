@@ -79,6 +79,7 @@ Danger zone width: how wide the area is where enemy shots and lasers sound strai
 Controller vibration: on or off.
 Sound volume, music volume and speech volume: 0 to 100 percent. Speech means the game's own voice and the story narration, not your screen reader.
 Speech rate: how fast the game's own voice talks. 1 is the original speed.
+Game voice: the game's own voice, or your screen reader. Screen reader is experimental and may not behave as intended. Where the game waits for a line to finish, it asks you to press Enter or Space to continue.
 Language: follow Windows, English or Portuguese. Takes effect the next time the game starts.
 Window size: the size of the game window, for anyone watching.
 

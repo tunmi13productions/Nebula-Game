@@ -110,7 +110,7 @@ class ChapterScene(BaseScene):
     def say(self, key, pre=0.0, post=0.0, then=None):
         """presentText:withSpeaker: "I.C.A.R.U.S." with speakSentence:withRate:0.55 pre post completition:."""
         text = self.services.strings.get(key)
-        self.services.voice.speak_then(text, ICARUS_RATE, pre, post, then or (lambda: None))
+        self.services.voice.speak_then(text, ICARUS_RATE, pre, post, then or (lambda: None), prompt=True)
 
     def say_chain(self, lines, then):
         """Lines spoken one after another, each starting in the previous one's completion."""

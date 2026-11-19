@@ -14,6 +14,11 @@ VoiceSynthesizer behaviour reproduced here:
   speaks. A 0.3 second timer polls for the end of speech. The first two polls are skipped, and the
   completion fires on the first poll that finds nothing speaking, not paused and not stopped.
 - pause() and resume() only hold back the completion. The voice itself keeps talking, as in the original.
+
+Screen reader mode (reader_mode, the Systems screen's experimental "Game voice" option, DEVIATIONS.md): the
+lines go to the player's screen reader instead, which can't say when it has finished, so each line is given
+an estimated length. Where the game waits on a line before going on (speak_then with prompt=True), it adds
+"Press Enter or Space to continue" and waits for that key (continue_) instead.
 """
 
 import re
@@ -22,6 +27,7 @@ from ..audio.volumes import VOLUMES
 
 POLL = 0.3
 IGNORED_POLLS = 2
+CONTINUE_TEXT = {'en': 'Press Enter or Space to continue.', 'pt': 'Pressione Enter ou Espa\u00e7o para continuar.'}
 
 
 class Speaker:
@@ -31,7 +37,7 @@ class Speaker:
     def speak_queued(self, text, rate=0.55, pre_delay=0.0, post_delay=0.0):
         raise NotImplementedError
 
-    def speak_then(self, text, rate, pre_delay, post_delay, on_done):
+    def speak_then(self, text, rate, pre_delay, post_delay, on_done, prompt=False):
         raise NotImplementedError
 
     def stop(self):
@@ -195,10 +201,26 @@ class GameVoice(Speaker):
         self.should_stop = False
         self.should_pause = False
         self.spoken = []          # every line started, in order, for tests and debugging
+        self.reader_mode = False  # lines go to the screen reader (experimental)
+        self.screen_reader = None
+        self.continue_text = CONTINUE_TEXT['en']
+        self._awaiting = None     # in reader mode, the completion waiting for Enter or Space
+        self._fresh = True        # the next line interrupts the screen reader
 
     @property
     def speaking(self):
-        return self._current is not None or bool(self._queue)
+        return self._current is not None or bool(self._queue) or self._awaiting is not None
+
+    @property
+    def awaiting_continue(self):
+        return self._awaiting is not None
+
+    def continue_(self):
+        """Enter or Space at a "press Enter or Space to continue" prompt."""
+        done, self._awaiting = self._awaiting, None
+        if done is not None:
+            self._cut()
+            done()
 
     # VoiceSynthesizer API
 
@@ -209,10 +231,16 @@ class GameVoice(Speaker):
     def speak_queued(self, text, rate=0.55, pre_delay=0.0, post_delay=0.0):
         self._enqueue(text, rate, pre_delay, post_delay)
 
-    def speak_then(self, text, rate, pre_delay, post_delay, on_done):
+    def speak_then(self, text, rate, pre_delay, post_delay, on_done, prompt=False):
+        """prompt: the game waits on this line before going on, so in reader mode it ends with a prompt to
+        press Enter or Space instead of an estimated length."""
         self.stop()
         self.should_stop = False
         self.should_pause = False
+        if self.reader_mode and prompt:
+            self._awaiting = on_done
+            self._enqueue(text, rate, pre_delay, post_delay, prompt=True)
+            return
         self._ignore = IGNORED_POLLS
         self._on_done = on_done
         self._poll = self.scheduler.every(POLL, self._check_finished)
@@ -220,10 +248,22 @@ class GameVoice(Speaker):
 
     def stop(self):
         self.should_stop = True
+        self._awaiting = None
         if self._poll is not None:
             self._poll.invalidate()
             self._poll = None
+        had_line = self._current is not None
         self._cut()
+        if self.reader_mode and had_line and self.screen_reader is not None:
+            self.screen_reader.stop()
+
+    def silence(self):
+        """Control in a menu: cuts what is being said, as a new line would, but keeps the completion the game
+        is waiting on (and, in reader mode, its Enter or Space prompt), so nothing is lost."""
+        had_line = self._current is not None
+        self._cut()
+        if self.reader_mode and had_line and self.screen_reader is not None:
+            self.screen_reader.stop()
 
     def pause(self):
         self.should_pause = True
@@ -248,6 +288,7 @@ class GameVoice(Speaker):
                 done()
 
     def _cut(self):
+        self._fresh = True
         self._queue.clear()
         if self._current is not None:
             if self._current['timer'] is not None:
@@ -260,8 +301,8 @@ class GameVoice(Speaker):
             if stop is not None:
                 stop()                  # an engine speaking live
 
-    def _enqueue(self, text, rate, pre, post):
-        self._queue.append((text, rate, pre, post))
+    def _enqueue(self, text, rate, pre, post, prompt=False):
+        self._queue.append((text, rate, pre, post, prompt))
         if self._current is None:
             self._next()
 
@@ -269,10 +310,19 @@ class GameVoice(Speaker):
         if not self._queue:
             self._current = None
             return
-        text, rate, pre, post = self._queue.pop(0)
+        text, rate, pre, post, prompt = self._queue.pop(0)
         cur = self._current = {'handle': None, 'timer': None}
 
         def start():
+            if self.reader_mode and self.screen_reader is not None:
+                self.screen_reader.say(text, interrupt=self._fresh)
+                self._fresh = False
+                if prompt:
+                    self.screen_reader.say(self.continue_text, interrupt=False)
+                self.spoken.append((text, rate, pre, post))
+                seconds = len(text) / (CHARS_PER_SECOND * (0.5 + max(0.0, min(1.0, rate))))
+                cur['timer'] = self.scheduler.after(seconds + post, finish)
+                return
             samples, channels, sample_rate = self.renderer.render(text, min(1.0, rate * VOLUMES.speech_rate))
             cur['handle'] = self.audio.load_samples(samples, channels, sample_rate)
             if VOLUMES.speech != 1.0:

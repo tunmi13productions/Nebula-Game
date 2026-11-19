@@ -33,7 +33,7 @@ class IntroScreen(Screen):
         ph = pw * 640 / 1024
         self.view.add_child(V.image('phones', (W - pw) / 2, (H - ph) / 2, pw, ph))
         text = '%s %s, %s' % (s.get('sound_1'), s.get('sound_2'), s.get('sound_3'))
-        self.services.voice.speak_then(text, RATE, NOTICE_PRE_DELAY, 0.0, self.show_logo)
+        self.services.voice.speak_then(text, RATE, NOTICE_PRE_DELAY, 0.0, self.show_logo, prompt=True)
 
     def show_logo(self):
         W, H = V.W, V.H

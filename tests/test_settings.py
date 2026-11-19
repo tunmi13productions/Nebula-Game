@@ -72,7 +72,7 @@ def test_volumes_and_language(tmp_path):
     screen.handle_key('left')
     assert services.screen_reader.said[-1] == '90%'
     assert VOLUMES.sounds == pytest.approx(0.9)
-    for _ in range(4):
+    for _ in range(5):
         screen.menu_next()
     assert 'Language, Follow Windows, takes effect after a restart' in services.screen_reader.said[-1]
     screen.handle_key('right')
@@ -104,3 +104,16 @@ def test_systems_takes_the_multiplayer_slot_on_the_doors(tmp_path):
         menu.menu_next()
     menu.menu_activate()
     assert isinstance(window.scene, SettingsScreen)
+
+
+def test_screen_reader_game_voice_option(tmp_path):
+    app, window, services, tilt, path = open_settings(tmp_path)
+    screen = window.scene
+    for _ in range(10):
+        screen.menu_next()
+    assert services.screen_reader.said[-1].startswith('Game voice, Built-in voice. Experimental')
+    screen.handle_key('right')
+    assert services.screen_reader.said[-1] == 'Screen reader, experimental'
+    assert services.voice.reader_mode
+    screen.handle_key('right')
+    assert not services.voice.reader_mode

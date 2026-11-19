@@ -57,6 +57,12 @@ class GameWindow:
     def handle(self, ev):
         s = self.scene
         down = ev.type == pygame.KEYDOWN
+        voice = self.services.voice
+        in_game_menu = getattr(s, 'in_menu', False) and hasattr(s, 'menu_items')
+        if (down and ev.key in (pygame.K_SPACE, pygame.K_RETURN, pygame.K_KP_ENTER)
+                and getattr(voice, 'awaiting_continue', False) and not in_game_menu):
+            voice.continue_()       # "press Enter or Space to continue", in screen reader mode
+            return
         named = {pygame.K_ESCAPE: 'escape', pygame.K_LEFT: 'left', pygame.K_RIGHT: 'right',
                  pygame.K_LCTRL: 'control', pygame.K_RCTRL: 'control', pygame.K_F1: 'f1'}.get(ev.key)
         if down and named and hasattr(s, 'handle_key') and s.handle_key(named):

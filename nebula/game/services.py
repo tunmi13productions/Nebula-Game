@@ -5,7 +5,7 @@ from ..audio.aureal import Aureal
 from ..audio.backend import NullBackend
 from ..audio.players import Effects
 from ..engine.scheduler import Scheduler
-from ..speech.speech import GameVoice, NullRenderer, NullScreenReader
+from ..speech.speech import CONTINUE_TEXT, GameVoice, NullRenderer, NullScreenReader
 from ..save import SaveData
 from ..strings import SOUNDS, Strings
 from .globals import GlobalState
@@ -21,6 +21,8 @@ class Services:
         self.effects = Effects(audio, SOUNDS)
         self.voice = GameVoice(audio, self.scheduler, voice_renderer)
         self.screen_reader = screen_reader
+        self.voice.screen_reader = screen_reader
+        self.voice.continue_text = CONTINUE_TEXT.get(strings.language, CONTINUE_TEXT['en'])
         self.save = save if save is not None else SaveData.in_memory()
         self.danger_zone = 1.5  # attack sounds' centred zone, as a multiple of the real hit range
         self.haptics = Haptics()  # controller vibration; the window connects it to a pad

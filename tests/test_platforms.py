@@ -60,3 +60,50 @@ def test_stopping_the_game_voice_silences_a_live_engine():
     scheduler.update(0.01)
     voice.stop()
     assert r.backend.stopped == 1
+
+
+def reader_voice():
+    from nebula.speech.speech import NullScreenReader
+    scheduler = Scheduler()
+    voice = GameVoice(NullBackend(), scheduler, None)
+    voice.reader_mode = True
+    voice.screen_reader = NullScreenReader()
+    return voice, scheduler
+
+
+def test_screen_reader_mode_sends_lines_to_the_screen_reader_with_estimated_lengths():
+    voice, scheduler = reader_voice()
+    done = []
+    voice.speak_then('2...', 0.55, 0.0, 0.2, lambda: done.append(True))
+    assert voice.screen_reader.said == ['2...']
+    for _ in range(100):
+        scheduler.update(0.05)
+    assert done == [True]                      # no prompt: it went on by itself
+
+
+def test_screen_reader_mode_waits_for_enter_or_space_where_the_game_waits_on_a_line():
+    voice, scheduler = reader_voice()
+    done = []
+    voice.speak_then('Commander, enemies ahead.', 0.55, 0.0, 0.0, lambda: done.append(True), prompt=True)
+    assert voice.screen_reader.said == ['Commander, enemies ahead.', 'Press Enter or Space to continue.']
+    for _ in range(200):
+        scheduler.update(0.05)
+    assert done == [] and voice.awaiting_continue and voice.speaking
+    voice.continue_()
+    assert done == [True] and not voice.awaiting_continue
+
+
+def test_stopping_cancels_a_waiting_prompt():
+    voice, scheduler = reader_voice()
+    done = []
+    voice.speak_then('Line.', 0.55, 0.0, 0.0, lambda: done.append(True), prompt=True)
+    voice.stop()
+    voice.continue_()
+    assert done == [] and not voice.awaiting_continue
+
+
+def test_the_built_in_voice_ignores_the_prompt_flag():
+    from test_combat import make
+    scene, services, keys = make()
+    services.voice.speak_then('Line.', 0.55, 0.0, 0.0, lambda: None, prompt=True)
+    assert not services.voice.awaiting_continue

@@ -19,7 +19,8 @@ LABELS = {
            'scale': 'Window size', 'auto': 'Follow Windows', 'en': 'English', 'pt': 'Portuguese',
            'restart': 'takes effect after a restart', 'hint': 'Left and right arrows change it',
            'controller_tilt': 'Controller tilt steering', 'controller_tilt_scale': 'Controller tilt sensitivity',
-           'vibration': 'Controller vibration', 'on': 'On', 'off': 'Off'},
+           'vibration': 'Controller vibration', 'on': 'On', 'off': 'Off',
+           'game_voice': 'Game voice', 'voice': 'Built-in voice', 'screen_reader': 'Screen reader, experimental'},
     'pt': {'title': 'Sistemas', 'back': 'Voltar', 'tilt': 'Velocidade de direção',
            'fast_tilt': 'Velocidade rápida, com Shift', 'danger_zone': 'Largura da zona de perigo',
            'sound_volume': 'Volume dos sons', 'music_volume': 'Volume da música',
@@ -28,7 +29,8 @@ LABELS = {
            'restart': 'vale depois de reiniciar', 'hint': 'Setas esquerda e direita mudam',
            'controller_tilt': 'Direção inclinando o controle',
            'controller_tilt_scale': 'Sensibilidade da inclinação do controle',
-           'vibration': 'Vibração do controle', 'on': 'Ligado', 'off': 'Desligado'},
+           'vibration': 'Vibração do controle', 'on': 'Ligado', 'off': 'Desligado',
+           'game_voice': 'Voz do jogo', 'voice': 'Voz própria', 'screen_reader': 'Leitor de tela, experimental'},
 }
 
 # What each option does, spoken after its name and value when it's focused.
@@ -53,6 +55,10 @@ EXPLAIN = {
                                  'harder. At 1, rolling it fully onto its side is the steepest tilt.',
         'vibration': 'The controller buzzes when you are hit, longer when you explode, a small pulse for a '
                      'power-up, and on the left or right side when you reach that edge of the screen.',
+        'game_voice': "Experimental, and may not behave as intended. The original spoke the game's lines with "
+                      "Apple's speech synthesizer, not VoiceOver. Screen reader sends them to your screen reader "
+                      'instead. Where the game waits for a line to finish, you will be asked to press Enter or '
+                      'Space to continue.',
     },
     'pt': {
         'tilt': 'A velocidade com que a nave desliza enquanto você segura uma seta. Maior é mais '
@@ -79,6 +85,10 @@ EXPLAIN = {
         'vibration': 'O controle vibra quando você é atingido, mais longo quando você explode, '
                      'um pulso curto ao pegar um power-up, e do lado esquerdo ou direito ao chegar nessa borda '
                      'da tela.',
+        'game_voice': 'Experimental, e pode não funcionar como esperado. O original falava as falas do jogo '
+                      'com o sintetizador de voz da Apple, não com o VoiceOver. Leitor de tela as envia ao seu '
+                      'leitor de tela. Onde o jogo espera uma fala terminar, você será solicitado a pressionar '
+                      'Enter ou Espaço para continuar.',
     },
 }
 
@@ -96,9 +106,10 @@ RANGES = {
     'controller_tilt': ('choice', ('on', 'off')),
     'controller_tilt_scale': ('number', 0.25, 3.0, 0.25),
     'vibration': ('choice', ('on', 'off')),
+    'game_voice': ('choice', ('voice', 'screen_reader')),
 }
 ORDER = ('tilt', 'fast_tilt', 'controller_tilt', 'controller_tilt_scale', 'danger_zone', 'vibration',
-         'sound_volume', 'music_volume', 'speech_volume', 'speech_rate', 'language', 'scale')
+         'sound_volume', 'music_volume', 'speech_volume', 'speech_rate', 'game_voice', 'language', 'scale')
 RESTART = ('language',)
 
 
@@ -123,7 +134,7 @@ class SettingsScreen(Screen):
         self.view.add_child(V.text(self.words['title'], 0, 30, V.W, 40, 28, 'Futura', (1.0, 1.0, 1.0), z=2))
         self.lines = []
         for i in range(len(self.elements)):
-            line = V.text('', 0, 84 + i * 36, V.W, 32, 14, 'Futura', (1.0, 1.0, 1.0), z=2)
+            line = V.text('', 0, 80 + i * 34, V.W, 30, 14, 'Futura', (1.0, 1.0, 1.0), z=2)
             self.view.add_child(line)
             self.lines.append(line)
         self.refresh_pictures()

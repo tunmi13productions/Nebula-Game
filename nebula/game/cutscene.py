@@ -77,7 +77,7 @@ class CutScene:
         if part[0] == AUDIO:
             self.player.play(s.sound_path(part[1]), self._next)
         else:
-            self.services.voice.speak_then(s.get(part[1]), RATE, part[2], 0.0, self._next)
+            self.services.voice.speak_then(s.get(part[1]), RATE, part[2], 0.0, self._next, prompt=True)
 
     def _finish(self):
         if self.running:
