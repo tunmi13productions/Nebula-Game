@@ -117,3 +117,23 @@ def test_screen_reader_game_voice_option(tmp_path):
     assert services.voice.reader_mode
     screen.handle_key('right')
     assert not services.voice.reader_mode
+
+
+def test_pilot_name_can_be_generated_or_typed_in_systems(tmp_path):
+    import pygame
+    app, window, services, tilt, path = open_settings(tmp_path, {'player_name': 'Ace'})
+    screen = window.scene
+    screen.handle_key('end')
+    screen.menu_last()
+    screen.menu_previous()
+    assert services.screen_reader.said[-1].startswith('Pilot name, Ace. Your name in multiplayer.')
+    screen.handle_key('right')
+    assert app.settings['player_name'] != 'Ace' and services.screen_reader.said[-1] == app.settings['player_name']
+    screen.menu_activate()
+    box = window.scene
+    box.handle_text_event(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL, unicode=''))
+    for ch in 'Comet 7':
+        box.handle_text_event(pygame.event.Event(pygame.TEXTINPUT, text=ch))
+    box.menu_activate()
+    assert window.scene is screen and app.settings['player_name'] == 'Comet 7'
+    assert services.screen_reader.said[-1] == 'Comet 7'

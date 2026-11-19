@@ -20,7 +20,8 @@ LABELS = {
            'restart': 'takes effect after a restart', 'hint': 'Left and right arrows change it',
            'controller_tilt': 'Controller tilt steering', 'controller_tilt_scale': 'Controller tilt sensitivity',
            'vibration': 'Controller vibration', 'on': 'On', 'off': 'Off',
-           'game_voice': 'Game voice', 'voice': 'Built-in voice', 'screen_reader': 'Screen reader, experimental'},
+           'game_voice': 'Game voice', 'voice': 'Built-in voice', 'screen_reader': 'Screen reader, experimental',
+           'player_name': 'Pilot name', 'not_set': 'not set', 'type_name': 'Type your pilot name, then press Enter.'},
     'pt': {'title': 'Sistemas', 'back': 'Voltar', 'tilt': 'Velocidade de direção',
            'fast_tilt': 'Velocidade rápida, com Shift', 'danger_zone': 'Largura da zona de perigo',
            'sound_volume': 'Volume dos sons', 'music_volume': 'Volume da música',
@@ -30,7 +31,9 @@ LABELS = {
            'controller_tilt': 'Direção inclinando o controle',
            'controller_tilt_scale': 'Sensibilidade da inclinação do controle',
            'vibration': 'Vibração do controle', 'on': 'Ligado', 'off': 'Desligado',
-           'game_voice': 'Voz do jogo', 'voice': 'Voz própria', 'screen_reader': 'Leitor de tela, experimental'},
+           'game_voice': 'Voz do jogo', 'voice': 'Voz própria', 'screen_reader': 'Leitor de tela, experimental',
+           'player_name': 'Nome de piloto', 'not_set': 'não definido',
+           'type_name': 'Digite seu nome de piloto e pressione Enter.'},
 }
 
 # What each option does, spoken after its name and value when it's focused.
@@ -59,6 +62,8 @@ EXPLAIN = {
                       "Apple's speech synthesizer, not VoiceOver. Screen reader sends them to your screen reader "
                       'instead. Where the game waits for a line to finish, you will be asked to press Enter or '
                       'Space to continue.',
+        'player_name': 'Your name in multiplayer. Press Enter to type a new one, or left and right to generate '
+                       'one.',
     },
     'pt': {
         'tilt': 'A velocidade com que a nave desliza enquanto você segura uma seta. Maior é mais '
@@ -89,6 +94,8 @@ EXPLAIN = {
                       'com o sintetizador de voz da Apple, não com o VoiceOver. Leitor de tela as envia ao seu '
                       'leitor de tela. Onde o jogo espera uma fala terminar, você será solicitado a pressionar '
                       'Enter ou Espaço para continuar.',
+        'player_name': 'Seu nome no multijogador. Pressione Enter para digitar outro, ou esquerda e direita para '
+                       'gerar um.',
     },
 }
 
@@ -107,9 +114,11 @@ RANGES = {
     'controller_tilt_scale': ('number', 0.25, 3.0, 0.25),
     'vibration': ('choice', ('on', 'off')),
     'game_voice': ('choice', ('voice', 'screen_reader')),
+    'player_name': ('name',),
 }
 ORDER = ('tilt', 'fast_tilt', 'controller_tilt', 'controller_tilt_scale', 'danger_zone', 'vibration',
-         'sound_volume', 'music_volume', 'speech_volume', 'speech_rate', 'game_voice', 'language', 'scale')
+         'sound_volume', 'music_volume', 'speech_volume', 'speech_rate', 'game_voice', 'language', 'scale',
+         'player_name')
 RESTART = ('language',)
 
 
@@ -122,7 +131,8 @@ class SettingsScreen(Screen):
         lang = self.services.strings.language
         self.words = LABELS.get(lang, LABELS['en'])
         self.explain = EXPLAIN.get(lang, EXPLAIN['en'])
-        self.elements = [Element(lambda k=key: '%s. %s' % (self.describe(k), self.explain[k]), button=False)
+        self.elements = [Element(lambda k=key: '%s. %s' % (self.describe(k), self.explain[k]),
+                                 self.type_name if key == 'player_name' else None, button=False)
                          for key in ORDER]
         self.elements.append(Element(self.words['back'], self.back))
         self.keys = list(ORDER) + [None]
@@ -134,7 +144,7 @@ class SettingsScreen(Screen):
         self.view.add_child(V.text(self.words['title'], 0, 30, V.W, 40, 28, 'Futura', (1.0, 1.0, 1.0), z=2))
         self.lines = []
         for i in range(len(self.elements)):
-            line = V.text('', 0, 80 + i * 34, V.W, 30, 14, 'Futura', (1.0, 1.0, 1.0), z=2)
+            line = V.text('', 0, 76 + i * 32, V.W, 28, 14, 'Futura', (1.0, 1.0, 1.0), z=2)
             self.view.add_child(line)
             self.lines.append(line)
         self.refresh_pictures()
@@ -156,6 +166,8 @@ class SettingsScreen(Screen):
     def value_text(self, key):
         v = self.value(key)
         kind = RANGES[key][0]
+        if kind == 'name':
+            return v or self.words['not_set']
         if kind == 'choice':
             return self.words.get(v, v)
         if kind == 'percent':
@@ -181,6 +193,12 @@ class SettingsScreen(Screen):
         if key is None:
             return
         spec = RANGES[key]
+        if spec[0] == 'name':
+            from .multiplayer import generate_name
+            self.settings[key] = generate_name(self.services.strings.language)
+            self.save()
+            self.say(self.value_text(key))
+            return
         if spec[0] == 'choice':
             options = spec[1]
             current = self.value(key)
@@ -200,6 +218,20 @@ class SettingsScreen(Screen):
         if key == 'music_volume' and self.app.menu_music is not None:
             self.app.menu_music.apply_volume()
         self.say(self.value_text(key))
+
+    def type_name(self):
+        """Enter on Pilot name: a text box for a new one."""
+        from .text_entry import TextEntryScreen
+
+        def done(name):
+            self.settings['player_name'] = name
+            self.save()
+            self.app.pop()
+            self.focus = self.keys.index('player_name')      # back on the same row
+            self.say(self.value_text('player_name'))
+
+        self.app.push(TextEntryScreen(self.app, self.words['type_name'], self.words['player_name'], done,
+                                      self.app.pop, max_length=24, value=self.value('player_name')))
 
     def save(self):
         try:
