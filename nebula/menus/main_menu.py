@@ -18,6 +18,7 @@ order VoiceOver read them): Campaign (tag 1), Free Mode (tag 2), Tutorial (tag 3
 """
 from ..engine import actions as A
 from . import view as V
+from .settings_screen import LABELS as _SETTINGS_LABELS
 from .screen import Element, Screen
 
 RATE = 0.55
@@ -36,6 +37,7 @@ class MainMenuScreen(Screen):
             Element(s.get('mXA-bH-dA4.normalTitle'), lambda: self.open(self.app.open_tutorial_selection)),
             Element(s.get('WWl-xv-diA.normalTitle'), lambda: self.open(self.app.open_hangar)),
             Element(s.get('ZcV-1U-Bf2.normalTitle'), lambda: self.open(self.app.open_about)),
+            Element(settings_label(s), lambda: self.open(self.app.open_settings)),   # a port addition
         ]
 
     def appeared(self):
@@ -94,6 +96,9 @@ class MainMenuScreen(Screen):
         self.services.scheduler.after(LOADING_FADE, loaded)
 
     def handle_key(self, key):
+        if key == 'f1' and not self.busy:
+            self.open(self.app.open_settings)
+            return True
         return key in ('escape', 'left', 'right')
 
 
@@ -166,3 +171,7 @@ class TutorialAlert(Screen):
         if key == 'escape':
             self.go()
         return True
+
+
+def settings_label(strings):
+    return _SETTINGS_LABELS.get(strings.language, _SETTINGS_LABELS['en'])['title']

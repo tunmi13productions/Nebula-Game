@@ -17,13 +17,17 @@ from .menus.campaign import CampaignSelectScene
 from .menus.hangar import HangarScreen
 from .menus.intro import IntroScreen
 from .menus.main_menu import MainMenuScreen
+from .menus.settings_screen import SettingsScreen
 from .menus.tutorial_selection import TutorialSelectionScreen
 
 
 class App:
-    def __init__(self, window, services, tilt, open_url=webbrowser.open):
-        """open_url opens a web page or a mailto: link with the system's default program."""
+    def __init__(self, window, services, tilt, open_url=webbrowser.open, settings=None, settings_path=None):
+        """open_url opens a web page or a mailto: link with the system's default program. settings: the
+        settings file's contents, which the Settings screen changes and saves to settings_path."""
         self.window, self.services, self.tilt = window, services, tilt
+        self.settings = settings if settings is not None else {}
+        self.settings_path = settings_path
         self.open_url = open_url
         self.stack = []
         self.menu_music = None   # Global.mainMenuMusic, created by the main menu's opening animation
@@ -134,3 +138,7 @@ class App:
 
     def open_about(self):
         self.push(AboutScreen(self))
+
+    def open_settings(self):
+        """The Settings screen, a port addition."""
+        self.push(SettingsScreen(self, self.settings, self.settings_path))

@@ -26,6 +26,16 @@ class GameWindow:
         self.screen = pygame.display.set_mode((round(POINTS[0] * scale), round(POINTS[1] * scale)))
         pygame.display.set_caption(title)
         self.renderer = Renderer(TextureStore(), scale)
+        self.scale = scale
+
+    def set_scale(self, scale):
+        """Resizes the window: the 320 by 568 point screen times scale."""
+        if scale == self.scale:
+            return
+        self.scale = scale
+        self.screen = pygame.display.set_mode((round(POINTS[0] * scale), round(POINTS[1] * scale)))
+        self.renderer.scale = scale
+        self.renderer._scaled.clear()
 
     def set_scene(self, scene):
         old = self.scene
@@ -43,7 +53,7 @@ class GameWindow:
         s = self.scene
         down = ev.type == pygame.KEYDOWN
         named = {pygame.K_ESCAPE: 'escape', pygame.K_LEFT: 'left', pygame.K_RIGHT: 'right',
-                 pygame.K_LCTRL: 'control', pygame.K_RCTRL: 'control'}.get(ev.key)
+                 pygame.K_LCTRL: 'control', pygame.K_RCTRL: 'control', pygame.K_F1: 'f1'}.get(ev.key)
         if down and named and hasattr(s, 'handle_key') and s.handle_key(named):
             return
         if ev.key in (pygame.K_LSHIFT, pygame.K_RSHIFT):

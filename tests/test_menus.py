@@ -64,12 +64,12 @@ def test_startup_speaks_the_headphones_notice_then_thunder_then_opens_the_menu()
 def test_main_menu_reads_its_buttons_in_screen_order():
     app, window, services = at_main_menu()
     menu = window.scene
-    for _ in range(6):
+    for _ in range(7):
         menu.menu_next()
     assert said(services) == ['Campaign, button', 'Free Mode, button', 'Tutorial, button', 'Hangar, button',
-                              'About, button']
+                              'About, button', 'Settings, button']   # Settings is a port addition
     menu.menu_previous()
-    assert said(services)[-1] == 'Hangar, button'
+    assert said(services)[-1] == 'About, button'
 
 
 def test_main_menu_plays_the_doors_once_and_resets_chapter_control():

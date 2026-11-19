@@ -24,7 +24,7 @@ from nebula.game.tutorial import TutorialScene
 from nebula.input import KeyboardTilt
 from nebula.runner import GameWindow
 from nebula.save import SaveData
-from nebula.settings import load_settings
+from nebula.settings import apply_settings, load_settings, setting
 from nebula.speech.speech import PrismRenderer, ScreenReader
 from nebula.strings import Strings, choose_language
 
@@ -38,9 +38,9 @@ def main():
     reader = ScreenReader()
     save = SaveData.default()
     services = Services(OpenALBackend(), PrismRenderer(lang), reader, Strings(lang), GlobalState.load(save), save=save)
-    services.danger_zone = float(settings.get('danger_zone', settings.get('laser_zone', 1.5)))
-    tilt = KeyboardTilt(float(settings.get('tilt', 0.3)), float(settings.get('fast_tilt', 0.6)))
-    window = GameWindow(services, tilt, 'Nebula', float(settings.get('scale', 1.5)))
+    tilt = KeyboardTilt()
+    apply_settings(settings, services, tilt)
+    window = GameWindow(services, tilt, 'Nebula', float(setting(settings, 'scale')))
 
     def tutorial(n):
         reader.say('Tutorial %d, %s' % (n, services.strings.get(NAMES[n]).capitalize()))

@@ -6,6 +6,8 @@ See docs/NOTES.md, "Recovered mechanics: Aureal audio engine", for the original 
 """
 import math
 
+from .volumes import VOLUMES
+
 FADE = 1          # stopSoundNamed:withOptions: value that fades out
 UPDATE_INTERVAL = 0.1
 FADE_STEP = 1.0 / 6.0
@@ -185,7 +187,7 @@ class Aureal:
         angle = self.angle_to(position)
         volume = self.new_volume(position)
         factor = self.mask_normal(angle) if angle < 0.0 else s.max_audio
-        self.backend.set_volume(s.handle, _f32(volume * factor))
+        self.backend.set_volume(s.handle, _f32(volume * factor) * VOLUMES.sounds)
 
     def new_volume(self, p):
         lx, ly = self.listener

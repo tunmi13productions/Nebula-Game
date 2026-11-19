@@ -18,6 +18,8 @@ VoiceSynthesizer behaviour reproduced here:
 
 import re
 
+from ..audio.volumes import VOLUMES
+
 POLL = 0.3
 IGNORED_POLLS = 2
 
@@ -230,8 +232,10 @@ class GameVoice(Speaker):
         cur = self._current = {'handle': None, 'timer': None}
 
         def start():
-            samples, channels, sample_rate = self.renderer.render(text, rate)
+            samples, channels, sample_rate = self.renderer.render(text, min(1.0, rate * VOLUMES.speech_rate))
             cur['handle'] = self.audio.load_samples(samples, channels, sample_rate)
+            if VOLUMES.speech != 1.0:
+                self.audio.set_volume(cur['handle'], VOLUMES.speech)
             self.audio.play(cur['handle'])
             self.spoken.append((text, rate, pre, post))
             seconds = len(samples) / max(channels, 1) / sample_rate

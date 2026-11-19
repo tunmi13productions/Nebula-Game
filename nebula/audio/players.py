@@ -6,6 +6,8 @@ import os
 
 import soundfile
 
+from .volumes import VOLUMES
+
 _lengths = {}
 
 
@@ -29,6 +31,8 @@ class Narration:
     def play(self, path, on_done=None):
         self.stop()
         self._handle = self.backend.load(path)
+        if VOLUMES.speech != 1.0:
+            self.backend.set_volume(self._handle, VOLUMES.speech)
         self.backend.play(self._handle)
         self.played.append(os.path.basename(path))
         if on_done is not None:
@@ -56,6 +60,7 @@ class Effects:
         """volume is for the few AVAudioPlayer sounds the original set a volume on (thunder, for one)."""
         self._sweep()
         handle = self.backend.load(os.path.join(self.sounds_dir, filename))
+        volume *= VOLUMES.sounds
         if volume != 1.0:
             self.backend.set_volume(handle, volume)
         self.backend.play(handle)
@@ -97,6 +102,7 @@ class LoopingMusic:
     def play(self):
         if self.playing:
             return
+        self.apply_volume()
         if self.started:
             self.backend.resume(self.handle)
         else:
@@ -108,3 +114,6 @@ class LoopingMusic:
         if self.playing:
             self.backend.pause(self.handle)
             self.playing = False
+
+    def apply_volume(self):
+        self.backend.set_volume(self.handle, VOLUMES.music)
