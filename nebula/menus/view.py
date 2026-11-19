@@ -84,3 +84,58 @@ class Doors:
             self.shut = True
             self.left.run(self.A.move_by(self.width, 0, duration), key='doors')
             self.right.run(self.A.move_by(-W / 2, 0, duration), key='doors')
+
+
+# Global createImageTextWith: text spelled with letter pictures: AlfabetoAct_ (orange, active) or
+# Alfabeto_ (grey). Accented letters are the base letter plus the UTF-8 bytes of a combining mark, which
+# the archive's file names carry as cp437 text.
+_MARKS = {'\u0303': '\u2560\u00e2', '\u0302': '\u2560\u00e9', '\u0301': '\u2560\u00fc', '\u0327': '\u2560\u00ba'}
+GLYPH_H = 146.0
+
+
+def glyph_name(ch, active):
+    import unicodedata
+    prefix = 'AlfabetoAct_' if active else 'Alfabeto_'
+    if ch == ' ':
+        return prefix
+    if ch in '-_':
+        return prefix + '_'
+    d = unicodedata.normalize('NFD', ch.upper())
+    return prefix + d[0] + ''.join(_MARKS.get(m, '') for m in d[1:])
+
+
+def glyph_text(value, scale, box_w, active, textures):
+    """A node holding `value` spelled in letter pictures at `scale`, wrapped into lines no wider than box_w,
+    each line centred, the block centred on the node."""
+    root = Node(name='glyphText')
+    h = GLYPH_H * scale
+    def width_of(word):
+        total = 0.0
+        for ch in word:
+            tex = textures.get(glyph_name(ch, active))
+            total += (tex.get_width() if tex is not None else 60) * scale
+        return total
+    space = width_of(' ')
+    lines, line = [], ''
+    for word in value.split():
+        trial = (line + ' ' + word).strip()
+        if line and width_of(trial) > box_w:
+            lines.append(line)
+            line = word
+        else:
+            line = trial
+    if line:
+        lines.append(line)
+    for i, text_line in enumerate(lines):
+        x = -width_of(text_line) / 2
+        y = (len(lines) - 1) * h / 2 - i * h
+        for ch in text_line:
+            name = glyph_name(ch, active)
+            tex = textures.get(name)
+            w = (tex.get_width() if tex is not None else 60) * scale
+            if ch != ' ' and tex is not None:
+                g = Node(name='glyph', size=(w, h), position=(x + w / 2, y))
+                g.texture = name
+                root.add_child(g)
+            x += w
+    return root

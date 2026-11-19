@@ -466,3 +466,12 @@ def test_screens_draw_their_pictures():
     window.scene.draw(surface, Renderer(TextureStore(), 1.0))
     window.scene.menu_activate()
     assert any(n.name == 'loading' for n in window.scene.view.children)
+
+
+def test_campaign_spells_its_chapter_in_letter_pictures():
+    from nebula.menus.view import glyph_name
+    app, window, services, spoken = campaign(2, 2)
+    textures = {n.texture for n in window.scene.view.walk() if getattr(n, 'texture', None)}
+    assert 'portaLisaCampanha' in textures and 'AlfabetoAct_D' in textures   # DIRECTION, unlocked
+    assert any(t.startswith('Alfabeto_') for t in textures)                    # the locked levels
+    assert glyph_name('\u00e3', True) == 'AlfabetoAct_A\u2560\u00e2'          # a with tilde

@@ -22,6 +22,10 @@ Deviation (DEVIATIONS.md): while an item is being spoken, any navigation key cut
 once, and Control silences it, instead of input waiting for the line to finish.
 """
 
+from ..game.map_generator import MapGenerator
+from ..render.textures import TextureStore
+from . import view as V
+
 RATE = 0.55
 SLIDE = 1.0          # the chapter labels move over 1 second
 ERROR_HOLD = 0.2
@@ -45,23 +49,65 @@ class CampaignSelectScene:
         self.swiping_from_slide = False
         self.leaving = False      # Back is under way: further keys are ignored so they can't restart it
         self.started = False
+        self._build_view()
+
+    # the look (visual only)
+
+    def _build_view(self):
+        """initWithSize:onChapter:'s look: the free mode map behind everything, two HologramaCampanha panels
+        (320 by 284, centred at y 300 and 116.4), the portaLisaCampanha frame over the screen (z 9) and the
+        back picture at the top. The chapter title is spelled in letter pictures (scale 0.22) at y 443.75 and
+        the four level names (scale 0.16, 156.8 points wide) in a 2 by 2 grid at (80, 284), (240, 284),
+        (80, 100.3) and (240, 100.3). Locked items use the grey letters."""
+        self.view = V.new_view()
+        self.map = MapGenerator(self.view, self.services)
+        self.map.free_mode()
+        s = self.services.strings
+        for y in (300.076, 116.423):
+            panel = V.image('HologramaCampanha', 0, V.H - y - 142, 320, 284, z=8)
+            self.view.add_child(panel)
+        self.view.add_child(V.image('portaLisaCampanha', 0, 0, V.W, V.H, z=9))
+        back = V.image(V.localized('back', s), 80, V.H - 545.143 - 22.857, 160, 45.7143, z=17)
+        self.view.add_child(back)
+        self.chapter_nodes = []
+        self._show_chapter()
+
+    def _show_chapter(self):
+        for n in self.chapter_nodes:
+            n.remove_from_parent()
+        textures = _textures()
+        title = V.glyph_text(self.strings().get('cap%d_title' % self.chapter), 0.22, 266.667,
+                             not self.chapter_locked(), textures)
+        title.position, title.z = (160.0, 443.75), 20
+        nodes = [title]
+        for level, pos in zip((1, 2, 3, 4), ((80, 284), (240, 284), (80, 100.347), (240, 100.347))):
+            n = V.glyph_text(self.level_name(level), 0.16, 156.8, not self.level_locked(level), textures)
+            n.position, n.z = pos, 16
+            nodes.append(n)
+        for n in nodes:
+            self.view.add_child(n)
+        self.chapter_nodes = nodes
+
+    def step(self, dt):
+        self.view.step(dt)
+
+    def draw(self, surface, renderer):
+        renderer.draw_scene(self.view, surface)
 
     # what the window calls
 
     def did_move_to_view(self):
         """Coming back from the Hangar shows this scene again; the original scene was never re-entered."""
         if self.started:
+            self._build_view()      # its map was stopped when the Hangar opened
             return
         self.started = True
         self.swiping = False
         self.selection = 0
         self.services.voice.speak(self.chapter_label(), RATE)
 
-    def step(self, dt):
-        pass
-
     def stop_audio(self):
-        pass
+        self.map.stop()
 
     def player_shoot(self):
         pass
@@ -196,6 +242,7 @@ class CampaignSelectScene:
     # changing chapter
 
     def _slid_in(self):
+        self._show_chapter()
         self.swiping = False
         self.selection = 0
         self.services.voice.speak(self.chapter_label(), RATE)
@@ -269,3 +316,14 @@ class CampaignSelectScene:
         save.set_integer('fase', stage)
         save.synchronize()
         self.app.start_chapter(self.chapter, stage)
+
+
+_TEXTURES = None
+
+
+def _textures():
+    """The letter pictures' sizes, for laying out the text (shared with the renderer's store)."""
+    global _TEXTURES
+    if _TEXTURES is None:
+        _TEXTURES = TextureStore()
+    return _TEXTURES
