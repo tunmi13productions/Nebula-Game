@@ -122,9 +122,9 @@ Each entry is a settled decision. Don't change a deviated behaviour unless the u
 
 ## Home and End in menus
 
-- Original: VoiceOver moved through menu items one at a time with swipes; there was no way to jump to the first or last item.
-- Changed: Home jumps to the first item and End to the last, in every menu: the interface screens (main menu, tutorial selection, Hangar, About, Systems), the in-game menus (pause, end of level, free mode results) and the campaign selector (Home goes to the chapter name, End to the last level). In the in-game menus and the campaign selector the jump plays the change sound, or the error sound when already there, as moving past either end does.
-- Reason: a keyboard convenience for screen reader users. Requested by the user on 2026-11-18.
+- Original: VoiceOver itself let the player jump to the first or last element on screen with a four-finger tap near the top or bottom of the screen. On the interface screens (main menu, tutorial selection, Hangar, About) that reached the first and last button. The in-game menus (pause, end of level, free mode results) and the campaign selector were not ordinary VoiceOver elements: the game read its own swipes there and moved one item at a time, so a four-finger tap had nothing in them to jump to.
+- Changed: Home and End stand for VoiceOver's four-finger taps, the way the arrows stand for swipes, so on the interface screens (and the Systems screen) they jump to the first and last element as VoiceOver did. The same keys also jump in the in-game menus and the campaign selector (Home to the chapter name, End to the last level), which the original couldn't do; there the jump plays the change sound, or the error sound when already there, as moving past either end does.
+- Reason: on the interface screens it reproduces a VoiceOver gesture the original's players had. In the game's own menus it is a convenience, so the same keys work everywhere. Requested by the user on 2026-11-18; the VoiceOver gesture pointed out by the user the same day.
 
 ## Game controllers
 

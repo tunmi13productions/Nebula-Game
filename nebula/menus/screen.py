@@ -3,8 +3,9 @@
 In the original these were UIKit view controllers read by VoiceOver: each button or label was one
 accessibility element, VoiceOver moved through them in screen order, read the label (adding "button" for
 buttons), and a double tap activated the focused one. When a screen appeared VoiceOver focused and read its
-first element. Here the down and up arrows move, Enter activates and Escape goes back (see DEVIATIONS.md),
-and labels go to the screen reader through Prism. VoiceOver's own sounds have no counterpart.
+first element. Here the down and up arrows move, Home and End jump to the first and last element (VoiceOver's
+four-finger taps), Enter activates and Escape goes back (see DEVIATIONS.md), and labels go to the screen
+reader through Prism. VoiceOver's own sounds have no counterpart.
 """
 
 from .view import new_view
@@ -112,14 +113,15 @@ class Screen:
             self.announce()
 
     def menu_first(self):
-        """Home: the first element (a port addition, DEVIATIONS.md, "Home and End in menus")."""
+        """Home: VoiceOver's four-finger tap near the top of the screen, which focused the first element
+        (DEVIATIONS.md, "Home and End in menus")."""
         if self.busy or not self._visible():
             return
         self.focus = 0
         self.announce()
 
     def menu_last(self):
-        """End: the last element."""
+        """End: the four-finger tap near the bottom, the last element."""
         if self.busy or not self._visible():
             return
         self.focus = len(self._visible()) - 1
