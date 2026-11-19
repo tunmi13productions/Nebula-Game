@@ -4,7 +4,8 @@
   "executable": "Nebula",
   "archive": "nebula",
   "version": {"file": "main.py", "pattern": "^VERSION = \"([^\"]+)\""},
-  "assets": ["sounds", "images", "data", "readme.txt"],
+  "assets": ["sounds", "images", "data", "readme.txt", "changelog.txt"],
+  "changelog": "changelog.txt",
   "native_packages": ["cyal", "prism", "_soundfile_data"],
   "licenses": "off",
   "nuitka_args": {
