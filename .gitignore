@@ -5,3 +5,7 @@ __pycache__/
 *.pyc
 decompiled/analysis/decompiled.c
 .pytest_cache/
+env/
+dist/
+*.build/
+*.dist/

@@ -1,0 +1,19 @@
+# Builds every system in release.json and publishes a release when a version tag is pushed.
+# Run from the Actions page, or from release.py's Test the GitHub build, it builds and publishes nothing.
+# Everything it does lives in tunmi13productions/game-release, so this file never needs to change.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    uses: tunmi13productions/game-release/.github/workflows/build.yml@main
