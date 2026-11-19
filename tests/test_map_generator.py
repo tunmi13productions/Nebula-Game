@@ -60,3 +60,20 @@ def test_every_chapter_stage_builds_its_map():
             assert isinstance(scene.map, MapGenerator)
             assert scene.background == (0.0, 0.0, 0.0)
             scene.stop_audio()
+
+
+def test_versus_map_and_its_nebulas_held_back_while_foreground_is_suspended():
+    from nebula.engine.nodes import Scene
+    services = Services.silent('en')
+    scene = Scene()
+    gen = MapGenerator(scene, services)
+    gen.versus()
+    textures = [n.texture for n in scene.children if getattr(n, 'texture', None)]
+    assert textures.count('starfieldBG') == 4 and not any(t.startswith('nebulaL') for t in textures)
+    gen.suspend_foreground()
+    gen.begin_versus_nebulas()
+    assert not any(getattr(n, 'texture', '') and n.texture.startswith('nebulaL') for n in scene.children)
+    gen.resume_foreground()
+    gen.make_a_nebula(20.0)
+    assert sum(1 for n in scene.children if getattr(n, 'texture', '') and n.texture.startswith('nebulaL')) == 2
+    gen.stop()

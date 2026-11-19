@@ -38,6 +38,7 @@ ROTATION_TICK = 0.025
 BLUE, GREEN, CLEAR = (0.0, 0.0, 1.0, 1.0), (0.0, 1.0, 0.0, 1.0), (0.0, 0.0, 0.0, 0.0)
 YELLOW, WHITE, PURPLE = (1.0, 1.0, 0.0, 1.0), (1.0, 1.0, 1.0, 1.0), (0.5, 0.0, 0.5, 1.0)
 ORANGE_DETAIL = (1.0, 180 / 255, 0.0, 1.0)
+RED = (1.0, 0.0, 0.0, 1.0)
 BLACK = (0.0, 0.0, 0.0, 1.0)
 
 
@@ -49,6 +50,7 @@ class MapGenerator:
         self.layers = []
         self.rotation_timer = None
         self.running_emitter = {}
+        self.generate_foreground = True   # _shouldGenerateForeground: makeANebula: does nothing while off
 
     # lifetime
 
@@ -142,6 +144,8 @@ class MapGenerator:
         self.item_texture('planet%d' % (r % 6), duration, 4, float(x), (self.H * 2, self.H * 2))
 
     def make_a_nebula(self, duration=40.0):
+        if not self.generate_foreground:
+            return
         for layer in ('nebulaL1_', 'nebulaL2_'):
             r = rand.arc4random()
             x = float(rand.arc4random_uniform(int(self.W)))
@@ -220,6 +224,28 @@ class MapGenerator:
         self.every(100, self.make_a_planet, fire_now=True)
         self.star_emitter()
         self.every(60, self.make_a_nebula)
+
+    def versus(self):
+        """initVersusMapInScene: the starfield (20 seconds, two layers), red details every 60 seconds, a
+        planet crossing in 30 seconds every 50, and the star emitter. The nebulas start with the match
+        (begin_versus_nebulas)."""
+        self.scene.background = (0.0, 0.0, 0.0)
+        self.rotate_background('starfieldBG', 20, True)
+        self.random_details(60, RED)
+        self.every(50, lambda: self.make_a_planet(30.0))
+        self.star_emitter()
+
+    def begin_versus_nebulas(self):
+        """beginNebulaGenerationForVersus: a nebula crossing in 20 seconds now and every 40."""
+        self.every(40, lambda: self.make_a_nebula(20.0), fire_now=True)
+
+    def suspend_foreground(self):
+        """suspendGeneratingForeground"""
+        self.generate_foreground = False
+
+    def resume_foreground(self):
+        """resumeForegroundGeneration"""
+        self.generate_foreground = True
 
     def chapter(self, chapter, stage):
         """initChapterNStage:onScene:"""
