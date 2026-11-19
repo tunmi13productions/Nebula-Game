@@ -8,7 +8,7 @@
   "native_packages": ["cyal", "prism", "_soundfile_data"],
   "licenses": "off",
   "nuitka_args": {
-    "all": ["--lto=yes"],
+    "all": ["--lto=yes", "--include-package=cyal"],
     "windows": [],
     "linux": [],
     "macos": []
