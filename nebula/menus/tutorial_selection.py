@@ -8,6 +8,7 @@
   primeiraVez to 1. With VoiceOver running that's the movement tutorial (without, the basic one).
 - Back: the accept sound, the doors close over 1 second, then the screen is popped.
 """
+from . import view as V
 from .screen import Element, Screen
 
 RATE = 0.55
@@ -35,6 +36,7 @@ class TutorialSelectionScreen(Screen):
 
     def select(self, n):
         self.busy = True
+        self.view.add_child(V.loading_view(self.services.strings))
 
         def loaded():
             self.services.voice.speak(self.services.strings.get('tela_load'), RATE)

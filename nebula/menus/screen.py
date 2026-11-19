@@ -7,6 +7,8 @@ first element. Here the down and up arrows move, Enter activates and Escape goes
 and labels go to the screen reader through Prism. VoiceOver's own sounds have no counterpart.
 """
 
+from .view import new_view
+
 BACK_DOORS = 1.0   # the doors close over 1 second before a screen is popped
 
 
@@ -41,6 +43,7 @@ class Screen:
         self.elements = []
         self.focus = 0
         self.busy = False   # while a transition runs, input does nothing
+        self.view = new_view()   # what the screen draws (visual only)
         self.build()
 
     def build(self):
@@ -51,6 +54,8 @@ class Screen:
     def did_move_to_view(self):
         self.busy = False
         self.focus = 0
+        for n in [c for c in self.view.children if c.name == 'loading']:
+            n.remove_from_parent()      # a loading view left from the last game
         self.appeared()
         self.announce_first()
 
@@ -58,7 +63,10 @@ class Screen:
         """viewDidAppear: hook for subclasses."""
 
     def step(self, dt):
-        pass
+        self.view.step(dt)
+
+    def draw(self, surface, renderer):
+        renderer.draw_scene(self.view, surface)
 
     def stop_audio(self):
         pass

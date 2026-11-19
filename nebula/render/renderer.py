@@ -17,6 +17,7 @@ FONTS = {
     'Futura-CondensedExtraBold': ('impact', 'arialblack', 'arial'),
     'HelveticaNeue-Thin': ('segoeuilight', 'segoeui', 'arial'),
     'Futura': ('centurygothic', 'segoeui', 'arial'),
+    'HelveticaNeue': ('segoeui', 'arial'),
 }
 
 
@@ -26,9 +27,11 @@ class Renderer:
         self.scale = scale
         self._scaled = {}
 
-    def draw_scene(self, scene, surface):
-        bg = getattr(scene, 'background', None) or SCENE_BACKGROUND
-        surface.fill([int(c * 255) for c in bg[:3]])
+    def draw_scene(self, scene, surface, clear=True):
+        """clear=False draws over what's there, for a layer on top of another scene."""
+        if clear:
+            bg = getattr(scene, 'background', None) or SCENE_BACKGROUND
+            surface.fill([int(c * 255) for c in bg[:3]])
         items = []
         self._collect(scene, 0.0, (0.0, 0.0), 1.0, 0.0, 1.0, items, [0])
         items.sort(key=lambda it: (it[0], it[1]))

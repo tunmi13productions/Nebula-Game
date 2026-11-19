@@ -452,3 +452,17 @@ def test_campaign_back_is_not_restarted_by_more_presses():
     assert spoken.lines.count('Back') == 2      # the item, then the one goodbye
     window.run(2.0)
     assert isinstance(window.scene, MainMenuScreen)
+
+
+def test_screens_draw_their_pictures():
+    import pygame
+    from nebula.render.renderer import Renderer
+    from nebula.render.textures import TextureStore
+    app, window, services = at_main_menu()
+    window.run(3.0)
+    textures = {n.texture for n in window.scene.view.walk() if getattr(n, 'texture', None)}
+    assert {'nebulaMenu1', 'leftDoor_en_4', 'rightDoor_en_4'} <= textures
+    surface = pygame.Surface((320, 568))
+    window.scene.draw(surface, Renderer(TextureStore(), 1.0))
+    window.scene.menu_activate()
+    assert any(n.name == 'loading' for n in window.scene.view.children)
