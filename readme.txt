@@ -9,7 +9,7 @@ Getting started
 
 Put on headphones. Enemies are placed left and right in stereo, and the game depends on it.
 
-Run NebulaGame.exe. The game speaks through your screen reader (NVDA, JAWS and others are supported) and has its own voice for in-game announcements.
+Run Nebula.exe. The game speaks through your screen reader (NVDA, JAWS and others are supported) and has its own voice for in-game announcements.
 
 On the first launch the game asks whether you'd like to play the tutorial. If you are new, say yes. The tutorial has six short parts and teaches everything below by ear.
 

@@ -1,8 +1,8 @@
 {
-  "name": "Nebula Game",
+  "name": "Nebula",
   "entry": "main.py",
-  "executable": "NebulaGame",
-  "archive": "nebula_game",
+  "executable": "Nebula",
+  "archive": "nebula",
   "version": {"file": "main.py", "pattern": "^VERSION = \"([^\"]+)\""},
   "assets": ["sounds", "images", "data", "readme.txt"],
   "native_packages": ["cyal", "prism", "_soundfile_data"],
@@ -15,6 +15,6 @@
   },
   "python": "3.12",
   "systems": ["windows", "linux", "macos-arm64", "macos-x86_64"],
-  "macos": {"bundle_id": "com.tunmi13.nebulagame", "minimum": "11.0"},
+  "macos": {"bundle_id": "com.tunmi13.nebula", "minimum": "11.0"},
   "venv": "env"
 }

@@ -39,7 +39,7 @@ def main():
     save = SaveData.default()
     services = Services(OpenALBackend(), PrismRenderer(lang), reader, Strings(lang), GlobalState.load(save), save=save)
     tilt = KeyboardTilt()
-    window = GameWindow(services, tilt, 'Nebula Game', float(setting(settings, 'scale')))
+    window = GameWindow(services, tilt, 'Nebula', float(setting(settings, 'scale')))
     apply_settings(settings, services, tilt, window)
 
     def tutorial(n):

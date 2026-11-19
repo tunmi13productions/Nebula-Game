@@ -1,4 +1,4 @@
-"""Starts Nebula Game, for the release builds (release.json's entry). From source, python -m nebula does the same."""
+"""Starts Nebula, for the release builds (release.json's entry). From source, python -m nebula does the same."""
 from nebula.__main__ import main
 
 VERSION = "0.1"
