@@ -35,7 +35,7 @@ Findings from studying the original iOS build. Raw dumps live in `decompiled/ana
 ## Game structure
 
 - Modes on the main menu: Campaign, Free Mode, Multiplayer (Versus over Game Center), Hangar (upgrades), Tutorial, About.
-- Campaign: 9 chapters with 4 levels each. Chapter 1 is free. The rest need the "full campaign" purchase.
+- Campaign: 9 chapters with 4 levels each. Earlier versions sold chapters 2 to 9 as the "full campaign" purchase; version 1.3 (this one) made it free, and `Global init` sets purchasedCampaign to YES (see MENUS.md).
 - Chapter titles: 1 Refueling, 2 Direction, 3 Hyperdrive, 4 Home, 5 Burning, 6 Exodus, 7 Hope, 8 Revenge, 9 Pegasus. Level names are in the `capN_lvlM` strings.
 - Tutorial: 6 sections, Movement, Enemies, Attack, Battle, Basic and Special (the menu order still needs checking against the code). Each step is a narrated mp3 `tut_X.Y`.
 - Free mode is endless with a score and a best score.
@@ -393,3 +393,27 @@ Continue the study through the open questions above, in roughly that order. Enem
 - MapGenerator (`nebula/game/map_generator.py`) draws from the game's arc4random and arc4random_uniform when it places items, as the original did. Recipes for free mode and all 36 chapter stages were traced with the emulator; see the module docstring.
 - destroyShip draws `arc4random() & 1` after the explosion sound to pick Explosion_1 (Explosion02 frames) or Explosion_2 (Explosion03 frames). The port makes the same draw, so the game's random sequence stays in step. Enemies (not the player, code 98) also send off the score.sks sparkle, which flies to (W/2, 0.95 H).
 
+## App Store listing
+
+The original listing (App Store id 874292053, bundle com.CiladaGames.Nebula), as supplied by the user on 2026-11-18 from its copy on App Pure (iphone.apkpure.com). Apple's page has been removed. Verbatim, including its typos:
+
+Nebula is a spaceship battle arcade game that will provide you a new experience. With many features such as 3D audio, device movements and accessibility for the visually impaired.
+
+"Nebula is a fantastic game. It is both challenging and addicting. It is a must download."
+- Liam Erven
+
+FEATURES:
+- Gaming Modes: Campaign, Free and Multiplayer.
+- 3D audio*, allowing play without vision.
+- 48 enemy spaceships
+- Campaign with storyline
+- Upgradeable spaceship.
+- Detailed tutorials
+- 9 chapters and 36 levels
+
+*For a better experience, use your headphones.
+
+STORY:
+During the last great inter-galactic war, the Spacial Defense Force created the Nebula project, an army of defense and attack composed by 2000 spaceships. The project got it's name due to the difficult the pilots had to perform combats in space, as they face huge nebulas that limited their vision and scrambled their systems. Because of this, engineers have invested heavily to develop a technology that would allow us to hear other ships and unknown objects.
+
+Version 1.3's What's New, from a mirror (soft112), dated 2016-12-05: "Major bug-fixes throughout the game." "Upgraded device compatibility." "Voice-Over bug-fixes." "Full campaign now included in the game, no more in-app purchases!"

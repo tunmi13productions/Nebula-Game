@@ -16,11 +16,11 @@ Each entry is a settled decision. Don't change a deviated behaviour unless the u
 - Changed: the port always takes the VoiceOver-running branch, and speaks through Prism.
 - Reason: the port always uses screen reader output, so it matches the original as played with VoiceOver. Decided by the user on 2026-11-17.
 
-## The full campaign is always unlocked, and the store is removed
+## The unreachable store screen is left out
 
-- Original: chapters 2 to 9 needed an in-app purchase (`purchased_Campaing`). Without it, the campaign selector showed a lock overlay and opened `CompraCampanhaViewController` ("Full campaing not purchased", with Buy, Restore and back) through StoreKit.
-- Changed: the purchase flag always counts as bought. The purchase screen, its texts and StoreKit are removed. Level-by-level progress unlocking (lastChapter and lastLevel) is unchanged.
-- Reason: Apple in-app purchases don't exist on Windows. Decided by the user on 2026-11-17.
+- Original: earlier versions sold chapters 2 to 9 as an in-app purchase (`purchased_Campaing`): without it, the campaign selector showed a lock overlay and opened `CompraCampanhaViewController` ("Full campaing not purchased", with Buy, Restore and back) through StoreKit. Version 1.3, the one ported, made the full campaign free (its What's New: "Full campaign now included in the game, no more in-app purchases!"): `Global init` sets purchasedCampaign to YES and never reads the saved flag back, so the lock and the purchase screen can't be reached, though their code is still in the app.
+- Changed: the full campaign is unlocked, as in 1.3. The unreachable purchase screen, its texts and StoreKit are left out. Level-by-level progress unlocking (lastChapter and lastLevel) is unchanged.
+- Reason: the screen can't be reached in the original, and Apple in-app purchases don't exist on Windows. First recorded on 2026-11-17 as a change to the original; corrected on 2026-11-18, when the user confirmed version 1.3's App Store notes, to say that 1.3 itself was already unlocked.
 
 ## Versus mode is left out for now
 

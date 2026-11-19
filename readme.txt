@@ -100,7 +100,6 @@ Differences from the iPhone version
 
 The port aims to be an exact copy of the original. The differences are:
 Keys and controller buttons take the place of tilting the phone, tapping and swiping.
-The full campaign is unlocked from the start; on iPhone it was a purchase. Levels still unlock one by one as you beat them.
 Multiplayer (versus mode) is not available. It depended on Apple's Game Center.
 Leaderboards and analytics are removed.
 The Systems screen, controller support, vibration and Home and End jumps are new.
