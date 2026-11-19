@@ -100,6 +100,19 @@ def test_quick_match_connects_waits_and_starts_the_scene(tmp_path):
     assert window.scene.lobby is None
 
 
+def test_joining_sends_the_typed_code(tmp_path):
+    app, window, services, client = open_multiplayer(tmp_path, 'Nebula 482')
+    for _ in range(3):
+        window.scene.menu_next()
+    window.scene.menu_activate()                     # Join a friend
+    for ch in '4127':
+        window.scene.handle_text_event(pygame.event.Event(pygame.TEXTINPUT, text=ch))
+    window.scene.menu_activate()
+    assert isinstance(window.scene, VersusScene)
+    client.on_welcome('Nebula 482')
+    assert client.calls[-1] == ('join', '4127')
+
+
 def test_hosting_reads_the_code_and_a_bad_code_returns(tmp_path):
     app, window, services, client = open_multiplayer(tmp_path, 'Nebula 482')
     window.scene.menu_next()
