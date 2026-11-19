@@ -65,6 +65,8 @@ class GameWindow:
             return
         if down and hasattr(s, 'handle_text_event') and s.handle_text_event(ev):
             return                  # a text box took the key
+        if down and hasattr(s, 'handle_raw_key') and s.handle_raw_key(ev):
+            return                  # a scene's own extra key, like C for the invite code
         named = {pygame.K_ESCAPE: 'escape', pygame.K_LEFT: 'left', pygame.K_RIGHT: 'right',
                  pygame.K_LCTRL: 'control', pygame.K_RCTRL: 'control', pygame.K_F1: 'f1'}.get(ev.key)
         if down and named and hasattr(s, 'handle_key') and s.handle_key(named):

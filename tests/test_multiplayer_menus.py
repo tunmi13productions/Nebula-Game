@@ -109,6 +109,17 @@ def test_hosting_reads_the_code_and_a_bad_code_returns(tmp_path):
     assert client.calls[-1] == ('host',)
     client.on_code('4821')
     assert said(services)[-1].startswith('Your code is 4 8 2 1.')
+    copied = []
+    import nebula.menus.textbox as tb
+    saved, tb._clipboard_set = tb._clipboard_set, copied.append
+    try:
+        scene = window.scene
+        assert scene.handle_raw_key(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_c, mod=0))
+        assert said(services)[-1] == '4821'
+        assert scene.handle_raw_key(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_c, mod=pygame.KMOD_SHIFT))
+        assert copied == ['4821'] and said(services)[-1] == 'Code 4 8 2 1 copied.'
+    finally:
+        tb._clipboard_set = saved
     client.on_error('unreachable')
     assert said(services)[-1] == "Can't reach the multiplayer server."
     assert isinstance(window.scene, MultiplayerScreen)

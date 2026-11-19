@@ -27,7 +27,9 @@ WORDS = {
         'quick': 'Quick match', 'host': 'Invite a friend', 'join': 'Join a friend',
         'type_code': "Type your friend's four-digit code, then press Enter.", 'code': 'Code',
         'connecting': 'Connecting.', 'waiting': 'Waiting for another pilot.',
-        'your_code': 'Your code is %s. Give it to your friend; waiting for them to join.',
+        'your_code': 'Your code is %s. Give it to your friend; waiting for them to join. Press C to hear it '
+                     'again, or Shift C to copy it.',
+        'code_copied': 'Code %s copied.',
         'unreachable': "Can't reach the multiplayer server.", 'bad_code': 'No game with that code.',
         'version': 'This version of the game is too old for the multiplayer server.',
         'disconnected': 'The connection to the multiplayer server was lost.',
@@ -40,7 +42,9 @@ WORDS = {
         'quick': 'Partida rápida', 'host': 'Convidar um amigo', 'join': 'Entrar na partida de um amigo',
         'type_code': 'Digite o código de quatro dígitos do seu amigo e pressione Enter.',
         'code': 'Código', 'connecting': 'Conectando.', 'waiting': 'Esperando outro piloto.',
-        'your_code': 'Seu código é %s. Passe para o seu amigo; esperando ele entrar.',
+        'your_code': 'Seu código é %s. Passe para o seu amigo; esperando ele entrar. Pressione C para ouvir '
+                     'de novo, ou Shift C para copiar.',
+        'code_copied': 'Código %s copiado.',
         'unreachable': 'Não foi possível alcançar o servidor multijogador.',
         'bad_code': 'Nenhuma partida com esse código.',
         'version': 'Esta versão do jogo é antiga demais para o servidor multijogador.',

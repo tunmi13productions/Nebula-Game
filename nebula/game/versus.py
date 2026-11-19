@@ -367,6 +367,25 @@ class VersusScene(BaseScene):
         self.net.poll()
         super().step(dt)
 
+    invite_code = None
+    code_lines = None      # (what C says, what Shift C says), each given the code: set by the App
+
+    def handle_raw_key(self, event):
+        """While hosting: C reads the invite code again, Shift C copies it to the clipboard (a port
+        addition)."""
+        import pygame
+        if event.key != pygame.K_c or not self.invite_code or self.code_lines is None:
+            return False
+        again, copied = self.code_lines
+        say = self.services.screen_reader.say
+        if getattr(event, 'mod', 0) & pygame.KMOD_SHIFT:
+            from ..menus.textbox import _clipboard_set
+            _clipboard_set(self.invite_code)
+            say(copied(self.invite_code))
+        else:
+            say(again(self.invite_code))
+        return True
+
     def swipe_up(self):
         """No pause in versus mode."""
 

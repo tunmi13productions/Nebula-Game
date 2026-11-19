@@ -196,7 +196,13 @@ class App:
 
         net.on_welcome = welcome
         net.on_waiting = lambda: say(w['waiting'])
-        net.on_code = lambda c: say(w['your_code'] % spelled(c))
+        def code(c):
+            scene.invite_code = c
+            say(w['your_code'] % spelled(c))
+
+        # C says the code alone, as plain digits, so it copies cleanly from a speech history
+        scene.code_lines = (lambda c: c, lambda c: w['code_copied'] % spelled(c))
+        net.on_code = code
         net.on_error = failed
         self.window.set_scene(scene)
         say(w['connecting'])

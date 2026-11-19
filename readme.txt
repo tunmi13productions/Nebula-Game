@@ -74,7 +74,7 @@ Two players face each other, each on their own computer, over the internet.
 The first time, choose a pilot name: type one, or let the game generate one, like Nebula 482. You can change it later in Systems, under Pilot name.
 Then choose:
 Quick match: play whoever else is waiting.
-Invite a friend: you get a four-digit code. Read it out to your friend, who chooses Join a friend and types it in.
+Invite a friend: you get a four-digit code. Read it out to your friend, who chooses Join a friend and types it in. While you wait, press C to hear the code again, or Shift C to copy it to the clipboard.
 Join a friend: type your friend's code.
 While you wait, the lobby music plays. Escape leaves.
 Once matched, the game counts down 3, 2, 1 and says Start. Your opponent's ship is at the top of the screen, and you hear its engine where it is. Dodge their shots and fire back. Your Hangar upgrades count in multiplayer too.
