@@ -92,9 +92,10 @@ def test_quick_match_connects_waits_and_starts_the_scene(tmp_path):
     window.scene.menu_activate()                     # Quick match
     assert isinstance(window.scene, VersusScene) and client.calls == [('connect', 'Nebula 482')]
     client.on_welcome('Nebula 482')
-    assert client.calls[-1] == ('quick',)
+    assert client.calls[-1] == ('quick',) and not window.scene.is_host
     client.on_waiting()
     assert said(services)[-1] == 'Waiting for another pilot.'
+    assert window.scene.is_host              # the one who waited hosts
     client.opponent = 'Starship 17'
     client.on_matched('Starship 17')
     assert window.scene.lobby is None
@@ -110,7 +111,7 @@ def test_joining_sends_the_typed_code(tmp_path):
     window.scene.menu_activate()
     assert isinstance(window.scene, VersusScene)
     client.on_welcome('Nebula 482')
-    assert client.calls[-1] == ('join', '4127')
+    assert client.calls[-1] == ('join', '4127') and not window.scene.is_host
 
 
 def test_hosting_reads_the_code_and_a_bad_code_returns(tmp_path):
@@ -119,7 +120,7 @@ def test_hosting_reads_the_code_and_a_bad_code_returns(tmp_path):
     window.scene.menu_next()
     window.scene.menu_activate()                     # Invite a friend
     client.on_welcome('Nebula 482')
-    assert client.calls[-1] == ('host',)
+    assert client.calls[-1] == ('host',) and window.scene.is_host
     client.on_code('4821')
     assert said(services)[-1].startswith('Your code is 4 8 2 1.')
     copied = []

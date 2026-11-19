@@ -8,12 +8,15 @@ original's C structs, little-endian, the first int their type:
     0 move (20 bytes)   x (float), own life, opponent's life and shield as the sender sees them, every 0.05 s
     1 shot (4 bytes)    the opponent fired
     6 (4 bytes)         round over (teste)
+    7 (4 bytes)         the host restarted the round (a port addition)
 
 The scene opens in the lobby (lobbyMusic, the createBG panel) while the relay pairs the players, then runs
 matchStarted. A shot that hits on the shooter's screen damages the opponent there; the damage reaches the
 opponent through the move messages, whose life and shield fields each side applies when they are lower. A
 shot hitting the player only bursts and plays player_hit.caf. When a life reaches 0, the round ends after a
-second with the winner's name and versus_Vitoria (or versus_Empate), and restarts after 5 more seconds.
+second with the winner's name (or versus_Empate) and a menu. The original restarted by itself 5 seconds later;
+here the host's menu has Restart, which restarts both sides (DEVIATIONS.md, "Versus rounds restart when the host
+chooses").
 """
 import struct
 
@@ -31,18 +34,23 @@ from .rand import arc4random
 from .ship import (CAT_ENEMY, CAT_ENEMY_SHOT, CAT_OBSTACLE, CAT_PLAYER, CAT_PLAYER_SHOT, Shot, SpaceShip,
                    burst_and_remove, player_hitbox)
 
-MOVE, SHOT, SPECS, SPECS_RECEIVED, ROUND_OVER = 0, 1, 3, 4, 6
+MOVE, SHOT, SPECS, SPECS_RECEIVED, ROUND_OVER, RESTART = 0, 1, 3, 4, 6, 7
 DEVICE_IPHONE = 1                 # device: the port is always the iPhone layout
 IPAD_SCALE = 2.4                  # DAT_00080ef0, x between iPhone and iPad widths
 SEND_INTERVAL = 0.05              # sendMove: (DAT_00080220)
 COUNT_INTERVAL = 1.0
 END_DELAY = 1.0
-RESTART_DELAY = 5.0
 MAX_WAITING_TIME = 5.0
 SHOT_FRAME = 0.04                 # DAT_00082010 / DAT_00080ef8
 SHOT_FLIGHT = 1.0
 COUNT_START = 4                   # counter: speaks 3, 2, 1, then versus_Inicio
 LOBBY_MUSIC = ('Lino Rise - Channel Intro Pompeii', 'mp3')   # LinoRise_ChannelIntroPompeii.mp3
+
+# The end screen's lines in place of versus_Vitoria, which said the game would restart automatically
+WORDS = {
+    'en': {'winner': 'Winner.', 'wait_host': 'Waiting for the host to restart.'},
+    'pt': {'winner': 'Vitorioso.', 'wait_host': 'Esperando o anfitrião recomeçar.'},
+}
 
 
 def enemy_stats(life_points, shield_points):
@@ -64,7 +72,6 @@ class VersusScene(BaseScene):
         self.counter = COUNT_START
         self.count_timer = None
         self.end_timer = None
-        self.restart_timer = None
         self.watchdog = None
         self.allow_move = self.allow_shoot = False
         self.map = MapGenerator(self, services)
@@ -211,6 +218,9 @@ class VersusScene(BaseScene):
             if self.count_timer is not None:
                 self.count_timer.invalidate()
             self.count_timer = self.services.scheduler.every(COUNT_INTERVAL, lambda t: self.regressive_count())
+        elif kind == RESTART:
+            if not self.is_host:
+                self.restart_game()
         elif kind == ROUND_OVER:
             if not self.waiting_start:
                 self._end_round()
@@ -303,18 +313,23 @@ class VersusScene(BaseScene):
 
     # the end of a round
 
+    is_host = False        # the invite's host, or the player who waited in a quick match: set by the App
+
     def screen_before_restart(self):
-        """The winner (or draw) box with Back to menu, spoken as "%@, %@", then a restart in 5 seconds."""
+        """The winner (or draw) box, spoken as "%@, %@", with Back to menu, and Restart for the host. The
+        other player is told the host restarts."""
         self.end_timer = None
         if self.ended:
             return
         s = self.services.strings
+        w = WORDS.get(s.language, WORDS['en'])
         me, them = self.player.life < 1, self.enemy.life < 1
         if me and them:
             text, box = s.get('versus_Empate'), 'boxMultiplayerEmpate'
         else:
             winner = (self.net.opponent or '') if me else (self.net.name or '')
-            text, box = ('%s %s' % (winner, s.get('versus_Vitoria'))).strip(), 'boxFinalMultiplayer'
+            text, box = ('%s %s' % (winner, w['winner'])).strip(), 'boxFinalMultiplayer'
+        spoken = text if self.is_host else '%s %s' % (text.rstrip('.') + '.', w['wait_host'])
         overlay = Node(name='endBox', size=(W, H), position=(W * 0.5, H * 0.5))
         overlay.color, overlay.z = (0.0, 0.0, 0.0, 0.6), 89
         picture = Node(name='box', size=(266.667, 320.0), position=(0.0, 0.0))
@@ -325,14 +340,23 @@ class VersusScene(BaseScene):
         label.font_color, label.z = (1.0, 1.0, 1.0), 2
         overlay.add_child(label)
         self.add_child(overlay)
-        self.open_menu(text, [(s.get('game_selecionar'), self.back_to_menu)], overlay=overlay)
-        self.restart_timer = self.services.scheduler.after(RESTART_DELAY, self.restart_game)
+        items = [(s.get('game_selecionar'), self.back_to_menu)]
+        if self.is_host:
+            items.append((s.get('pause_replayLabel'), self.host_restart))
+        self.open_menu(spoken, items, overlay=overlay)
+
+    def host_restart(self):
+        """Restart on the host's menu: the other side is told, and both restart."""
+        if self._send('<i', RESTART):
+            self.restart_game()
 
     def restart_game(self):
         """restartGame: both ships rebuilt, the countdown label back, and the match starts again."""
-        self.restart_timer = None
         if self.ended:
             return
+        if self.end_timer is not None:      # the other side restarted before this one's end screen came
+            self.end_timer.invalidate()
+            self.end_timer = None
         if self.in_menu:
             self.in_menu = False
             overlay = getattr(self, 'menu_overlay', None)
@@ -397,7 +421,7 @@ class VersusScene(BaseScene):
         return super().handle_key(key)
 
     def stop_audio(self):
-        for t in (self.send_timer, self.count_timer, self.end_timer, self.restart_timer, self.watchdog):
+        for t in (self.send_timer, self.count_timer, self.end_timer, self.watchdog):
             if t is not None:
                 t.invalidate()
         self.map.stop()

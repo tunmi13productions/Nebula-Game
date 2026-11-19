@@ -181,6 +181,7 @@ class App:
         net = self.make_relay_client(self.settings.get('server') or DEFAULT_SERVER)
         self.stop_menu_music()
         scene = VersusScene(self.services, self.tilt, net, self.back_to_screen)
+        scene.is_host = mode == 'host'     # in a quick match, whoever waited for the other hosts
 
         def welcome(name):
             if mode == 'quick':
@@ -195,7 +196,11 @@ class App:
             say(w.get(reason, w['disconnected']))     # after the menu's own line, so it isn't cut off
 
         net.on_welcome = welcome
-        net.on_waiting = lambda: say(w['waiting'])
+        def waiting():
+            scene.is_host = True
+            say(w['waiting'])
+
+        net.on_waiting = waiting
         def got_code(c):     # not named code: that would replace the joining code above before welcome runs
             scene.invite_code = c
             say(w['your_code'] % spelled(c))

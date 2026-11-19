@@ -51,6 +51,7 @@ def pair(a_points=(0, 0), b_points=(0, 0)):
         scene = VersusScene(services, KeyboardTilt(0.3), net, lambda left=left: left.append(True))
         scene.did_move_to_view()
         sides.append((scene, services, left))
+    sides[0][0].is_host = True
     for net in nets:
         net.on_matched('x')
     return sides
@@ -99,19 +100,58 @@ def test_a_shot_reaches_the_other_side_and_damage_is_agreed():
     assert b.player.life == 3
 
 
-def test_a_round_ends_with_the_winner_and_restarts():
+def end_round(sides):
+    run(sides, 4.5)
+    sides[0][0].enemy.inflict_damage(5)     # the host wins
+    run(sides, 1.5)
+
+
+def test_a_round_ends_and_waits_for_the_host():
     sides = pair()
     (a, sa, _), (b, sb, _) = sides
+    end_round(sides)
+    assert a.in_menu and b.in_menu
+    assert spoken(sa)[-1] == 'Nebula 482 Winner., Back to menu button'
+    assert spoken(sb)[-1] == 'Nebula 482 Winner. Waiting for the host to restart., Back to menu button'
+    assert [label for label, _ in a.menu_items] == ['Back to menu button', 'Restart, button']
+    assert [label for label, _ in b.menu_items] == ['Back to menu button']
+    run(sides, 10.0)
+    assert a.in_menu and b.in_menu           # no restart by itself
+
+
+def test_the_host_restarts_both_sides():
+    sides = pair()
+    (a, sa, _), (b, sb, _) = sides
+    end_round(sides)
+    a.menu_next()
+    a.menu_activate()                        # Restart
+    run(sides, 0.1)
+    assert not a.in_menu and not b.in_menu
+    assert a.player.life == a.player.max_life and b.player.life == b.player.max_life
     run(sides, 4.5)
+    assert a.started and b.started and spoken(sb)[-1] == 'Start!'
+
+
+def test_the_guest_can_go_back_to_the_menu_from_the_end_screen():
+    sides = pair()
+    (a, sa, aleft), (b, sb, bleft) = sides
+    end_round(sides)
+    b.menu_activate()                        # Back to menu
+    run(sides, 0.1)
+    assert bleft == [True] and aleft == [True]
+
+
+def test_a_draw_tells_the_guest_to_wait_in_portuguese():
+    sides = pair()
+    (a, sa, _), (b, sb, _) = sides
+    for scene, services, _ in sides:
+        services.strings.__init__('pt')
+    run(sides, 4.5)
+    a.player.inflict_damage(5)
     a.enemy.inflict_damage(5)
     run(sides, 1.5)
-    assert a.in_menu and b.in_menu
-    assert spoken(sa)[-1] == 'Nebula 482 Winner. The game will restart automatically., Back to menu button'
-    assert spoken(sb)[-1].startswith('Nebula 482 Winner.')
-    run(sides, 5.5)
-    assert not a.in_menu and a.player.life == a.player.max_life
-    run(sides, 4.5)
-    assert a.started and b.started
+    assert spoken(sa)[-1] == 'Empate, Ir para menu, Botão'
+    assert spoken(sb)[-1] == 'Empate. Esperando o anfitrião recomeçar., Ir para menu, Botão'
 
 
 def test_the_loser_can_keep_shooting_after_a_restart():
@@ -119,7 +159,9 @@ def test_the_loser_can_keep_shooting_after_a_restart():
     (a, sa, _), (b, sb, _) = sides
     run(sides, 4.5)
     a.enemy.inflict_damage(5)               # B loses: its ship is destroyed
-    run(sides, 1.5 + 5.5 + 4.5)             # end screen, the restart, the countdown
+    run(sides, 1.5)
+    a.host_restart()
+    run(sides, 4.5)
     assert b.started
     shots = 0
     for _ in range(3):
