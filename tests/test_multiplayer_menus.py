@@ -102,6 +102,9 @@ def test_quick_match_connects_waits_and_starts_the_scene(tmp_path):
     assert window.scene.lobby is not None    # a pause, so the line is heard before the countdown
     services.scheduler.update(MATCH_PAUSE + 0.1)
     assert window.scene.lobby is None
+    client.on_opponent_left()
+    assert said(services)[-1] == 'Your opponent left.'
+    assert isinstance(window.scene, MultiplayerScreen)
 
 
 def test_joining_sends_the_typed_code(tmp_path):
@@ -129,6 +132,8 @@ def test_hosting_says_who_joined_in_portuguese(tmp_path):
     client.on_code('4821')
     client.on_matched('Estrela 9')
     assert said(services)[-1] == 'Estrela 9 entrou.'
+    client.on_opponent_left()
+    assert said(services)[-1] == 'Seu oponente saiu.'
 
 
 def test_hosting_reads_the_code_and_a_bad_code_returns(tmp_path):

@@ -217,6 +217,12 @@ class App:
         scene.code_lines = (lambda c: c, lambda c: w['code_copied'] % spelled(c))
         net.on_code = got_code
         net.on_error = failed
+
+        def opponent_left():
+            scene.match_ended()
+            say(w['opponent_left'])
+
+        net.on_opponent_left = opponent_left
         self.window.set_scene(scene)
         say(w['connecting'])
         net.connect(self.player_name())
