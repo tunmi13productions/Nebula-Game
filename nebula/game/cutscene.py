@@ -43,8 +43,9 @@ def roman(n):
 
 
 class CutScene:
-    def __init__(self, services, chapter, on_done):
-        self.services, self.chapter, self.on_done = services, chapter, on_done
+    def __init__(self, services, chapter, on_done, view=None):
+        """view: a CutSceneView that draws the pictures (visual only), or None."""
+        self.services, self.chapter, self.on_done, self.view = services, chapter, on_done, view
         self.player = Narration(services.audio, services.scheduler)
         self.timer = None
         self.running = False
@@ -62,6 +63,11 @@ class CutScene:
         if not self.running:
             return
         parts = PARTS[self.chapter]
+        if self.view is not None:
+            if self.step == 0:
+                self.view.narration_starts()
+            else:
+                self.view.part_ended(self.step - 1)
         if self.step >= len(parts):
             self.timer = self.services.scheduler.after(FINAL_FADE, self._finish)
             return
@@ -76,6 +82,8 @@ class CutScene:
     def _finish(self):
         if self.running:
             self.running = False
+            if self.view is not None:
+                self.view.remove()
             self.on_done()
 
     def skip(self):
@@ -87,6 +95,8 @@ class CutScene:
         self.player.stop()
         if self.timer is not None:
             self.timer.invalidate()
+        if self.view is not None:
+            self.view.remove()
         self.on_done()
 
     def stop(self):

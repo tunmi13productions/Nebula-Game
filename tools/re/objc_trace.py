@@ -49,6 +49,12 @@ FW_SIG = {
     'colorizeWithColor:colorBlendFactor:duration:': '@fd', 'playAudioFileNamed:completion:': '@B',
     'showText:for:speaker:': '@d@', 'presentText:withSpeaker:': '@@',
     'setFrame:': 'R', 'initWithFrame:': 'R', 'setCenter:': 'P', 'fontWithName:size:': '@f',
+    'resizeToWidth:height:duration:': 'ffd', 'resizeToWidth:duration:': 'fd', 'resizeToHeight:duration:': 'fd',
+    'moveTo:duration:': 'Pd', 'moveByX:y:duration:': 'ffd', 'moveToX:duration:': 'fd', 'moveToY:duration:': 'fd',
+    'scaleTo:duration:': 'fd', 'scaleBy:duration:': 'fd', 'fadeAlphaTo:duration:': 'fd', 'fadeInWithDuration:': 'd',
+    'fadeOutWithDuration:': 'd', 'waitForDuration:': 'd', 'rotateByAngle:duration:': 'fd', 'rotateToAngle:duration:': 'fd',
+    'scaleXBy:y:duration:': 'ffd', 'resizeByWidth:height:duration:': 'ffd', 'scaleXTo:y:duration:': 'ffd',
+    'sequence:': 'A', 'group:': 'A', 'repeatActionForever:': '@', 'spriteNodeWithTexture:': '@',
 }
 STRET_SELS = {'frame', 'size', 'position', 'anchorPoint', 'locationInNode:', 'calculateAccumulatedFrame', 'bounds', 'acceleration'}
 

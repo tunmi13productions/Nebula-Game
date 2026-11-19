@@ -66,3 +66,14 @@ def test_stage_one_plays_the_intro_and_space_skips_it():
     scene.player_shoot()
     assert not scene.cutscene_running()
     assert scene.allow_move
+
+
+def test_cutscene_pictures_follow_the_narration_and_leave_with_it():
+    services = Services.silent('en')
+    scene = CHAPTERS[2](services, stage=1)
+    scene.did_move_to_view()
+    run(services, 7.2, scene)
+    pictures = [n.texture for n in scene.cutscene.view.root.walk() if getattr(n, 'texture', None)]
+    assert 'shipInterior1.jpg' in pictures
+    scene.player_shoot()                     # skip
+    assert scene.cutscene.view.root.parent is None

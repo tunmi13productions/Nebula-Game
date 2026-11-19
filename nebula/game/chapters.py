@@ -13,6 +13,7 @@ from . import rand
 from . import overlays
 from .base_scene import BaseScene, H, W
 from .cutscene import CutScene
+from .cutscene_view import CutSceneView
 from .map_generator import MapGenerator
 from .powerups import FAST_SHOT, LIFE, SHIELD, SPEED
 
@@ -57,7 +58,8 @@ class ChapterScene(BaseScene):
             self._after_intro()
 
     def _play_cutscene(self, chapter, on_done):
-        self.cutscene = CutScene(self.services, chapter, on_done)
+        self.cutscene = CutScene(self.services, chapter, on_done,
+                                 CutSceneView(self, chapter, self.services.strings))
         self.cutscene.start()
 
     def cutscene_running(self):

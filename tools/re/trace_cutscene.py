@@ -16,7 +16,7 @@ t.send(cs, 'playIntroCutSceneChapter:completition:', n, 0)
 i = 0
 while i < len(t.blocks) and i < 200:
     t.run_block(i); i += 1
-keep = ('!!', 'playAudioFileNamed', 'speakSentence', 'performSelector', 'waitForDuration', '-> <CutScene', 'playSoundFileNamed',
+keep = ('setSize', 'setPosition', 'setZPosition', 'setAlpha', 'setAnchor', 'moveBy', 'fadeAlpha', 'resize', 'rotate', 'sequence', 'group', 'removeFromParent', 'setZRotation', 'setXScale', 'setYScale', 'colorize', '!!', 'playAudioFileNamed', 'speakSentence', 'performSelector', 'waitForDuration', '-> <CutScene', 'playSoundFileNamed',
         'BLOCK#', 'fadeIn', 'fadeOut', 'moveTo', 'scaleTo', 'presentText', 'showText', 'initWithImageNamed', 'spriteNodeWithImageNamed', 'getTextureWithName')
 skip = ('from runAction:completion:)',)
 for l in buf.getvalue().splitlines():
