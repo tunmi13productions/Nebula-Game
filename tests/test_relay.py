@@ -113,3 +113,29 @@ def test_names_are_tidied_and_limited():
     assert p.name.startswith('Pilot x') and len(p.name) == relay.MAX_NAME
     q = relay.Player(Out())
     assert not r.handle(q, {'op': 'hello', 'name': 'Old', 'version': 0})
+
+
+def test_two_versus_scenes_play_through_a_real_relay(server):
+    from nebula.game.services import Services
+    from nebula.game.versus import VersusScene
+    from nebula.input import KeyboardTilt
+    sides = []
+    for name, points in (('Nebula 482', (3, 2)), ('Starship 17', (0, 0))):
+        services = Services.silent('en')
+        services.globals.life_points, services.globals.shield_points = points
+        client = RelayClient(server)
+        scene = VersusScene(services, KeyboardTilt(0.3), client, lambda: None)
+        client.on_welcome = lambda n, c=client: c.quick()
+        client.connect(name)
+        sides.append((scene, services))
+    end = time.time() + 15.0
+    while time.time() < end and not all(s.started for s, _ in sides):
+        for scene, services in sides:
+            services.scheduler.update(1 / 60)
+            scene.step(1 / 60)
+        time.sleep(0.002)
+    (a, sa), (b, sb) = sides
+    assert a.started and b.started
+    assert (b.enemy.life, b.enemy.shield) == (20, 2)       # built from the other side's upgrades
+    for scene, _ in sides:
+        scene.back_to_menu()
